@@ -1,0 +1,12 @@
+
+.externalToolBuilders
+.DS_Store
+.lock-wscript
+build
+builds
+*.pyc
+.project
+.cproject
+builtins
+.internal
+log.txt

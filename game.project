@@ -1,0 +1,55 @@
+[project]
+title = GameAnalytics
+version = 0.1
+write_log = 0
+
+[bootstrap]
+main_collection = /main/gameanalytics.collectionc
+
+[input]
+game_binding = /input/game.input_bindingc
+
+[display]
+width = 720
+height = 1280
+
+[physics]
+scale = 0.02
+
+[script]
+shared_state = 1
+
+[ios]
+bundle_identifier = com.gameanalytics.defold
+
+[android]
+package = com.gameanalytics.defold
+
+[osx]
+bundle_identifier = com.gameanalytics.defold
+
+[gameanalytics]
+game_key_ios = IOS_GAME_KEY
+secret_key_ios = IOS_SECRET_KEY
+build_ios = 0.1
+game_key_android = ANDROID_GAME_KEY
+secret_key_android = ANDROID_SECRET_KEY
+build_android = 0.1
+game_key_html5 = HTML5_GAME_KEY
+secret_key_html5 = HTML5_SECRET_KEY
+build_html5 = 0.1
+game_key_osx = OSX_GAME_KEY
+secret_key_osx = OSX_SECRET_KEY
+build_osx = 0.1
+custom_dimensions_01 = ninja,samurai
+custom_dimensions_02 = whale,dolphin
+custom_dimensions_03 = horde,alliance
+resource_currencies = gold,gems
+resource_item_types = boost,lives
+enable_info_log = 1
+enable_verbose_log = 1
+use_custom_id = 0
+use_manual_session_handling = 0
+
+[library]
+include_dirs = gameanalytics

@@ -1,0 +1,34 @@
+name: "GameAnalytics"
+
+platforms:
+    arm64-ios:
+        context:
+            frameworks: ["AdSupport", "SystemConfiguration"]
+            flags:      ["-stdlib=libc++", "-std=c++11"]
+            linkFlags:  ["-ObjC"]
+            libs:       ["z", "c++", "sqlite3"]
+
+    armv7-ios:
+        context:
+            frameworks: ["AdSupport", "SystemConfiguration"]
+            flags:      ["-stdlib=libc++", "-std=c++11"]
+            linkFlags:  ["-ObjC"]
+            libs:       ["z", "c++", "sqlite3"]
+
+    armv7-android:
+        context:
+            flags:      ["-std=c++11"]
+
+    x86-osx:
+        context:
+            frameworks: []
+            flags:  ["-std=c++11", "-stdlib=libc++"]
+            linkFlags: ["-stdlib=libc++"]
+            libs: ["c++"]
+
+    x86_64-osx:
+        context:
+            frameworks: []
+            flags:  ["-std=c++11", "-stdlib=libc++"]
+            linkFlags: ["-stdlib=libc++"]
+            libs: ["c++"]

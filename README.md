@@ -9,7 +9,7 @@ Documentation located in the [wiki](https://github.com/GameAnalytics/GA-SDK-DEFO
 >
 > Requirements:
 > * **Defold:** 1.2.108+  &nbsp;
-> * **iOS:** iOS 7+ &nbsp; 
+> * **iOS:** iOS 7+ &nbsp;
 > * **Android:** Android API Level 14 &nbsp;  
 >   
 > **Build size:**   
@@ -26,3 +26,4 @@ Changelog
 <!--(CHANGELOG_TOP)-->
 **1.0.0**
 * initial release
+
