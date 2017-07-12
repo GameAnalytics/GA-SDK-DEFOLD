@@ -24,6 +24,9 @@ Documentation located in the [wiki](https://github.com/GameAnalytics/GA-SDK-DEFO
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.0.2**
+* fixed native html5 lib (html5)
+
 **1.0.1**
 * bug fix when building to html5 (html5)
 
