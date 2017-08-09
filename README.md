@@ -5,7 +5,7 @@ Documentation located in the [wiki](https://github.com/GameAnalytics/GA-SDK-DEFO
 
 > :information_source:
 >
-> The Defold SDK include support for **iOS**, **Android**, **HTML5** and **Mac** platforms
+> The Defold SDK include support for **iOS**, **Android**, **HTML5**, **Windows** and **Mac** platforms
 >
 > Requirements:
 > * **Defold:** 1.2.108+  &nbsp;
