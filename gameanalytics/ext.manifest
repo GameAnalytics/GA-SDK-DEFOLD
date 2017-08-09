@@ -36,3 +36,11 @@ platforms:
     js-web:
         context:
             flags:      ["-std=c++11"]
+
+    x86-win32:
+        context:
+            flags:      []
+
+    x86_64-win32:
+        context:
+            flags:      []

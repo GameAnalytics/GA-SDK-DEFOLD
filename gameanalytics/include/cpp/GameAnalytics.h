@@ -4,7 +4,7 @@
 //
 
 #pragma once
-#if defined(DM_PLATFORM_OSX)
+#if defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
 
 #include <string>
 #include <vector>

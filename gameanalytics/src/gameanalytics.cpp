@@ -6,7 +6,7 @@
 #define DLIB_LOG_DOMAIN LIB_NAME
 #include <dmsdk/sdk.h>
 
-#if defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID) || defined(DM_PLATFORM_HTML5) || defined(DM_PLATFORM_OSX)
+#if defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID) || defined(DM_PLATFORM_HTML5) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
 
 #define LuaTypeName(L, pos) lua_typename(L, lua_type(L, pos))
 #define UTF8IsEqual(utf8str1, utf8str2) (strcmp(utf8str1, utf8str2) == 0)
@@ -39,7 +39,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "1.0.2"
+#define VERSION "1.1.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -878,6 +878,11 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_osx", 0);
     secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_osx", 0);
     build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_osx", 0);
+#elif defined(DM_PLATFORM_WINDOWS)
+    game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_win32", 0);
+    secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_win32", 0);
+    build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_win32", 0);
+
 #endif
 
     if(!game_key)
