@@ -24,6 +24,9 @@ Documentation located in the [wiki](https://github.com/GameAnalytics/GA-SDK-DEFO
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.1.1**
+* JNI memory leak bug fix (android)
+
 **1.1.0**
 * added windows support
 
