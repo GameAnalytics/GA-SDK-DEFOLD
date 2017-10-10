@@ -24,6 +24,9 @@ Documentation located in the [wiki](https://github.com/GameAnalytics/GA-SDK-DEFO
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.1.3**
+* bug fix: events now sent with https on windows (windows)
+
 **1.1.2**
 * bug fix: events now sent with https on mac (mac)
 
