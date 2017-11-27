@@ -24,6 +24,9 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.1.5**
+* fixed progression events to work with progression03 as well (alsways sent empty before)
+
 **1.1.4**
 * ios library fixed (ios)
 

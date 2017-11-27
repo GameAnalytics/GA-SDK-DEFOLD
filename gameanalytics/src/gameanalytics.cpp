@@ -39,7 +39,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "1.1.4"
+#define VERSION "1.1.5"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -473,11 +473,11 @@ static int addProgressionEvent( lua_State *L )
 
     if(sendScore)
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, score);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03, score);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03);
     }
 
     return 0;
