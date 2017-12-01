@@ -39,7 +39,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "1.1.5"
+#define VERSION "1.1.6"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -879,9 +879,9 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_osx", 0);
     build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_osx", 0);
 #elif defined(DM_PLATFORM_WINDOWS)
-    game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_win32", 0);
-    secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_win32", 0);
-    build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_win32", 0);
+    game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_windows", 0);
+    secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_windows", 0);
+    build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_windows", 0);
 
 #endif
 
