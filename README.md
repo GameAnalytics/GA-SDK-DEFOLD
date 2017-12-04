@@ -8,7 +8,7 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 > The Defold SDK include support for **iOS**, **Android**, **HTML5**, **Windows** and **Mac** platforms
 >
 > Requirements:
-> * **Defold:** 1.2.108+  &nbsp;
+> * **Defold:** 1.2.117+  &nbsp;
 > * **iOS:** iOS 7+ &nbsp;
 > * **Android:** Android API Level 14 &nbsp;  
 >   
@@ -24,6 +24,9 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.1.7**
+* openssl lib for windows modified to not clash with Defold duplicate symbols (windows)
+
 **1.1.6**
 * fixed build bug for windows and mac targets (windows, mac)
 
@@ -53,4 +56,3 @@ Changelog
 
 **1.0.0**
 * initial release
-
