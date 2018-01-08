@@ -24,6 +24,9 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.2.0**
+* linux support added
+
 **1.1.7**
 * openssl lib for windows modified to not clash with Defold duplicate symbols (windows)
 

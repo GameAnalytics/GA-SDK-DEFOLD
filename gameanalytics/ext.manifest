@@ -33,6 +33,10 @@ platforms:
             linkFlags:  ["-stdlib=libc++"]
             libs:       ["c++"]
 
+    x86_64-linux:
+        context:
+            flags:      []
+
     js-web:
         context:
             flags:      ["-std=c++11"]

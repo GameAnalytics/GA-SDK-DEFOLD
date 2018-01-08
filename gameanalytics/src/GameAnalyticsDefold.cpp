@@ -6,7 +6,7 @@
 #elif defined(DM_PLATFORM_HTML5)
 #include "html5/GameAnalytics.h"
 #include <regex>
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 #include "cpp/GameAnalytics.h"
 #endif
 
@@ -62,7 +62,7 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableCustomDimensions01(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions01(split(list, ','));
 #endif
         }
@@ -85,7 +85,7 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableCustomDimensions02(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions02(split(list, ','));
 #endif
         }
@@ -108,7 +108,7 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableCustomDimensions03(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions03(split(list, ','));
 #endif
         }
@@ -132,7 +132,7 @@ namespace gameanalytics
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableResourceCurrencies(JSON.parse('" + arrayString + "'))");
             // js_configureAvailableResourceCurrencies(arrayString.c_str());
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureAvailableResourceCurrencies(split(list, ','));
 #endif
         }
@@ -155,7 +155,7 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableResourceItemTypes(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureAvailableResourceItemTypes(split(list, ','));
 #endif
         }
@@ -171,7 +171,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.configureBuild('" << build << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureBuild(build);
 #endif
         }
@@ -187,7 +187,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.configureUserId('" << userId << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureUserId(userId);
 #endif
         }
@@ -203,7 +203,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.configureSdkGameEngineVersion('" << gameEngineSdkVersion << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureSdkGameEngineVersion(gameEngineSdkVersion);
 #endif
         }
@@ -219,7 +219,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.configureGameEngineVersion('" << gameEngineVersion << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureGameEngineVersion(gameEngineVersion);
 #endif
         }
@@ -236,7 +236,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.initialize('" << gameKey << "', '" << gameSecret << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::initialize(gameKey, gameSecret);
 #endif
         }
@@ -269,7 +269,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addBusinessEvent('" << currency << "', " << amount << ", '" << itemType << "', '" << itemId << "', '" << cartType << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType);
 #endif
         }
@@ -285,7 +285,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addResourceEvent(" << (int)flowType << ", '" << currency << "', " << amount << ", '" << itemType << "', '" << itemId << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addResourceEvent((gameanalytics::EGAResourceFlowType)((int)flowType), currency, amount, itemType, itemId);
 #endif
         }
@@ -321,7 +321,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addProgressionEvent(" << (int)progressionStatus << ", '" << progression01 << "', '" << progression02 << "', '" << progression03 << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03);
 #endif
         }
@@ -337,7 +337,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addProgressionEvent(" << (int)progressionStatus << ", '" << progression01 << "', '" << progression02 << "', '" << progression03 << "', " << score << ")";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03, score);
 #endif
         }
@@ -353,7 +353,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addDesignEvent('" << eventId << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addDesignEvent(eventId);
 #endif
         }
@@ -369,7 +369,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addDesignEvent('" << eventId << "', " << value << ")";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addDesignEvent(eventId, value);
 #endif
         }
@@ -385,7 +385,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.addErrorEvent(" << (int)severity << ", '" << message << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addErrorEvent((gameanalytics::EGAErrorSeverity)((int)severity), message);
 #endif
         }
@@ -401,7 +401,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setEnabledInfoLog(" << (flag ? "true" : "false") << ")";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledInfoLog(flag);
 #endif
         }
@@ -417,7 +417,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setEnabledVerboseLog(" << (flag ? "true" : "false") << ")";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledVerboseLog(flag);
 #endif
         }
@@ -433,7 +433,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setEnabledManualSessionHandling(" << (flag ? "true" : "false") << ")";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledManualSessionHandling(flag);
 #endif
         }
@@ -449,7 +449,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setCustomDimension01('" << customDimension << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setCustomDimension01(customDimension);
 #endif
         }
@@ -465,7 +465,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setCustomDimension02('" << customDimension << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setCustomDimension02(customDimension);
 #endif
         }
@@ -480,7 +480,7 @@ namespace gameanalytics
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.setCustomDimension03('" << customDimension << "')";
             std::string code = ss.str();
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setCustomDimension03(customDimension);
 #endif
         }
@@ -496,7 +496,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setFacebookId('" << facebookId << "')";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setFacebookId(facebookId);
 #endif
         }
@@ -516,7 +516,7 @@ namespace gameanalytics
                     ss << "gameanalytics.GameAnalytics.setGender(" << (int)gender << ")";
                     std::string code = ss.str();
                     runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
                     gameanalytics::GameAnalytics::setGender((gameanalytics::EGAGender)((int)gender));
 #endif
                 }
@@ -533,7 +533,7 @@ namespace gameanalytics
                     ss << "gameanalytics.GameAnalytics.setGender(" << (int)gender << ")";
                     std::string code = ss.str();
                     runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
                     gameanalytics::GameAnalytics::setGender((gameanalytics::EGAGender)((int)gender));
 #endif
                 }
@@ -552,7 +552,7 @@ namespace gameanalytics
             ss << "gameanalytics.GameAnalytics.setBirthYear(" << birthYear << ")";
             std::string code = ss.str();
             runHtml5Code(L, code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setBirthYear(birthYear);
 #endif
         }
@@ -565,7 +565,7 @@ namespace gameanalytics
             jni_startSession();
 #elif defined(DM_PLATFORM_HTML5)
             runHtml5Code(L, "gameanalytics.GameAnalytics.startSession()");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::startSession();
 #endif
         }
@@ -578,7 +578,7 @@ namespace gameanalytics
             jni_endSession();
 #elif defined(DM_PLATFORM_HTML5)
             runHtml5Code(L, "gameanalytics.GameAnalytics.endSession()");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::endSession();
 #endif
         }
