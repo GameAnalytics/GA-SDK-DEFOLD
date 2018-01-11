@@ -24,6 +24,9 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.2.2**
+* more fixes openssl lib for osx (osx)
+
 **1.2.1**
 * fixes openssl lib for osx (osx)
 
