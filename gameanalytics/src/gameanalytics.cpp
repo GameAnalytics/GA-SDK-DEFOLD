@@ -6,7 +6,7 @@
 #define DLIB_LOG_DOMAIN LIB_NAME
 #include <dmsdk/sdk.h>
 
-#if defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID) || defined(DM_PLATFORM_HTML5) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+#if defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID) || defined(DM_PLATFORM_HTML5) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 
 #define LuaTypeName(L, pos) lua_typename(L, lua_type(L, pos))
 #define UTF8IsEqual(utf8str1, utf8str2) (strcmp(utf8str1, utf8str2) == 0)
@@ -39,7 +39,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "1.2.0"
+#define VERSION "1.2.1"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -104,9 +104,13 @@ static int addBusinessEvent(lua_State *L)
     const char *itemType = "";
     const char *itemId = "";
     const char *cartType = "";
+#if defined(DM_PLATFORM_IOS)
+    const char *receipt = "";
+    bool autoFetchReceipt = false;
+#elif defined(DM_PLATFORM_ANDROID)
     const char *receipt = "";
     const char *signature = "";
-    bool autoFetchReceipt = false;
+#endif
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -169,6 +173,7 @@ static int addBusinessEvent(lua_State *L)
                     return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CartTypeOptionsKey, LuaTypeName(L, -1));
                 }
             }
+#if defined(DM_PLATFORM_ANDROID) || defined(DM_PLATFORM_IOS)
             else if(UTF8IsEqual(key, ReceiptOptionsKey))
             {
                 if(lua_type(L, -1) == LUA_TSTRING)
@@ -180,6 +185,7 @@ static int addBusinessEvent(lua_State *L)
                     return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", ReceiptOptionsKey, LuaTypeName(L, -1));
                 }
             }
+#endif
 #if defined(DM_PLATFORM_ANDROID)
             else if(UTF8IsEqual(key, SignatureOptionsKey))
             {
@@ -230,13 +236,13 @@ static int addBusinessEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s is mandatory and can't be null or empty", ItemIdOptionsKey);
     }
 
+#if defined(DM_PLATFORM_IOS)
     if(autoFetchReceipt)
     {
-#if defined(DM_PLATFORM_IOS)
         gameanalytics::defold::GameAnalytics::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType);
-#endif
     }
     else
+#endif
     {
 #if defined(DM_PLATFORM_IOS)
         gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt);
@@ -254,7 +260,7 @@ static int addBusinessEvent(lua_State *L)
 static int addResourceEvent(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    gameanalytics::defold::EGAResourceFlowType flowType;
+    gameanalytics::defold::EGAResourceFlowType flowType = (gameanalytics::defold::EGAResourceFlowType)0;
     const char *currency = "";
     lua_Number amount = 0;
     const char *itemType = "";
@@ -370,7 +376,7 @@ static int addResourceEvent(lua_State *L)
 static int addProgressionEvent( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
-    gameanalytics::defold::EGAProgressionStatus progressionStatus;
+    gameanalytics::defold::EGAProgressionStatus progressionStatus = (gameanalytics::defold::EGAProgressionStatus)0;
     const char *progression01 = "";
     const char *progression02 = "";
     const char *progression03 = "";
@@ -552,7 +558,7 @@ static int addDesignEvent(lua_State *L)
 static int addErrorEvent(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    gameanalytics::defold::EGAErrorSeverity severity;
+    gameanalytics::defold::EGAErrorSeverity severity = (gameanalytics::defold::EGAErrorSeverity)0;
     const char *message = "";
 
     if(lua_type(L, 1) == LUA_TTABLE)
@@ -882,7 +888,10 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_windows", 0);
     secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_windows", 0);
     build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_windows", 0);
-
+#elif defined(DM_PLATFORM_LINUX)
+    game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_linux", 0);
+    secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_linux", 0);
+    build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_linux", 0);
 #endif
 
     if(!game_key)
