@@ -24,6 +24,10 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**1.2.3**
+* fixed session length bug
+* fixed not allowing to add events when session is not started
+
 **1.2.2**
 * more fixes openssl lib for osx (osx)
 
