@@ -6,7 +6,10 @@
 #elif defined(DM_PLATFORM_HTML5)
 #include "html5/GameAnalytics.h"
 #include <regex>
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#elif defined(DM_PLATFORM_LINUX)
+#include <regex>
+#include "cpp/GameAnalytics.h"
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
 #include "cpp/GameAnalytics.h"
 #endif
 
@@ -26,7 +29,7 @@ namespace gameanalytics
             lua_call(L, 1, 0);                                      // call function with 1 arg, 0 return value
             lua_pop(L, 1);                                          // pop 'html5'
         }
-#else
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
         static std::vector<std::string> split(std::string str, char delimiter)
         {
             std::vector<std::string> internal;
@@ -62,7 +65,19 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableCustomDimensions01(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#elif defined(DM_PLATFORM_LINUX)
+            std::string arrayString;
+            if(list.length() > 0)
+            {
+                std::string replaceString = std::regex_replace(list, std::regex(","), "\",\"");
+                arrayString = "[\"" + replaceString + "\"]";
+            }
+            else
+            {
+                arrayString = "[]";
+            }
+            gameanalytics::GameAnalytics::configureAvailableCustomDimensions01(arrayString.c_str());
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions01(split(list, ','));
 #endif
         }
@@ -85,7 +100,19 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableCustomDimensions02(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#elif defined(DM_PLATFORM_LINUX)
+            std::string arrayString;
+            if(list.length() > 0)
+            {
+                std::string replaceString = std::regex_replace(list, std::regex(","), "\",\"");
+                arrayString = "[\"" + replaceString + "\"]";
+            }
+            else
+            {
+                arrayString = "[]";
+            }
+            gameanalytics::GameAnalytics::configureAvailableCustomDimensions02(arrayString.c_str());
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions02(split(list, ','));
 #endif
         }
@@ -108,7 +135,19 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableCustomDimensions03(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#elif defined(DM_PLATFORM_LINUX)
+            std::string arrayString;
+            if(list.length() > 0)
+            {
+                std::string replaceString = std::regex_replace(list, std::regex(","), "\",\"");
+                arrayString = "[\"" + replaceString + "\"]";
+            }
+            else
+            {
+                arrayString = "[]";
+            }
+            gameanalytics::GameAnalytics::configureAvailableCustomDimensions03(arrayString.c_str());
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions03(split(list, ','));
 #endif
         }
@@ -131,8 +170,19 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableResourceCurrencies(JSON.parse('" + arrayString + "'))");
-            // js_configureAvailableResourceCurrencies(arrayString.c_str());
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#elif defined(DM_PLATFORM_LINUX)
+            std::string arrayString;
+            if(list.length() > 0)
+            {
+                std::string replaceString = std::regex_replace(list, std::regex(","), "\",\"");
+                arrayString = "[\"" + replaceString + "\"]";
+            }
+            else
+            {
+                arrayString = "[]";
+            }
+            gameanalytics::GameAnalytics::configureAvailableResourceCurrencies(arrayString.c_str());
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             gameanalytics::GameAnalytics::configureAvailableResourceCurrencies(split(list, ','));
 #endif
         }
@@ -155,7 +205,19 @@ namespace gameanalytics
                 arrayString = "[]";
             }
             runHtml5Code(L, "gameanalytics.GameAnalytics.configureAvailableResourceItemTypes(JSON.parse('" + arrayString + "'))");
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#elif defined(DM_PLATFORM_LINUX)
+            std::string arrayString;
+            if(list.length() > 0)
+            {
+                std::string replaceString = std::regex_replace(list, std::regex(","), "\",\"");
+                arrayString = "[\"" + replaceString + "\"]";
+            }
+            else
+            {
+                arrayString = "[]";
+            }
+            gameanalytics::GameAnalytics::configureAvailableResourceItemTypes(arrayString.c_str());
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             gameanalytics::GameAnalytics::configureAvailableResourceItemTypes(split(list, ','));
 #endif
         }
