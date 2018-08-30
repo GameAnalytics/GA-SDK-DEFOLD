@@ -32,6 +32,9 @@
 #define ValueOptionsKey "value"
 #define SeverityOptionsKey "severity"
 #define MessageOptionsKey "message"
+#define CustomFieldsOptionsKey "customFields"
+#define KeyOptionsKey "key"
+#define DefaultValueOptionsKey "defaultValue"
 
 #include <assert.h>
 #include <iostream>
@@ -39,7 +42,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "1.2.4"
+#define VERSION "2.0.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -111,6 +114,7 @@ static int addBusinessEvent(lua_State *L)
     const char *receipt = "";
     const char *signature = "";
 #endif
+    const char *fields = "";
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -212,6 +216,17 @@ static int addBusinessEvent(lua_State *L)
                 }
             }
 #endif
+            else if(UTF8IsEqual(key, CustomFieldsOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    fields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
             else
             {
                 return luaL_error(L, "gameanalytics.addBusinessEvent(options): Invalid option: '%s'", key);
@@ -239,17 +254,17 @@ static int addBusinessEvent(lua_State *L)
 #if defined(DM_PLATFORM_IOS)
     if(autoFetchReceipt)
     {
-        gameanalytics::defold::GameAnalytics::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType);
+        gameanalytics::defold::GameAnalytics::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType, fields);
     }
     else
 #endif
     {
 #if defined(DM_PLATFORM_IOS)
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, fields);
 #elif defined(DM_PLATFORM_ANDROID)
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, signature);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, signature, fields);
 #else
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(L, currency, amount, itemType, itemId, cartType);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(L, currency, amount, itemType, itemId, cartType, fields);
 #endif
     }
 
@@ -265,6 +280,7 @@ static int addResourceEvent(lua_State *L)
     lua_Number amount = 0;
     const char *itemType = "";
     const char *itemId = "";
+    const char *fields = "";
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -339,6 +355,17 @@ static int addResourceEvent(lua_State *L)
                     return luaL_error(L, "gameanalytics.addResourceEvent(options): options.%s, expected string got: %s", ItemIdOptionsKey, LuaTypeName(L, -1));
                 }
             }
+            else if(UTF8IsEqual(key, CustomFieldsOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    fields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
             else
             {
                 return luaL_error(L, "gameanalytics.addResourceEvent(options): Invalid option: '%s'", key);
@@ -367,7 +394,7 @@ static int addResourceEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addResourceEvent(options): options.%s is mandatory and can't be null or empty", ItemIdOptionsKey);
     }
 
-    gameanalytics::defold::GameAnalytics::addResourceEvent(L, flowType, currency, amount, itemType, itemId);
+    gameanalytics::defold::GameAnalytics::addResourceEvent(L, flowType, currency, amount, itemType, itemId, fields);
 
     return 0;
 }
@@ -382,6 +409,7 @@ static int addProgressionEvent( lua_State *L )
     const char *progression03 = "";
     lua_Integer score = 0;
     bool sendScore = false;
+    const char *fields = "";
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -461,6 +489,17 @@ static int addProgressionEvent( lua_State *L )
                     return luaL_error(L, "gameanalytics.addProgressionEvent(options): options.%s, expected number got: %s", ScoreOptionsKey, LuaTypeName(L, -1));
                 }
             }
+            else if(UTF8IsEqual(key, CustomFieldsOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    fields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
             else
             {
                 return luaL_error(L, "gameanalytics.addProgressionEvent(options): Invalid option: '%s'", key);
@@ -479,11 +518,11 @@ static int addProgressionEvent( lua_State *L )
 
     if(sendScore)
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03, score);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03, score, fields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03, fields);
     }
 
     return 0;
@@ -496,6 +535,7 @@ static int addDesignEvent(lua_State *L)
     const char *eventId = "";
     lua_Number value = 0;
     bool sendValue = false;
+    const char *fields = "";
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -526,6 +566,17 @@ static int addDesignEvent(lua_State *L)
                     return luaL_error(L, "gameanalytics.addDesignEvent(options): options.%s, expected number got: %s", ValueOptionsKey, LuaTypeName(L, -1));
                 }
             }
+            else if(UTF8IsEqual(key, CustomFieldsOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    fields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
             else
             {
                 return luaL_error(L, "gameanalytics.addDesignEvent(options): Invalid option: '%s'", key);
@@ -544,22 +595,23 @@ static int addDesignEvent(lua_State *L)
 
     if(sendValue)
     {
-        gameanalytics::defold::GameAnalytics::addDesignEvent(L, eventId, value);
+        gameanalytics::defold::GameAnalytics::addDesignEvent(L, eventId, value, fields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addDesignEvent(L, eventId);
+        gameanalytics::defold::GameAnalytics::addDesignEvent(L, eventId, fields);
     }
 
     return 0;
 }
 
-// [Lua] gameanalytics.addErrorEvent( severity, message )
+// [Lua] gameanalytics.addErrorEvent( options )
 static int addErrorEvent(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
     gameanalytics::defold::EGAErrorSeverity severity = (gameanalytics::defold::EGAErrorSeverity)0;
     const char *message = "";
+    const char *fields = "";
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -614,6 +666,17 @@ static int addErrorEvent(lua_State *L)
                     return luaL_error(L, "gameanalytics.addErrorEvent(options): options.%s, expected string got: %s", MessageOptionsKey, LuaTypeName(L, -1));
                 }
             }
+            else if(UTF8IsEqual(key, CustomFieldsOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    fields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
             else
             {
                 return luaL_error(L, "gameanalytics.addErrorEvent(options): Invalid option: '%s'", key);
@@ -625,7 +688,7 @@ static int addErrorEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addErrorEvent(options): options, expected table got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::addErrorEvent(L, severity, message);
+    gameanalytics::defold::GameAnalytics::addErrorEvent(L, severity, message, fields);
 
     return 0;
 }
@@ -799,6 +862,91 @@ static int endSession(lua_State *L)
     return 0;
 }
 
+// [Lua] gameanalytics.getCommandCenterValueAsString(options)
+static int getCommandCenterValueAsString(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    const char *cc_key = "";
+    const char *defaultValue = "";
+    bool useDefaultValue = false;
+
+    if(lua_type(L, 1) == LUA_TTABLE)
+    {
+        for (lua_pushnil(L); lua_next(L, 1) != 0; lua_pop(L, 1))
+        {
+            const char *key = lua_tostring(L, -2);
+
+            if(UTF8IsEqual(key, KeyOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    cc_key = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options.%s, expected string got: %s", KeyOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if(UTF8IsEqual(key, DefaultValueOptionsKey))
+            {
+                if(lua_type(L, -1) == LUA_TSTRING)
+                {
+                    defaultValue = lua_tostring(L, -1);
+                    useDefaultValue = true;
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options.%s, expected string got: %s", DefaultValueOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else
+            {
+                return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): Invalid option: '%s'", key);
+            }
+        }
+    }
+    else
+    {
+        return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options, expected table got: %s", LuaTypeName(L, 1));
+    }
+
+    if(cc_key == NULL || cc_key[0] == '\0')
+    {
+        return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options.%s is mandatory and can't be null or empty", KeyOptionsKey);
+    }
+
+    if(useDefaultValue)
+    {
+        std::string result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key, defaultValue);
+        lua_pushstring( L, result.c_str() );
+    }
+    else
+    {
+        std::string result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key);
+        lua_pushstring( L, result.c_str() );
+    }
+
+    return 1;
+}
+
+// [Lua] gameanalytics.isCommandCenterReady()
+static int isCommandCenterReady(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    bool result = gameanalytics::defold::GameAnalytics::isCommandCenterReady(L);
+    lua_pushboolean( L, result ? 1 : 0 );
+    return 1;
+}
+
+// [Lua] gameanalytics.getConfigurationsContentAsString()
+static int getConfigurationsContentAsString(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    std::string result = gameanalytics::defold::GameAnalytics::getConfigurationsContentAsString(L);
+    lua_pushstring( L, result.c_str() );
+    return 1;
+}
+
 ////////////////////////////////////////////////////////
 
 static const luaL_reg Module_methods[] =
@@ -823,6 +971,10 @@ static const luaL_reg Module_methods[] =
 
     {"startSession", startSession},
     {"endSession", endSession},
+
+    { "getCommandCenterValueAsString", getCommandCenterValueAsString },
+    { "isCommandCenterReady", isCommandCenterReady },
+    { "getConfigurationsContentAsString", getConfigurationsContentAsString },
 
     {0, 0}
 };

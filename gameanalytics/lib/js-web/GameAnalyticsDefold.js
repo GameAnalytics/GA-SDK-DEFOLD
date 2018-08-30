@@ -51,33 +51,33 @@ var GameAnalyticsDefold = {
     {
         gameanalytics.GameAnalytics.setCustomDimension03(Pointer_stringify(customDimension));
     },
-    js_addBusinessEvent: function(currency, amount, itemType, itemId, cartType)
+    js_addBusinessEvent: function(currency, amount, itemType, itemId, cartType, fields)
     {
-        gameanalytics.GameAnalytics.addBusinessEvent(Pointer_stringify(currency), amount, Pointer_stringify(itemType), Pointer_stringify(itemId), Pointer_stringify(cartType));
+        gameanalytics.GameAnalytics.addBusinessEvent(Pointer_stringify(currency), amount, Pointer_stringify(itemType), Pointer_stringify(itemId), Pointer_stringify(cartType)/*, Pointer_stringify(fields)*/);
     },
-    js_addResourceEvent: function(flowType, currency, amount, itemType, itemId)
+    js_addResourceEvent: function(flowType, currency, amount, itemType, itemId, fields)
     {
-        gameanalytics.GameAnalytics.addResourceEvent(flowType, Pointer_stringify(currency), amount, Pointer_stringify(itemType), Pointer_stringify(itemId));
+        gameanalytics.GameAnalytics.addResourceEvent(flowType, Pointer_stringify(currency), amount, Pointer_stringify(itemType), Pointer_stringify(itemId)/*, Pointer_stringify(fields)*/);
     },
-    js_addProgressionEvent: function(progressionStatus, progression01, progression02, progression03)
+    js_addProgressionEvent: function(progressionStatus, progression01, progression02, progression03, fields)
     {
-        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, Pointer_stringify(progression01), Pointer_stringify(progression02), Pointer_stringify(progression03));
+        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, Pointer_stringify(progression01), Pointer_stringify(progression02), Pointer_stringify(progression03)/*, Pointer_stringify(fields)*/);
     },
-    js_addProgressionEventWithScore: function(progressionStatus, progression01, progression02, progression03, score)
+    js_addProgressionEventWithScore: function(progressionStatus, progression01, progression02, progression03, score, fields)
     {
-        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, Pointer_stringify(progression01), Pointer_stringify(progression02), Pointer_stringify(progression03), score);
+        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, Pointer_stringify(progression01), Pointer_stringify(progression02), Pointer_stringify(progression03), score/*, Pointer_stringify(fields)*/);
     },
-    js_addDesignEvent: function(eventId)
+    js_addDesignEvent: function(eventId, fields)
     {
-        gameanalytics.GameAnalytics.addDesignEvent(Pointer_stringify(eventId));
+        gameanalytics.GameAnalytics.addDesignEvent(Pointer_stringify(eventId)/*, Pointer_stringify(fields)*/);
     },
-    js_addDesignEventWithValue: function(eventId, value)
+    js_addDesignEventWithValue: function(eventId, value, fields)
     {
-        gameanalytics.GameAnalytics.addDesignEvent(Pointer_stringify(eventId), value);
+        gameanalytics.GameAnalytics.addDesignEvent(Pointer_stringify(eventId), value/*, Pointer_stringify(fields)*/);
     },
-    js_addErrorEvent: function(severity, message)
+    js_addErrorEvent: function(severity, message, fields)
     {
-        gameanalytics.GameAnalytics.addErrorEvent(severity, Pointer_stringify(message));
+        gameanalytics.GameAnalytics.addErrorEvent(severity, Pointer_stringify(message)/*, Pointer_stringify(fields)*/);
     },
     js_setEnabledInfoLog: function(enabled)
     {
@@ -114,6 +114,34 @@ var GameAnalyticsDefold = {
     js_setBirthYear: function(birthYear)
     {
         gameanalytics.GameAnalytics.setBirthYear(birthYear);
+    },
+    js_getCommandCenterValueAsString: function(key)
+    {
+        var returnStr = gameanalytics.GameAnalytics.getCommandCenterValueAsString(Pointer_stringify(key));
+        var bufferSize = lengthBytesUTF8(returnStr) + 1;
+        var buffer = _malloc(bufferSize);
+        stringToUTF8(returnStr, buffer, bufferSize);
+        return buffer;
+    },
+    js_getCommandCenterValueAsStringWithDefaultValue: function(key, defaultValue)
+    {
+        var returnStr = gameanalytics.GameAnalytics.getCommandCenterValueAsString(Pointer_stringify(key), Pointer_stringify(defaultValue));
+        var bufferSize = lengthBytesUTF8(returnStr) + 1;
+        var buffer = _malloc(bufferSize);
+        stringToUTF8(returnStr, buffer, bufferSize);
+        return buffer;
+    },
+    js_isCommandCenterReady: function()
+    {
+        return gameanalytics.GameAnalytics.isCommandCenterReady();
+    },
+    js_getConfigurationsContentAsString: function()
+    {
+        var returnStr = gameanalytics.GameAnalytics.getConfigurationsContentAsString();
+        var bufferSize = lengthBytesUTF8(returnStr) + 1;
+        var buffer = _malloc(bufferSize);
+        stringToUTF8(returnStr, buffer, bufferSize);
+        return buffer;
     }
 };
 

@@ -445,7 +445,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType)
+        void jni_addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -462,11 +462,13 @@ namespace gameanalytics {
                     jstring j_itemType = env->NewStringUTF(itemType);
                     jstring j_itemId = env->NewStringUTF(itemId);
                     jstring j_cartType = env->NewStringUTF(cartType);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType/*, j_fields*/);
                     env->DeleteLocalRef(j_currency);
                     env->DeleteLocalRef(j_itemType);
                     env->DeleteLocalRef(j_itemId);
                     env->DeleteLocalRef(j_cartType);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -481,8 +483,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addBusinessEventWithReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType,
-            const char *receipt, const char *store, const char *signature)
+        void jni_addBusinessEventWithReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *store, const char *signature, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -502,7 +503,8 @@ namespace gameanalytics {
                     jstring j_receipt = env->NewStringUTF(receipt);
                     jstring j_store = env->NewStringUTF(store);
                     jstring j_signature = env->NewStringUTF(signature);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType, j_receipt, j_store, j_signature);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType, j_receipt, j_store, j_signature/*, j_fields*/);
                     env->DeleteLocalRef(j_currency);
                     env->DeleteLocalRef(j_itemType);
                     env->DeleteLocalRef(j_itemId);
@@ -510,6 +512,7 @@ namespace gameanalytics {
                     env->DeleteLocalRef(j_receipt);
                     env->DeleteLocalRef(j_store);
                     env->DeleteLocalRef(j_signature);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -524,7 +527,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addResourceEvent(int flowType, const char *currency, float amount, const char *itemType, const char *itemId)
+        void jni_addResourceEvent(int flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -540,10 +543,12 @@ namespace gameanalytics {
                     jstring j_currency = env->NewStringUTF(currency);
                     jstring j_itemType = env->NewStringUTF(itemType);
                     jstring j_itemId = env->NewStringUTF(itemId);
-                    env->CallStaticVoidMethod(jClass, jMethod, flowType, j_currency, amount, j_itemType, j_itemId);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, flowType, j_currency, amount, j_itemType, j_itemId/*, j_fields*/);
                     env->DeleteLocalRef(j_currency);
                     env->DeleteLocalRef(j_itemType);
                     env->DeleteLocalRef(j_itemId);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -558,7 +563,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addProgressionEvent(int progressionStatus, const char *progression01, const char *progression02, const char *progression03)
+        void jni_addProgressionEvent(int progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -574,10 +579,12 @@ namespace gameanalytics {
                     jstring j_progression01 = env->NewStringUTF(progression01);
                     jstring j_progression02 = env->NewStringUTF(progression02);
                     jstring j_progression03 = env->NewStringUTF(progression03);
-                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03/*, j_fields*/);
                     env->DeleteLocalRef(j_progression01);
                     env->DeleteLocalRef(j_progression02);
                     env->DeleteLocalRef(j_progression03);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -592,7 +599,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addProgressionEventWithScore(int progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score)
+        void jni_addProgressionEventWithScore(int progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -608,10 +615,12 @@ namespace gameanalytics {
                     jstring j_progression01 = env->NewStringUTF(progression01);
                     jstring j_progression02 = env->NewStringUTF(progression02);
                     jstring j_progression03 = env->NewStringUTF(progression03);
-                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03, (double)score);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03, (double)score/*, j_fields*/);
                     env->DeleteLocalRef(j_progression01);
                     env->DeleteLocalRef(j_progression02);
                     env->DeleteLocalRef(j_progression03);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -626,7 +635,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addDesignEvent(const char *eventId)
+        void jni_addDesignEvent(const char *eventId, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -640,8 +649,10 @@ namespace gameanalytics {
                 if(jMethod)
                 {
                     jstring j_eventId = env->NewStringUTF(eventId);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId/*, j_fields*/);
                     env->DeleteLocalRef(j_eventId);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -656,7 +667,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addDesignEventWithValue(const char *eventId, float value)
+        void jni_addDesignEventWithValue(const char *eventId, float value, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -670,8 +681,10 @@ namespace gameanalytics {
                 if(jMethod)
                 {
                     jstring j_eventId = env->NewStringUTF(eventId);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId, value);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId, value/*, j_fields*/);
                     env->DeleteLocalRef(j_eventId);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -686,7 +699,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_addErrorEvent(int severity, const char *message)
+        void jni_addErrorEvent(int severity, const char *message, const char *fields)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -700,8 +713,10 @@ namespace gameanalytics {
                 if(jMethod)
                 {
                     jstring j_message = env->NewStringUTF(message);
-                    env->CallStaticVoidMethod(jClass, jMethod, severity, j_message);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, severity, j_message/*, j_fields*/);
                     env->DeleteLocalRef(j_message);
+                    env->DeleteLocalRef(j_fields);
                 }
                 else
                 {
@@ -1030,6 +1045,145 @@ namespace gameanalytics {
             {
                 dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
             }
+        }
+
+        const char* jni_getCommandCenterValueAsString(const char *key)
+        {
+            AttachScope attachscope;
+            JNIEnv* env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char* strMethod = "getCommandCenterValueAsString";
+            std::string result;
+
+            if(jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;)Ljava/lang/String;");
+
+                if(jMethod)
+                {
+                    jstring j_key = env->NewStringUTF(key);
+                    jstring j_s = (jstring)env->CallStaticObjectMethod(jClass, jMethod, j_key);
+                    const char* s = env->GetStringUTFChars(j_s, 0);
+                    result = s;
+                    env->ReleaseStringUTFChars(j_s, s);
+                    env->DeleteLocalRef(j_key);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+
+            return result.c_str();
+        }
+
+        const char* jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue)
+        {
+            AttachScope attachscope;
+            JNIEnv* env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char* strMethod = "getCommandCenterValueAsString";
+            std::string result;
+
+            if(jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
+
+                if(jMethod)
+                {
+                    jstring j_key = env->NewStringUTF(key);
+                    jstring j_defaultValue = env->NewStringUTF(defaultValue);
+                    jstring j_s = (jstring)env->CallStaticObjectMethod(jClass, jMethod, j_key, j_defaultValue);
+                    const char* s = env->GetStringUTFChars(j_s, 0);
+                    result = s;
+                    env->ReleaseStringUTFChars(j_s, s);
+                    env->DeleteLocalRef(j_key);
+                    env->DeleteLocalRef(j_defaultValue);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+
+            return result.c_str();
+        }
+
+        bool jni_isCommandCenterReady()
+        {
+            AttachScope attachscope;
+            JNIEnv* env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char* strMethod = "isCommandCenterReady";
+            bool result = false;
+
+            if(jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "()Z");
+
+                if(jMethod)
+                {
+                    result = env->CallStaticBooleanMethod(jClass, jMethod);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+
+            return result;
+        }
+
+        const char* jni_getConfigurationsContentAsString()
+        {
+            AttachScope attachscope;
+            JNIEnv* env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char* strMethod = "getConfigurationsContentAsString";
+            std::string result;
+
+            if(jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "()Ljava/lang/String;");
+
+                if(jMethod)
+                {
+                    jstring j_s = (jstring)env->CallStaticObjectMethod(jClass, jMethod);
+                    const char* s = env->GetStringUTFChars(j_s, 0);
+                    result = s;
+                    env->ReleaseStringUTFChars(j_s, s);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+
+            return result.c_str();
         }
 #ifdef __cplusplus
     }

@@ -1,4 +1,4 @@
-﻿//
+//
 // GA-SDK-CPP
 // Copyright 2015 CppWrapper. All rights reserved.
 //
@@ -11,8 +11,10 @@
 
 #if defined(DM_PLATFORM_LINUX)
 using STRING = const char*;
+using RETURN_STRING = const char*;
 #else
 using STRING = const std::string&;
+using RETURN_STRING = std::string;
 #endif
 
 namespace gameanalytics
@@ -140,6 +142,11 @@ namespace gameanalytics
         static void onResume();
         static void onSuspend();
         static void onQuit();
+
+        static RETURN_STRING getCommandCenterValueAsString(STRING key);
+        static RETURN_STRING getCommandCenterValueAsString(STRING key, STRING defaultValue);
+        static bool isCommandCenterReady();
+        static RETURN_STRING getConfigurationsContentAsString();
 
      private:
         static bool isSdkReady(bool needsInitialized);

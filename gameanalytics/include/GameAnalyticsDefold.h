@@ -51,23 +51,19 @@ namespace gameanalytics
             static void configureGameEngineVersion(lua_State *L, const char *gameEngineVersion);
             static void initialize(lua_State *L, const char *gameKey, const char *gameSecret);
 
-    #if defined(DM_PLATFORM_IOS)
-            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt);
-            static void addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType);
-    #elif defined(DM_PLATFORM_ANDROID)
-            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature);
-    #endif
-            static void addBusinessEvent(lua_State *L, const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType);
-            static void addResourceEvent(lua_State *L, EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, int score);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, int score);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score);
-            static void addDesignEvent(lua_State *L, const char *eventId);
-            static void addDesignEvent(lua_State *L, const char *eventId, float value);
-            static void addErrorEvent(lua_State *L, EGAErrorSeverity severity, const char *message);
+#if defined(DM_PLATFORM_IOS)
+            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields);
+            static void addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
+#elif defined(DM_PLATFORM_ANDROID)
+            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields);
+#endif
+            static void addBusinessEvent(lua_State *L, const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
+            static void addResourceEvent(lua_State *L, EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields);
+            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields);
+            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields);
+            static void addDesignEvent(lua_State *L, const char *eventId, const char *fields);
+            static void addDesignEvent(lua_State *L, const char *eventId, float value, const char *fields);
+            static void addErrorEvent(lua_State *L, EGAErrorSeverity severity, const char *message, const char *fields);
 
             static void setEnabledInfoLog(lua_State *L, bool flag);
             static void setEnabledVerboseLog(lua_State *L, bool flag);
@@ -81,6 +77,20 @@ namespace gameanalytics
 
             static void startSession(lua_State *L);
             static void endSession(lua_State *L);
+
+            static const char* getCommandCenterValueAsString(lua_State *L, const char *key);
+            static const char* getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue);
+            static bool isCommandCenterReady(lua_State *L);
+            static const char* getConfigurationsContentAsString(lua_State *L);
+
+        private:
+#if defined(DM_PLATFORM_HTML5)
+            static void runHtml5Code(lua_State *L, const std::string& code);
+            static const char* runHtml5CodeWithReturnString(lua_State *L, const std::string& code);
+            static bool runHtml5CodeWithReturnBool(lua_State *L, const std::string& code);
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID)
+            static std::vector<std::string> split(const std::string& str, char delimiter);
+#endif
         };
     }
 }

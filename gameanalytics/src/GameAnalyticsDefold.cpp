@@ -21,7 +21,7 @@ namespace gameanalytics
     namespace defold
     {
 #if defined(DM_PLATFORM_HTML5)
-        static void runHtml5Code(lua_State *L, const std::string code)
+        void GameAnalytics::runHtml5Code(lua_State *L, const std::string& code)
         {
             lua_getglobal(L, "html5");                              // push 'html5' onto stack
             lua_getfield(L, -1, "run");                             // push desired function
@@ -29,8 +29,34 @@ namespace gameanalytics
             lua_call(L, 1, 0);                                      // call function with 1 arg, 0 return value
             lua_pop(L, 1);                                          // pop 'html5'
         }
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
-        static std::vector<std::string> split(std::string str, char delimiter)
+
+        const char* GameAnalytics::runHtml5CodeWithReturnString(lua_State *L, const std::string& code)
+        {
+            const char *result = "";
+            lua_getglobal(L, "html5");                              // push 'html5' onto stack
+            lua_getfield(L, -1, "run");                             // push desired function
+            lua_pushstring(L, code.c_str());                        // push argument
+            lua_call(L, 1, 1);                                      // call function with 1 arg, 1 return value
+            result = lua_tostring(L, 1);                            // get the result
+            lua_pop(L, 1);                                          // pop 'html5'
+
+            return result;
+        }
+
+        bool GameAnalytics::runHtml5CodeWithReturnBool(lua_State *L, const std::string& code)
+        {
+            bool result = false;
+            lua_getglobal(L, "html5");                              // push 'html5' onto stack
+            lua_getfield(L, -1, "run");                             // push desired function
+            lua_pushstring(L, code.c_str());                        // push argument
+            lua_call(L, 1, 1);                                      // call function with 1 arg, 1 return value
+            result = lua_toboolean(L, 1);                            // get the result
+            lua_pop(L, 1);                                          // pop 'html5'
+
+            return result;
+        }
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID)
+        std::vector<std::string> GameAnalytics::split(const std::string& str, char delimiter)
         {
             std::vector<std::string> internal;
             std::stringstream ss(str); // Turn the string into a stream.
@@ -304,28 +330,28 @@ namespace gameanalytics
         }
 
 #if defined(DM_PLATFORM_IOS)
-        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt)
+        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields)
         {
-            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt);
+            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, "");
         }
 
-        void GameAnalytics::addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType)
+        void GameAnalytics::addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields)
         {
-            GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType);
+            GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType, "");
         }
 #elif defined(DM_PLATFORM_ANDROID)
-        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature)
+        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields)
         {
-            jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature);
+            jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature, "");
         }
 #endif
 
-        void GameAnalytics::addBusinessEvent(lua_State *L, const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType)
+        void GameAnalytics::addBusinessEvent(lua_State *L, const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, "");
+            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, "", "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addBusinessEvent(currency, amount, itemType, itemId, cartType);
+            jni_addBusinessEvent(currency, amount, itemType, itemId, cartType, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addBusinessEvent('" << currency << "', " << amount << ", '" << itemType << "', '" << itemId << "', '" << cartType << "')";
@@ -336,12 +362,12 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::addResourceEvent(lua_State *L, EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId)
+        void GameAnalytics::addResourceEvent(lua_State *L, EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addResourceEvent((int)flowType, currency, amount, itemType, itemId);
+            GameAnalyticsCpp::addResourceEvent((int)flowType, currency, amount, itemType, itemId, "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addResourceEvent((int)flowType, currency, amount, itemType, itemId);
+            jni_addResourceEvent((int)flowType, currency, amount, itemType, itemId, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addResourceEvent(" << (int)flowType << ", '" << currency << "', " << amount << ", '" << itemType << "', '" << itemId << "')";
@@ -352,32 +378,12 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01)
-        {
-            addProgressionEvent(L, progressionStatus, progression01, "", "");
-        }
-
-        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, int score)
-        {
-            addProgressionEvent(L, progressionStatus, progression01, "", "", score);
-        }
-
-        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02)
-        {
-            addProgressionEvent(L, progressionStatus, progression01, progression02, "");
-        }
-
-        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, int score)
-        {
-            addProgressionEvent(L, progressionStatus, progression01, progression02, "", score);
-        }
-
-        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03)
+        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addProgressionEvent((int)progressionStatus, progression01, progression02, progression03);
+            GameAnalyticsCpp::addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03);
+            jni_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addProgressionEvent(" << (int)progressionStatus << ", '" << progression01 << "', '" << progression02 << "', '" << progression03 << "')";
@@ -388,12 +394,12 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score)
+        void GameAnalytics::addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score);
+            GameAnalyticsCpp::addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score);
+            jni_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addProgressionEvent(" << (int)progressionStatus << ", '" << progression01 << "', '" << progression02 << "', '" << progression03 << "', " << score << ")";
@@ -404,12 +410,12 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::addDesignEvent(lua_State *L, const char *eventId)
+        void GameAnalytics::addDesignEvent(lua_State *L, const char *eventId, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addDesignEvent(eventId);
+            GameAnalyticsCpp::addDesignEvent(eventId, "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addDesignEvent(eventId);
+            jni_addDesignEvent(eventId, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addDesignEvent('" << eventId << "')";
@@ -420,12 +426,12 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::addDesignEvent(lua_State *L, const char *eventId, float value)
+        void GameAnalytics::addDesignEvent(lua_State *L, const char *eventId, float value, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addDesignEventWithValue(eventId, value);
+            GameAnalyticsCpp::addDesignEventWithValue(eventId, value, "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addDesignEventWithValue(eventId, value);
+            jni_addDesignEventWithValue(eventId, value, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addDesignEvent('" << eventId << "', " << value << ")";
@@ -436,12 +442,12 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::addErrorEvent(lua_State *L, EGAErrorSeverity severity, const char *message)
+        void GameAnalytics::addErrorEvent(lua_State *L, EGAErrorSeverity severity, const char *message, const char *fields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addErrorEvent((int)severity, message);
+            GameAnalyticsCpp::addErrorEvent((int)severity, message, "");
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addErrorEvent((int)severity, message);
+            jni_addErrorEvent((int)severity, message, "");
 #elif defined(DM_PLATFORM_HTML5)
             std::ostringstream ss;
             ss << "gameanalytics.GameAnalytics.addErrorEvent(" << (int)severity << ", '" << message << "')";
@@ -642,6 +648,70 @@ namespace gameanalytics
             runHtml5Code(L, "gameanalytics.GameAnalytics.endSession()");
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::endSession();
+#endif
+        }
+
+        const char* GameAnalytics::getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue)
+        {
+#if defined(DM_PLATFORM_IOS)
+            return GameAnalyticsCpp::getCommandCenterValueAsString(key, defaultValue);
+#elif defined(DM_PLATFORM_ANDROID)
+            return jni_getCommandCenterValueAsStringWithDefaultValue(key, defaultValue);
+#elif defined(DM_PLATFORM_HTML5)
+            std::ostringstream ss;
+            ss << "gameanalytics.GameAnalytics.getCommandCenterValueAsString('" << key << "', '" << defaultValue << "')";
+            std::string code = ss.str();
+            return runHtml5CodeWithReturnString(L, code);
+#elif defined(DM_PLATFORM_LINUX)
+            return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key, defaultValue);
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+            return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key, defaultValue).c_str();
+#endif
+        }
+
+        const char* GameAnalytics::getCommandCenterValueAsString(lua_State *L, const char *key)
+        {
+#if defined(DM_PLATFORM_IOS)
+            return GameAnalyticsCpp::getCommandCenterValueAsString(key);
+#elif defined(DM_PLATFORM_ANDROID)
+            return jni_getCommandCenterValueAsString(key);
+#elif defined(DM_PLATFORM_HTML5)
+            std::ostringstream ss;
+            ss << "gameanalytics.GameAnalytics.getCommandCenterValueAsString('" << key << "')";
+            std::string code = ss.str();
+            return runHtml5CodeWithReturnString(L, code);
+#elif defined(DM_PLATFORM_LINUX)
+            return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key);
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+            return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key).c_str();
+#endif
+        }
+
+        bool GameAnalytics::isCommandCenterReady(lua_State *L)
+        {
+#if defined(DM_PLATFORM_IOS)
+            return GameAnalyticsCpp::isCommandCenterReady();
+#elif defined(DM_PLATFORM_ANDROID)
+            return jni_isCommandCenterReady();
+#elif defined(DM_PLATFORM_HTML5)
+            return runHtml5CodeWithReturnBool(L, "gameanalytics.GameAnalytics.isCommandCenterReady()");
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+            return gameanalytics::GameAnalytics::isCommandCenterReady();
+#endif
+        }
+
+        const char* GameAnalytics::getConfigurationsContentAsString(lua_State *L)
+        {
+#if defined(DM_PLATFORM_IOS)
+            return GameAnalyticsCpp::getConfigurationsContentAsString();
+#elif defined(DM_PLATFORM_ANDROID)
+            return jni_getConfigurationsContentAsString();
+#elif defined(DM_PLATFORM_HTML5)
+            return runHtml5CodeWithReturnString(L, "gameanalytics.GameAnalytics.getConfigurationsContentAsString()");
+#elif defined(DM_PLATFORM_LINUX)
+            return gameanalytics::GameAnalytics::getConfigurationsContentAsString();
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
+            return gameanalytics::GameAnalytics::getConfigurationsContentAsString().c_str();
 #endif
         }
     }

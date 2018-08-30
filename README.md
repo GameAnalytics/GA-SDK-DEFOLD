@@ -24,6 +24,9 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.0.0**
+* added command center funcitonality
+
 **1.2.4**
 * added custom dimensions to design and error events
 * fixed linux support to work again
