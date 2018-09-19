@@ -42,7 +42,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.0.0"
+#define VERSION "2.0.1"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
