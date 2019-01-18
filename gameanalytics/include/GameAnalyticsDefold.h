@@ -68,6 +68,7 @@ namespace gameanalytics
             static void setEnabledInfoLog(lua_State *L, bool flag);
             static void setEnabledVerboseLog(lua_State *L, bool flag);
             static void setEnabledManualSessionHandling(lua_State *L, bool flag);
+            static void setEnabledEventSubmission(lua_State *L, bool flag);
             static void setCustomDimension01(lua_State *L, const char *customDimension);
             static void setCustomDimension02(lua_State *L, const char *customDimension);
             static void setCustomDimension03(lua_State *L, const char *customDimension);

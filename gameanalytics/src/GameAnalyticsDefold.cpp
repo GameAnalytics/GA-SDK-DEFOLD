@@ -506,6 +506,22 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::setEnabledEventSubmission(lua_State *L, bool flag)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::setEnabledEventSubmission(flag);
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_setEnabledEventSubmission(flag);
+#elif defined(DM_PLATFORM_HTML5)
+            std::ostringstream ss;
+            ss << "gameanalytics.GameAnalytics.setEnabledEventSubmission(" << (flag ? "true" : "false") << ")";
+            std::string code = ss.str();
+            runHtml5Code(L, code);
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+            gameanalytics::GameAnalytics::setEnabledEventSubmission(flag);
+#endif
+        }
+
         void GameAnalytics::setCustomDimension01(lua_State *L, const char *customDimension)
         {
 #if defined(DM_PLATFORM_IOS)

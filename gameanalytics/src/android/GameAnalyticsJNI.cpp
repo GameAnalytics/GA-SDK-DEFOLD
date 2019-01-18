@@ -815,6 +815,34 @@ namespace gameanalytics {
             }
         }
 
+        void jni_setEnabledEventSubmission(bool flag)
+        {
+            AttachScope attachscope;
+            JNIEnv* env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char* strMethod = "setEnabledEventSubmission";
+
+            if(jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Z)V");
+
+                if(jMethod)
+                {
+                    env->CallStaticVoidMethod(jClass, jMethod, flag);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+        }
+
         void jni_setCustomDimension01(const char *customDimension)
         {
             AttachScope attachscope;

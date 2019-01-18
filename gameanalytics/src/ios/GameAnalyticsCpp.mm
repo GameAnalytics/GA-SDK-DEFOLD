@@ -228,6 +228,10 @@ void GameAnalyticsCpp::setEnabledManualSessionHandling(bool flag) {
     [GameAnalytics setEnabledManualSessionHandling:flag];
 }
 
+void GameAnalyticsCpp::setEnabledEventSubmission(bool flag) {
+    [GameAnalytics setEnabledEventSubmission:flag];
+}
+
 void GameAnalyticsCpp::setCustomDimension01(const char *customDimension) {
     NSString *customDimensionString = !isStringNullOrEmpty(customDimension) ? [NSString stringWithUTF8String:customDimension] : nil;
     [GameAnalytics setCustomDimension01:customDimensionString];

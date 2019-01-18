@@ -91,6 +91,10 @@ var GameAnalyticsDefold = {
     {
         gameanalytics.GameAnalytics.setEnabledManualSessionHandling(enabled);
     },
+    js_setEventSubmission: function(enabled)
+    {
+        gameanalytics.GameAnalytics.setEnabledEventSubmission(enabled);
+    },
     js_startSession: function()
     {
         gameanalytics.GameAnalytics.startSession();

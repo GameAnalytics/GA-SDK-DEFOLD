@@ -42,7 +42,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.0.2"
+#define VERSION "2.1.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -731,6 +731,20 @@ static int setEnabledManualSessionHandling(lua_State *L)
     }
 
     gameanalytics::defold::GameAnalytics::setEnabledManualSessionHandling(L, lua_toboolean(L, 1));
+
+    return 0;
+}
+
+// [Lua] gameanalytics.setEnabledEventSubmission( flag )
+static int setEnabledEventSubmission(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if(lua_type(L, 1) != LUA_TBOOLEAN)
+    {
+        return luaL_error(L, "gameanalytics.setEnabledEventSubmission(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
+    }
+
+    gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(L, lua_toboolean(L, 1));
 
     return 0;
 }
