@@ -972,6 +972,8 @@ static const luaL_reg Module_methods[] =
     {"addProgressionEvent", addProgressionEvent},
     {"addDesignEvent", addDesignEvent},
     {"addErrorEvent", addErrorEvent},
+    
+    {"setEnabledEventSubmission", setEnabledEventSubmission},
 
     {"setEnabledInfoLog", setEnabledInfoLog},
     {"setEnabledVerboseLog", setEnabledVerboseLog},
