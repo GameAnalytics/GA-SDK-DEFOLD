@@ -1033,6 +1033,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     const char* build = NULL;
     bool enable_info_log = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_info_log", 0) == 1;
     bool enable_verbose_log = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_verbose_log", 0) == 1;
+    bool enable_event_submission = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_event_submission", 0) == 1;
     use_custom_id = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_custom_id", 0) == 1;
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
 
@@ -1081,6 +1082,13 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     if(enable_verbose_log)
     {
         gameanalytics::defold::GameAnalytics::setEnabledVerboseLog(params->m_L, true);
+    }
+    
+    if(enable_event_submission)
+    {
+        gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, true);
+    } else {
+        gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, false);
     }
 
     if(build)
