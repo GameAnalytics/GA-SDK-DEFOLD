@@ -24,6 +24,9 @@ Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.1.1**
+* fixes to setEnabledEventSubmission
+
 **2.1.0**
 * added enable/disable event submission function
 

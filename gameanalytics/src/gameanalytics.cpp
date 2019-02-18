@@ -42,7 +42,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.1.0"
+#define VERSION "2.1.1"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -972,7 +972,7 @@ static const luaL_reg Module_methods[] =
     {"addProgressionEvent", addProgressionEvent},
     {"addDesignEvent", addDesignEvent},
     {"addErrorEvent", addErrorEvent},
-    
+
     {"setEnabledEventSubmission", setEnabledEventSubmission},
 
     {"setEnabledInfoLog", setEnabledInfoLog},
@@ -1033,7 +1033,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     const char* build = NULL;
     bool enable_info_log = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_info_log", 0) == 1;
     bool enable_verbose_log = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_verbose_log", 0) == 1;
-    bool enable_event_submission = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_event_submission", 0) == 1;
+    bool enable_event_submission = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_event_submission", 1) == 1;
     use_custom_id = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_custom_id", 0) == 1;
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
 
@@ -1083,11 +1083,13 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     {
         gameanalytics::defold::GameAnalytics::setEnabledVerboseLog(params->m_L, true);
     }
-    
+
     if(enable_event_submission)
     {
         gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, true);
-    } else {
+    }
+    else
+    {
         gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, false);
     }
 
