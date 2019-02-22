@@ -3,6 +3,8 @@ GameAnalytics SDK for Defold.
 
 Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).  
 
+If you have any issues or feedback regarding the SDK, please contact our friendly support team [here](https://gameanalytics.com/contact).
+
 > :information_source:
 >
 > The Defold SDK include support for **iOS**, **Android**, **HTML5**, **Windows**, **Mac** and **Linux** platforms
