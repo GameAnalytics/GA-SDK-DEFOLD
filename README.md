@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.1.3**
+* linux library updated to correct one (changed from using clang to gcc)
+
 **2.1.2**
 * fixed linux library
 
