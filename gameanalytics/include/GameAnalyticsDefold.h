@@ -49,6 +49,7 @@ namespace gameanalytics
             static void configureUserId(lua_State *L, const char *userId);
             static void configureSdkGameEngineVersion(lua_State *L, const char *gameEngineSdkVersion);
             static void configureGameEngineVersion(lua_State *L, const char *gameEngineVersion);
+            static void configureWritablePath(lua_State *L, const char *writablePath);
             static void initialize(lua_State *L, const char *gameKey, const char *gameSecret);
 
 #if defined(DM_PLATFORM_IOS)

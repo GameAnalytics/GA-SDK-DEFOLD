@@ -312,6 +312,16 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::configureWritablePath(lua_State *L, const char *writablePath)
+        {
+#if defined(DM_PLATFORM_IOS)
+#elif defined(DM_PLATFORM_ANDROID)
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+            gameanalytics::GameAnalytics::configureWritablePath(writablePath);
+#endif
+        }
+
         void GameAnalytics::initialize(lua_State *L, const char *gameKey, const char *gameSecret)
         {
 

@@ -36,13 +36,30 @@
 #define KeyOptionsKey "key"
 #define DefaultValueOptionsKey "defaultValue"
 
+#if defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_LINUX)
+#include <string.h>
+#include <limits.h>     /* PATH_MAX */
+#include <sys/stat.h>   /* mkdir(2) */
+#include <errno.h>
+#include <wordexp.h>
+#elif defined(DM_PLATFORM_WINDOWS)
+#include <string.h>
+#include <errno.h>
+#include <direct.h>
+#include <regex>
+#include <string>
+#ifndef PATH_MAX
+#define PATH_MAX 260
+#endif
+#endif
+
 #include <assert.h>
 #include <iostream>
 #include <sstream>
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.1.3"
+#define VERSION "2.2.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -97,6 +114,103 @@ static int configureUserId(lua_State* L)
 
     return 0;
 }
+
+#if defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_LINUX)
+int mkdir_p(const char *path)
+{
+    const size_t len = strlen(path);
+    char _path[PATH_MAX];
+    char *p;
+
+    errno = 0;
+
+    /* Copy string so its mutable */
+    if (len > sizeof(_path)-1) {
+        errno = ENAMETOOLONG;
+        return -1;
+    }
+    strcpy(_path, path);
+
+    /* Iterate the string */
+    for (p = _path + 1; *p; p++) {
+        if (*p == '/') {
+            /* Temporarily truncate */
+            *p = '\0';
+
+            if (mkdir(_path, S_IRWXU) != 0) {
+                if (errno != EEXIST)
+                    return -1;
+            }
+
+            *p = '/';
+        }
+    }
+
+    if (mkdir(_path, S_IRWXU) != 0) {
+        if (errno != EEXIST)
+            return -1;
+    }
+
+    return 0;
+}
+#elif defined(DM_PLATFORM_WINDOWS)
+void autoExpandEnvironmentVariables( std::string & text ) {
+    static std::regex env( "%.+%" );
+    std::smatch match;
+    while ( std::regex_search( text, match, env ) ) {
+        std::string m = match[0].str();
+        m.erase(std::remove(m.begin(), m.end(), '%'), m.end());
+        dmLogInfo("match=%s\n", m.c_str());
+        const char * s = std::getenv( m.c_str() );
+        const std::string var( s == NULL ? "" : s );
+        text.replace( match[0].first, match[0].second, var );
+    }
+}
+
+std::string expandEnvironmentVariables( const std::string & input ) {
+    std::string text = input;
+    autoExpandEnvironmentVariables( text );
+    return text;
+}
+
+int mkdir_p(const char *path)
+{
+    const size_t len = strlen(path);
+    char _path[PATH_MAX];
+    char *p;
+
+    errno = 0;
+
+    /* Copy string so its mutable */
+    if (len > sizeof(_path)-1) {
+        errno = ENAMETOOLONG;
+        return -1;
+    }
+    strcpy(_path, path);
+
+    /* Iterate the string */
+    for (p = _path + 1; *p; p++) {
+        if (*p == '/' || *p == '\\') {
+            /* Temporarily truncate */
+            *p = '\0';
+
+            if (_mkdir(_path) != 0) {
+                if (errno != EEXIST)
+                    return -1;
+            }
+
+            *p = '/';
+        }
+    }
+
+    if (_mkdir(_path) != 0) {
+        if (errno != EEXIST)
+            return -1;
+    }
+
+    return 0;
+}
+#endif
 
 // [Lua] gameanalytics.addBusinessEvent( options )
 static int addBusinessEvent(lua_State *L)
@@ -1053,14 +1167,43 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_osx", 0);
     secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_osx", 0);
     build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_osx", 0);
+    const char* write_path = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.write_path_osx", 0);
+    if(write_path)
+    {
+        wordexp_t p;
+        wordexp(write_path, &p, 0);
+        dmLogInfo("write_path=%s\n", p.we_wordv[0]);
+        mkdir_p(p.we_wordv[0]);
+        gameanalytics::defold::GameAnalytics::configureWritablePath(params->m_L, p.we_wordv[0]);
+        wordfree(&p);
+    }
 #elif defined(DM_PLATFORM_WINDOWS)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_windows", 0);
     secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_windows", 0);
     build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_windows", 0);
+    const char* write_path = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.write_path_windows", 0);
+    if(write_path)
+    {
+        std::string p(write_path);
+        p = expandEnvironmentVariables(p);
+        dmLogInfo("write_path=%s\n", p.c_str());
+        mkdir_p(p.c_str());
+        gameanalytics::defold::GameAnalytics::configureWritablePath(params->m_L, p.c_str());
+    }
 #elif defined(DM_PLATFORM_LINUX)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_linux", 0);
     secret_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.secret_key_linux", 0);
     build = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.build_linux", 0);
+    const char* write_path = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.write_path_linux", 0);
+    if(write_path)
+    {
+        wordexp_t p;
+        wordexp(write_path, &p, 0);
+        dmLogInfo("write_path=%s\n", p.we_wordv[0]);
+        mkdir_p(p.we_wordv[0]);
+        gameanalytics::defold::GameAnalytics::configureWritablePath(params->m_L, p.we_wordv[0]);
+        wordfree(&p);
+    }
 #endif
 
     if(!game_key)

@@ -577,6 +577,19 @@ typedef enum GAErrorSeverity : NSInteger {
  */
 + (void)setEnabledVerboseLog:(BOOL)flag;
 
+/*!
+ @method
+ 
+ @abstract Enable wanrning logging of analytics.
+ 
+ @param flag
+ Enable or disable watning log mode
+ 
+ @availability Available since 3.2.1
+ 
+ */
++ (void)setEnabledWarningLog:(BOOL)flag;
+
 
 /*!
  @method
