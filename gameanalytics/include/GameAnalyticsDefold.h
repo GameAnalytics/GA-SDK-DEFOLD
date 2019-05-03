@@ -2,7 +2,7 @@
 
 #include <dmsdk/script/script.h>
 #include <vector>
-#include <string>
+#include "CharArray.h"
 
 namespace gameanalytics
 {
@@ -38,12 +38,12 @@ namespace gameanalytics
 
         class GameAnalytics {
         public:
-            static void configureAvailableCustomDimensions01(lua_State *L, const std::string& list);
-            static void configureAvailableCustomDimensions02(lua_State *L, const std::string& list);
-            static void configureAvailableCustomDimensions03(lua_State *L, const std::string& list);
+            static void configureAvailableCustomDimensions01(lua_State *L, const char* list);
+            static void configureAvailableCustomDimensions02(lua_State *L, const char* list);
+            static void configureAvailableCustomDimensions03(lua_State *L, const char* list);
 
-            static void configureAvailableResourceCurrencies(lua_State *L, const std::string& list);
-            static void configureAvailableResourceItemTypes(lua_State *L, const std::string& list);
+            static void configureAvailableResourceCurrencies(lua_State *L, const char* list);
+            static void configureAvailableResourceItemTypes(lua_State *L, const char* list);
 
             static void configureBuild(lua_State *L, const char *build);
             static void configureUserId(lua_State *L, const char *userId);
@@ -80,19 +80,18 @@ namespace gameanalytics
             static void startSession(lua_State *L);
             static void endSession(lua_State *L);
 
-            static const char* getCommandCenterValueAsString(lua_State *L, const char *key);
-            static const char* getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue);
+            static std::vector<char> getCommandCenterValueAsString(lua_State *L, const char *key);
+            static std::vector<char> getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue);
             static bool isCommandCenterReady(lua_State *L);
-            static const char* getConfigurationsContentAsString(lua_State *L);
+            static std::vector<char> getConfigurationsContentAsString(lua_State *L);
 
         private:
 #if defined(DM_PLATFORM_HTML5)
-            static void runHtml5Code(lua_State *L, const std::string& code);
-            static const char* runHtml5CodeWithReturnString(lua_State *L, const std::string& code);
-            static bool runHtml5CodeWithReturnBool(lua_State *L, const std::string& code);
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID)
-            static std::vector<std::string> split(const std::string& str, char delimiter);
+            static void runHtml5Code(lua_State *L, const char* code);
+            static std::vector<char> runHtml5CodeWithReturnString(lua_State *L, const char* code);
+            static bool runHtml5CodeWithReturnBool(lua_State *L, const char* code);
 #endif
+            static std::vector<CharArray> split(char* str, const char* delimiter);
         };
     }
 }

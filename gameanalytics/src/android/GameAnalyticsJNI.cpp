@@ -4,6 +4,8 @@
 #include <dmsdk/graphics/graphics_native.h>
 #define DLIB_LOG_DOMAIN "GameAnalytics"
 #include <dmsdk/dlib/log.h>
+#include <string.h>
+#include <stdio.h>
 
 #define GAMEANALYTICS_CLASS_NAME "com/gameanalytics/sdk/GameAnalytics"
 
@@ -56,7 +58,7 @@ namespace gameanalytics {
     extern "C"
     {
 #endif
-        void jni_configureAvailableCustomDimensions01(const std::vector<std::string>& list)
+        void jni_configureAvailableCustomDimensions01(const std::vector<CharArray>& list)
         {
             // get the java environment so we can register the native function with the java call
             AttachScope attachscope;
@@ -76,9 +78,9 @@ namespace gameanalytics {
                     j_array = env->NewObjectArray(len, env->FindClass("java/lang/String"), 0);
 
                     int i = 0;
-                    for (std::string s : list)
+                    for (CharArray s : list)
                     {
-                        str = env->NewStringUTF(s.c_str());
+                        str = env->NewStringUTF(s.array);
                         env->SetObjectArrayElement(j_array, i, str);
                         ++i;
                     }
@@ -104,7 +106,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_configureAvailableCustomDimensions02(const std::vector<std::string>& list)
+        void jni_configureAvailableCustomDimensions02(const std::vector<CharArray>& list)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -123,9 +125,9 @@ namespace gameanalytics {
                     j_array = env->NewObjectArray(len, env->FindClass("java/lang/String"), 0);
 
                     int i = 0;
-                    for (std::string s : list)
+                    for (CharArray s : list)
                     {
-                        str = env->NewStringUTF(s.c_str());
+                        str = env->NewStringUTF(s.array);
                         env->SetObjectArrayElement(j_array, i, str);
                         ++i;
                     }
@@ -151,7 +153,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_configureAvailableCustomDimensions03(const std::vector<std::string>& list)
+        void jni_configureAvailableCustomDimensions03(const std::vector<CharArray>& list)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -170,9 +172,9 @@ namespace gameanalytics {
                     j_array = env->NewObjectArray(len, env->FindClass("java/lang/String"), 0);
 
                     int i = 0;
-                    for (std::string s : list)
+                    for (CharArray s : list)
                     {
-                        str = env->NewStringUTF(s.c_str());
+                        str = env->NewStringUTF(s.array);
                         env->SetObjectArrayElement(j_array, i, str);
                         ++i;
                     }
@@ -198,7 +200,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_configureAvailableResourceCurrencies(const std::vector<std::string>& list)
+        void jni_configureAvailableResourceCurrencies(const std::vector<CharArray>& list)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -217,9 +219,9 @@ namespace gameanalytics {
                     j_array = env->NewObjectArray(len, env->FindClass("java/lang/String"), 0);
 
                     int i = 0;
-                    for (std::string s : list)
+                    for (CharArray s : list)
                     {
-                        str = env->NewStringUTF(s.c_str());
+                        str = env->NewStringUTF(s.array);
                         env->SetObjectArrayElement(j_array, i, str);
                         ++i;
                     }
@@ -245,7 +247,7 @@ namespace gameanalytics {
             }
         }
 
-        void jni_configureAvailableResourceItemTypes(const std::vector<std::string>& list)
+        void jni_configureAvailableResourceItemTypes(const std::vector<CharArray>& list)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
@@ -264,9 +266,9 @@ namespace gameanalytics {
                     j_array = env->NewObjectArray(len, env->FindClass("java/lang/String"), 0);
 
                     int i = 0;
-                    for (std::string s : list)
+                    for (CharArray s : list)
                     {
-                        str = env->NewStringUTF(s.c_str());
+                        str = env->NewStringUTF(s.array);
                         env->SetObjectArrayElement(j_array, i, str);
                         ++i;
                     }
@@ -1075,13 +1077,13 @@ namespace gameanalytics {
             }
         }
 
-        const char* jni_getCommandCenterValueAsString(const char *key)
+        std::vector<char> jni_getCommandCenterValueAsString(const char *key)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
             const char* strMethod = "getCommandCenterValueAsString";
-            std::string result;
+            std::vector<char> resultVector;
 
             if(jClass)
             {
@@ -1092,7 +1094,11 @@ namespace gameanalytics {
                     jstring j_key = env->NewStringUTF(key);
                     jstring j_s = (jstring)env->CallStaticObjectMethod(jClass, jMethod, j_key);
                     const char* s = env->GetStringUTFChars(j_s, 0);
-                    result = s;
+                    size_t size = strlen(s);
+                    for(size_t i = 0; i < size; ++i)
+                    {
+                        resultVector.push_back(s[i]);
+                    }
                     env->ReleaseStringUTFChars(j_s, s);
                     env->DeleteLocalRef(j_key);
                 }
@@ -1107,17 +1113,15 @@ namespace gameanalytics {
             {
                 dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
             }
-
-            return result.c_str();
         }
 
-        const char* jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue)
+        std::vector<char> jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
             const char* strMethod = "getCommandCenterValueAsString";
-            std::string result;
+            std::vector<char> resultVector;
 
             if(jClass)
             {
@@ -1129,7 +1133,11 @@ namespace gameanalytics {
                     jstring j_defaultValue = env->NewStringUTF(defaultValue);
                     jstring j_s = (jstring)env->CallStaticObjectMethod(jClass, jMethod, j_key, j_defaultValue);
                     const char* s = env->GetStringUTFChars(j_s, 0);
-                    result = s;
+                    size_t size = strlen(s);
+                    for(size_t i = 0; i < size; ++i)
+                    {
+                        resultVector.push_back(s[i]);
+                    }
                     env->ReleaseStringUTFChars(j_s, s);
                     env->DeleteLocalRef(j_key);
                     env->DeleteLocalRef(j_defaultValue);
@@ -1146,7 +1154,8 @@ namespace gameanalytics {
                 dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
             }
 
-            return result.c_str();
+            resultVector.push_back('\0');
+            return resultVector;
         }
 
         bool jni_isCommandCenterReady()
@@ -1180,13 +1189,13 @@ namespace gameanalytics {
             return result;
         }
 
-        const char* jni_getConfigurationsContentAsString()
+        std::vector<char> jni_getConfigurationsContentAsString()
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
             const char* strMethod = "getConfigurationsContentAsString";
-            std::string result;
+            std::vector<char> resultVector;
 
             if(jClass)
             {
@@ -1196,7 +1205,11 @@ namespace gameanalytics {
                 {
                     jstring j_s = (jstring)env->CallStaticObjectMethod(jClass, jMethod);
                     const char* s = env->GetStringUTFChars(j_s, 0);
-                    result = s;
+                    size_t size = strlen(s);
+                    for(size_t i = 0; i < size; ++i)
+                    {
+                        resultVector.push_back(s[i]);
+                    }
                     env->ReleaseStringUTFChars(j_s, s);
                 }
                 else
@@ -1211,7 +1224,8 @@ namespace gameanalytics {
                 dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
             }
 
-            return result.c_str();
+            resultVector.push_back('\0');
+            return resultVector;
         }
 #ifdef __cplusplus
     }

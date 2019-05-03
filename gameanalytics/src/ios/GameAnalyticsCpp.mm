@@ -1,58 +1,59 @@
 #include <vector>
-#include <string>
 #import "ios/GameAnalytics.h"
 #import "ios/GameAnalyticsCpp.h"
+#include <string.h>
+#include <stdio.h>
 
 static bool isStringNullOrEmpty(const char* s)
 {
     return s == NULL || strlen(s) == 0;
 }
 
-void GameAnalyticsCpp::configureAvailableCustomDimensions01(const std::vector<std::string>& list) {
+void GameAnalyticsCpp::configureAvailableCustomDimensions01(const std::vector<CharArray>& list) {
     NSMutableArray * tmpary = [[NSMutableArray alloc] initWithCapacity: list.size()];
-    for (std::string s : list)
+    for (CharArray s : list)
     {
-        [tmpary addObject: [NSString stringWithUTF8String: s.c_str()]];
+        [tmpary addObject: [NSString stringWithUTF8String: s.array]];
     }
     NSArray *list_array = tmpary;
     [GameAnalytics configureAvailableCustomDimensions01:list_array];
 }
 
-void GameAnalyticsCpp::configureAvailableCustomDimensions02(const std::vector<std::string>& list) {
+void GameAnalyticsCpp::configureAvailableCustomDimensions02(const std::vector<CharArray>& list) {
     NSMutableArray * tmpary = [[NSMutableArray alloc] initWithCapacity: list.size()];
-    for (std::string s : list)
+    for (CharArray s : list)
     {
-        [tmpary addObject: [NSString stringWithUTF8String: s.c_str()]];
+        [tmpary addObject: [NSString stringWithUTF8String: s.array]];
     }
     NSArray *list_array = tmpary;
     [GameAnalytics configureAvailableCustomDimensions02:list_array];
 }
 
-void GameAnalyticsCpp::configureAvailableCustomDimensions03(const std::vector<std::string>& list) {
+void GameAnalyticsCpp::configureAvailableCustomDimensions03(const std::vector<CharArray>& list) {
     NSMutableArray * tmpary = [[NSMutableArray alloc] initWithCapacity: list.size()];
-    for (std::string s : list)
+    for (CharArray s : list)
     {
-        [tmpary addObject: [NSString stringWithUTF8String: s.c_str()]];
+        [tmpary addObject: [NSString stringWithUTF8String: s.array]];
     }
     NSArray *list_array = tmpary;
     [GameAnalytics configureAvailableCustomDimensions03:list_array];
 }
 
-void GameAnalyticsCpp::configureAvailableResourceCurrencies(const std::vector<std::string>& list) {
+void GameAnalyticsCpp::configureAvailableResourceCurrencies(const std::vector<CharArray>& list) {
     NSMutableArray * tmpary = [[NSMutableArray alloc] initWithCapacity: list.size()];
-    for (std::string s : list)
+    for (CharArray s : list)
     {
-        [tmpary addObject: [NSString stringWithUTF8String: s.c_str()]];
+        [tmpary addObject: [NSString stringWithUTF8String: s.array]];
     }
     NSArray *list_array = tmpary;
     [GameAnalytics configureAvailableResourceCurrencies:list_array];
 }
 
-void GameAnalyticsCpp::configureAvailableResourceItemTypes(const std::vector<std::string>& list) {
+void GameAnalyticsCpp::configureAvailableResourceItemTypes(const std::vector<CharArray>& list) {
     NSMutableArray * tmpary = [[NSMutableArray alloc] initWithCapacity: list.size()];
-    for (std::string s : list)
+    for (CharArray s : list)
     {
-        [tmpary addObject: [NSString stringWithUTF8String: s.c_str()]];
+        [tmpary addObject: [NSString stringWithUTF8String: s.array]];
     }
     NSArray *list_array = tmpary;
     [GameAnalytics configureAvailableResourceItemTypes:list_array];
@@ -270,27 +271,60 @@ void GameAnalyticsCpp::endSession() {
     [GameAnalytics endSession];
 }
 
-const char* GameAnalyticsCpp::getCommandCenterValueAsString(const char *key) {
+std::vector<char> GameAnalyticsCpp::getCommandCenterValueAsString(const char *key) {
     NSString *keyString = key != NULL ? [NSString stringWithUTF8String:key] : nil;
-    NSString *result = [GameAnalytics getCommandCenterValueAsString:keyString];
+    NSString *returnValue = [GameAnalytics getCommandCenterValueAsString:keyString];
 
-    return result != nil ? [result UTF8String] : NULL;
+    std::vector<char> result;
+    if(returnValue != nil)
+    {
+        const char *s = [returnValue UTF8String];
+        size_t size = strlen(s);
+        for(size_t i = 0; i < size; ++i)
+        {
+            result.push_back(s[i]);
+        }
+    }
+    result.push_back('\0');
+    return result;
 }
 
-const char* GameAnalyticsCpp::getCommandCenterValueAsString(const char *key, const char *defaultValue) {
+std::vector<char> GameAnalyticsCpp::getCommandCenterValueAsString(const char *key, const char *defaultValue) {
     NSString *keyString = key != NULL ? [NSString stringWithUTF8String:key] : nil;
     NSString *defaultValueString = key != NULL ? [NSString stringWithUTF8String:defaultValue] : nil;
-    NSString *result = [GameAnalytics getCommandCenterValueAsString:keyString defaultValue:defaultValueString];
+    NSString *returnValue = [GameAnalytics getCommandCenterValueAsString:keyString defaultValue:defaultValueString];
 
-    return result != nil ? [result UTF8String] : NULL;
+    std::vector<char> result;
+    if(returnValue != nil)
+    {
+        const char *s = [returnValue UTF8String];
+        size_t size = strlen(s);
+        for(size_t i = 0; i < size; ++i)
+        {
+            result.push_back(s[i]);
+        }
+    }
+    result.push_back('\0');
+    return result;
 }
 
 bool GameAnalyticsCpp::isCommandCenterReady() {
     return [GameAnalytics isCommandCenterReady] ? true : false;
 }
 
-const char* GameAnalyticsCpp::getConfigurationsContentAsString() {
-    NSString *result = [GameAnalytics getCommandCenterConfigurations];
+std::vector<char> GameAnalyticsCpp::getConfigurationsContentAsString() {
+    NSString *returnValue = [GameAnalytics getCommandCenterConfigurations];
 
-    return result != nil ? [result UTF8String] : NULL;
+    std::vector<char> resultVector;
+    if(returnValue != nil)
+    {
+        const char *s = [returnValue UTF8String];
+        size_t size = strlen(s);
+        for(size_t i = 0; i < size; ++i)
+        {
+            resultVector.push_back(s[i]);
+        }
+    }
+    resultVector.push_back('\0');
+    return resultVector;
 }

@@ -2,20 +2,21 @@
 #if defined(DM_PLATFORM_ANDROID)
 
 #include <vector>
-#include <string>
 #include <jni.h>
+#include "CharArray.h"
 
 namespace gameanalytics {
 #ifdef __cplusplus
     extern "C"
     {
 #endif
-        extern void jni_configureAvailableCustomDimensions01(const std::vector<std::string>& list);
-        extern void jni_configureAvailableCustomDimensions02(const std::vector<std::string>& list);
-        extern void jni_configureAvailableCustomDimensions03(const std::vector<std::string>& list);
+        typedef gameanalytics::defold::CharArray CharArray;
+        extern void jni_configureAvailableCustomDimensions01(const std::vector<CharArray>& list);
+        extern void jni_configureAvailableCustomDimensions02(const std::vector<CharArray>& list);
+        extern void jni_configureAvailableCustomDimensions03(const std::vector<CharArray>& list);
 
-        extern void jni_configureAvailableResourceCurrencies(const std::vector<std::string>& list);
-        extern void jni_configureAvailableResourceItemTypes(const std::vector<std::string>& list);
+        extern void jni_configureAvailableResourceCurrencies(const std::vector<CharArray>& list);
+        extern void jni_configureAvailableResourceItemTypes(const std::vector<CharArray>& list);
 
         extern void jni_configureBuild(const char *build);
         extern void jni_configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
@@ -46,10 +47,10 @@ namespace gameanalytics {
         extern void jni_startSession();
         extern void jni_endSession();
 
-        extern const char* jni_getCommandCenterValueAsString(const char *key);
-        extern const char* jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue);
+        extern std::vector<char> jni_getCommandCenterValueAsString(const char *key);
+        extern std::vector<char> jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue);
         extern bool jni_isCommandCenterReady();
-        extern const char* jni_getConfigurationsContentAsString();
+        extern std::vector<char> jni_getConfigurationsContentAsString();
 #ifdef __cplusplus
     }
 #endif

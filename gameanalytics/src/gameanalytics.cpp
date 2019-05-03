@@ -47,19 +47,18 @@
 #include <errno.h>
 #include <direct.h>
 #include <regex>
-#include <string>
 #ifndef PATH_MAX
 #define PATH_MAX 260
 #endif
 #endif
 
 #include <assert.h>
-#include <iostream>
-#include <sstream>
+#include <vector>
+#include <cctype>
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.2.0"
+#define VERSION "2.2.1"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1045,13 +1044,13 @@ static int getCommandCenterValueAsString(lua_State *L)
 
     if(useDefaultValue)
     {
-        std::string result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key, defaultValue);
-        lua_pushstring( L, result.c_str() );
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key, defaultValue);
+        lua_pushstring( L, result.data() );
     }
     else
     {
-        std::string result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key);
-        lua_pushstring( L, result.c_str() );
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key);
+        lua_pushstring( L, result.data() );
     }
 
     return 1;
@@ -1070,8 +1069,8 @@ static int isCommandCenterReady(lua_State *L)
 static int getConfigurationsContentAsString(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    std::string result = gameanalytics::defold::GameAnalytics::getConfigurationsContentAsString(L);
-    lua_pushstring( L, result.c_str() );
+    std::vector<char> result = gameanalytics::defold::GameAnalytics::getConfigurationsContentAsString(L);
+    lua_pushstring( L, result.data() );
     return 1;
 }
 
@@ -1277,24 +1276,14 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     lua_pop(params->m_L, 1);                                 // pop result
     lua_pop(params->m_L, 1);                                 // pop function
     lua_pop(params->m_L, 1);                                 // pop 'sys'
-    std::string sdk_version;
-    {
-        std::ostringstream ss;
-        ss << "defold ";
-        ss << VERSION;
-        sdk_version = ss.str();
-    }
+    char sdk_version[65] = "";
+    snprintf(sdk_version, sizeof(sdk_version), "defold %s", VERSION);
 
-    std::string engine_version;
-    {
-        std::ostringstream ss;
-        ss << "defold ";
-        ss << defoldBuildVersion;
-        engine_version = ss.str();
-    }
+    char engine_version[65] = "";
+    snprintf(engine_version, sizeof(engine_version), "defold %s", defoldBuildVersion);
 
-    gameanalytics::defold::GameAnalytics::configureSdkGameEngineVersion(params->m_L, sdk_version.c_str());
-    gameanalytics::defold::GameAnalytics::configureGameEngineVersion(params->m_L, engine_version.c_str());
+    gameanalytics::defold::GameAnalytics::configureSdkGameEngineVersion(params->m_L, sdk_version);
+    gameanalytics::defold::GameAnalytics::configureGameEngineVersion(params->m_L, engine_version);
 
     if(!use_custom_id)
     {

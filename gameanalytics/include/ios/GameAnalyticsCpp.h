@@ -1,16 +1,17 @@
 #pragma once
 
 #import <vector>
-#import <string>
+#include "CharArray.h"
 
 class GameAnalyticsCpp {
 public:
-    static void configureAvailableCustomDimensions01(const std::vector<std::string>& list);
-    static void configureAvailableCustomDimensions02(const std::vector<std::string>& list);
-    static void configureAvailableCustomDimensions03(const std::vector<std::string>& list);
+    typedef gameanalytics::defold::CharArray CharArray;
+    static void configureAvailableCustomDimensions01(const std::vector<CharArray>& list);
+    static void configureAvailableCustomDimensions02(const std::vector<CharArray>& list);
+    static void configureAvailableCustomDimensions03(const std::vector<CharArray>& list);
 
-    static void configureAvailableResourceCurrencies(const std::vector<std::string>& list);
-    static void configureAvailableResourceItemTypes(const std::vector<std::string>& list);
+    static void configureAvailableResourceCurrencies(const std::vector<CharArray>& list);
+    static void configureAvailableResourceItemTypes(const std::vector<CharArray>& list);
 
     static void configureBuild(const char *build);
     static void configureUserId(const char *userId);
@@ -41,8 +42,8 @@ public:
     static void startSession();
     static void endSession();
 
-    static const char* getCommandCenterValueAsString(const char *key);
-    static const char* getCommandCenterValueAsString(const char *key, const char *defaultValue);
+    static std::vector<char> getCommandCenterValueAsString(const char *key);
+    static std::vector<char> getCommandCenterValueAsString(const char *key, const char *defaultValue);
     static bool isCommandCenterReady();
-    static const char* getConfigurationsContentAsString();
+    static std::vector<char> getConfigurationsContentAsString();
 };
