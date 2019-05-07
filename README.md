@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.2.2**
+* bug fix for html5 builds
+
 **2.2.1**
 * migrated to use c strings in c++ native sdk to support better for linux platforms
 

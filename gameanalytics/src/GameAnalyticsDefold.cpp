@@ -10,6 +10,7 @@
 #endif
 #include <string.h>
 #include <stdio.h>
+#include <dmsdk/sdk.h>
 
 namespace gameanalytics
 {
@@ -108,7 +109,7 @@ namespace gameanalytics
                 snprintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(arrayString, sizeof(arrayString), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions01(JSON.parse('%s'))", arrayString);
+            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions01(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
@@ -173,7 +174,7 @@ namespace gameanalytics
                 snprintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(arrayString, sizeof(arrayString), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions02(JSON.parse('%s'))", arrayString);
+            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions02(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
@@ -238,7 +239,7 @@ namespace gameanalytics
                 snprintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(arrayString, sizeof(arrayString), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions03(JSON.parse('%s'))", arrayString);
+            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions03(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
@@ -303,7 +304,7 @@ namespace gameanalytics
                 snprintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(arrayString, sizeof(arrayString), "gameanalytics.GameAnalytics.configureAvailableResourceCurrencies(JSON.parse('%s'))", arrayString);
+            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableResourceCurrencies(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
@@ -368,7 +369,7 @@ namespace gameanalytics
                 snprintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(arrayString, sizeof(arrayString), "gameanalytics.GameAnalytics.configureAvailableResourceItemTypes(JSON.parse('%s'))", arrayString);
+            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableResourceItemTypes(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
@@ -435,7 +436,7 @@ namespace gameanalytics
 #elif defined(DM_PLATFORM_ANDROID)
             jni_configureSdkGameEngineVersion(gameEngineSdkVersion);
 #elif defined(DM_PLATFORM_HTML5)
-            char code[strlen(gameEngineSdkVersion) + 49];
+            char code[strlen(gameEngineSdkVersion) + 63];
             snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureSdkGameEngineVersion('%s')", gameEngineSdkVersion);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
