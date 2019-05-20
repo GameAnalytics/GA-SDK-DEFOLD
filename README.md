@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.2.3**
+* fixed compile error for 64-bit android builds
+
 **2.2.2**
 * bug fix for html5 builds
 

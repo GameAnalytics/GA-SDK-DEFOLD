@@ -19,6 +19,10 @@ platforms:
         context:
             flags:      ["-std=c++11"]
 
+    arm64-android:
+        context:
+            flags:      ["-std=c++11"]
+
     x86-osx:
         context:
             frameworks: []
