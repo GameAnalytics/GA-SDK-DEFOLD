@@ -26,6 +26,10 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.2.4**
+* fixed progression event bug
+* fixed hanging background thread for desktop platforms
+
 **2.2.3**
 * fixed compile error for 64-bit android builds
 

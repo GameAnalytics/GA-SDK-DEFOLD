@@ -806,6 +806,16 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::onQuit(lua_State *L)
+        {
+#if defined(DM_PLATFORM_IOS)
+#elif defined(DM_PLATFORM_ANDROID)
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+            gameanalytics::GameAnalytics::onQuit();
+#endif
+        }
+
         std::vector<char> GameAnalytics::getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue)
         {
 #if defined(DM_PLATFORM_IOS)

@@ -79,6 +79,7 @@ namespace gameanalytics
 
             static void startSession(lua_State *L);
             static void endSession(lua_State *L);
+            static void onQuit(lua_State *L);
 
             static std::vector<char> getCommandCenterValueAsString(lua_State *L, const char *key);
             static std::vector<char> getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue);

@@ -58,7 +58,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.2.3"
+#define VERSION "2.2.4"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1124,6 +1124,7 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result AppInitializeExtension(dmExtension::AppParams* params)
 {
+    dmLogInfo("AppInitializeExtension");
     return dmExtension::RESULT_OK;
 }
 
@@ -1303,11 +1304,14 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 
 static dmExtension::Result AppFinalizeExtension(dmExtension::AppParams* params)
 {
+    dmLogInfo("AppFinalizeExtension");
     return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result FinalizeExtension(dmExtension::Params* params)
 {
+    dmLogInfo("FinalizeExtension");
+    gameanalytics::defold::GameAnalytics::onQuit(params->m_L);
     return dmExtension::RESULT_OK;
 }
 
@@ -1321,16 +1325,19 @@ static dmExtension::Result AppInitializeExtension(dmExtension::AppParams* params
 
 static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 {
+    dmLogInfo("InitializeExtension");
     return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result AppFinalizeExtension(dmExtension::AppParams* params)
 {
+    dmLogInfo("AppFinalizeExtension");
     return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result FinalizeExtension(dmExtension::Params* params)
 {
+    dmLogInfo("FinalizeExtension");
     return dmExtension::RESULT_OK;
 }
 
