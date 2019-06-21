@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.2.5**
+* added check if log files and database can't be created
+
 **2.2.4**
 * fixed progression event bug
 * fixed hanging background thread for desktop platforms
