@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.2.6**
+* bug fix for too big log files for desktop platforms
+
 **2.2.5**
 * added check if log files and database can't be created
 
