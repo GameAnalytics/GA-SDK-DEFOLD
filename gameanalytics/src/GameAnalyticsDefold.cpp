@@ -667,6 +667,19 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::setEnabledErrorReporting(lua_State *L, bool flag)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::setEnabledErrorReporting(flag);
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_setEnabledErrorReporting(flag);
+#elif defined(DM_PLATFORM_HTML5)
+            // ;
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+            gameanalytics::GameAnalytics::setEnabledErrorReporting(flag);
+#endif
+        }
+
         void GameAnalytics::setCustomDimension01(lua_State *L, const char *customDimension)
         {
 #if defined(DM_PLATFORM_IOS)

@@ -32,6 +32,7 @@ public:
     static void setEnabledVerboseLog(bool flag);
     static void setEnabledManualSessionHandling(bool flag);
     static void setEnabledEventSubmission(bool flag);
+    static void setEnabledErrorReporting(bool flag);
     static void setCustomDimension01(const char *customDimension);
     static void setCustomDimension02(const char *customDimension);
     static void setCustomDimension03(const char *customDimension);

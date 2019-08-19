@@ -58,7 +58,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.2.6"
+#define VERSION "2.2.7"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1148,6 +1148,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     bool enable_info_log = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_info_log", 0) == 1;
     bool enable_verbose_log = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_verbose_log", 0) == 1;
     bool enable_event_submission = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_event_submission", 1) == 1;
+    bool use_error_reporting = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_error_reporting", 0) == 1;
     use_custom_id = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_custom_id", 0) == 1;
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
 
@@ -1234,6 +1235,15 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     else
     {
         gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, false);
+    }
+
+    if(use_error_reporting)
+    {
+        gameanalytics::defold::GameAnalytics::setEnabledErrorReporting(params->m_L, true);
+    }
+    else
+    {
+        gameanalytics::defold::GameAnalytics::setEnabledErrorReporting(params->m_L, false);
     }
 
     if(build)
