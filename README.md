@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.2.8**
+* corrected error reporting for desktop platforms to call previous handler as well
+
 **2.2.7**
 * added option to enable/disable GA error reporting
 
