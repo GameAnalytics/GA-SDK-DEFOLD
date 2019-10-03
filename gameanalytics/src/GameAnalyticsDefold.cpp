@@ -469,13 +469,13 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::initialize(lua_State *L, const char *gameKey, const char *gameSecret)
+        void GameAnalytics::initialize(lua_State *L, const char *gameKey, const char *gameSecret, bool use_imei_android)
         {
 
 #if defined(DM_PLATFORM_IOS)
             GameAnalyticsCpp::initialize(gameKey, gameSecret);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_initialize(gameKey, gameSecret);
+            jni_initialize(gameKey, gameSecret, use_imei_android);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(gameKey) + strlen(gameSecret) + 50];
             snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.initialize('%s', '%s')", gameKey, gameSecret);

@@ -50,7 +50,7 @@ namespace gameanalytics
             static void configureSdkGameEngineVersion(lua_State *L, const char *gameEngineSdkVersion);
             static void configureGameEngineVersion(lua_State *L, const char *gameEngineVersion);
             static void configureWritablePath(lua_State *L, const char *writablePath);
-            static void initialize(lua_State *L, const char *gameKey, const char *gameSecret);
+            static void initialize(lua_State *L, const char *gameKey, const char *gameSecret, bool use_imei_android);
 
 #if defined(DM_PLATFORM_IOS)
             static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields);

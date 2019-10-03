@@ -58,12 +58,13 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.2.8"
+#define VERSION "2.3.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
 const char* game_key = NULL;
 const char* secret_key = NULL;
+bool use_imei_android = false;
 
 static int stringCmpi(const char *s1, const char *s2)
 {
@@ -104,7 +105,7 @@ static int configureUserId(lua_State* L)
     {
         dmLogInfo("Initializing with custom id: %s\n", s);
         gameanalytics::defold::GameAnalytics::configureUserId(L, s);
-        gameanalytics::defold::GameAnalytics::initialize(L, game_key, secret_key);
+        gameanalytics::defold::GameAnalytics::initialize(L, game_key, secret_key, use_imei_android);
     }
     else
     {
@@ -1151,6 +1152,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     bool use_error_reporting = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_error_reporting", 0) == 1;
     use_custom_id = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_custom_id", 0) == 1;
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
+    use_imei_android = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_imei_android", 0) == 1;
 
 #if defined(DM_PLATFORM_ANDROID)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_android", 0);
@@ -1298,7 +1300,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 
     if(!use_custom_id)
     {
-        gameanalytics::defold::GameAnalytics::initialize(params->m_L, game_key, secret_key);
+        gameanalytics::defold::GameAnalytics::initialize(params->m_L, game_key, secret_key, use_imei_android);
     }
     else
     {

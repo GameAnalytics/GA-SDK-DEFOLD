@@ -26,6 +26,10 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.3.0**
+* improved device identifier flow (android)
+* OPS: refactored IMEI code out into a seperate library, please check the documentation page for how to use it now (only relevant for apps using IMEI ids) (android)
+
 **2.2.8**
 * corrected error reporting for desktop platforms to call previous handler as well
 
