@@ -58,7 +58,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.3.0"
+#define VERSION "2.3.1"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -129,7 +129,7 @@ int mkdir_p(const char *path)
         errno = ENAMETOOLONG;
         return -1;
     }
-    strcpy(_path, path);
+    dmStrlCpy(_path, path, sizeof(_path));
 
     /* Iterate the string */
     for (p = _path + 1; *p; p++) {
@@ -186,7 +186,7 @@ int mkdir_p(const char *path)
         errno = ENAMETOOLONG;
         return -1;
     }
-    strcpy(_path, path);
+    dmStrlCpy(_path, path, sizeof(_path));
 
     /* Iterate the string */
     for (p = _path + 1; *p; p++) {
@@ -1290,10 +1290,10 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     lua_pop(params->m_L, 1);                                 // pop function
     lua_pop(params->m_L, 1);                                 // pop 'sys'
     char sdk_version[65] = "";
-    snprintf(sdk_version, sizeof(sdk_version), "defold %s", VERSION);
+    dmSnPrintf(sdk_version, sizeof(sdk_version), "defold %s", VERSION);
 
     char engine_version[65] = "";
-    snprintf(engine_version, sizeof(engine_version), "defold %s", defoldBuildVersion);
+    dmSnPrintf(engine_version, sizeof(engine_version), "defold %s", defoldBuildVersion);
 
     gameanalytics::defold::GameAnalytics::configureSdkGameEngineVersion(params->m_L, sdk_version);
     gameanalytics::defold::GameAnalytics::configureGameEngineVersion(params->m_L, engine_version);

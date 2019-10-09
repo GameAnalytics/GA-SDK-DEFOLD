@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <dmsdk/sdk.h>
+#include <dmsdk/dlib/dstrings.h>
 
 namespace gameanalytics
 {
@@ -61,14 +62,14 @@ namespace gameanalytics
         {
             std::vector<CharArray> result;
 
-            char * token;
-            token = strtok(str, delimiter);
+            char * token , *last;
+            token = dmStrTok(str, delimiter, &last);
             while (token != NULL)
             {
                 CharArray a;
-                snprintf(a.array, sizeof(a.array), "%s", token);
+                dmSnPrintf(a.array, sizeof(a.array), "%s", token);
                 result.push_back(a);
-                token = strtok(NULL, delimiter);
+                token = dmStrTok(NULL, delimiter, &last);
             }
 
             return result;
@@ -78,62 +79,62 @@ namespace gameanalytics
         {
 #if defined(DM_PLATFORM_IOS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             GameAnalyticsCpp::configureAvailableCustomDimensions01(split(listArray, ","));
 #elif defined(DM_PLATFORM_ANDROID)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             jni_configureAvailableCustomDimensions01(split(listArray, ","));
 #elif defined(DM_PLATFORM_HTML5)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(list) + strlen(list) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array);
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]");
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions01(JSON.parse('%s'))", arrayString);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions01(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(listArray) + strlen(listArray) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions01(arrayString);
 #endif
@@ -143,62 +144,62 @@ namespace gameanalytics
         {
 #if defined(DM_PLATFORM_IOS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             GameAnalyticsCpp::configureAvailableCustomDimensions02(split(listArray, ","));
 #elif defined(DM_PLATFORM_ANDROID)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             jni_configureAvailableCustomDimensions02(split(listArray, ","));
 #elif defined(DM_PLATFORM_HTML5)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(list) + strlen(list) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions02(JSON.parse('%s'))", arrayString);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions02(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(listArray) + strlen(listArray) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions02(arrayString);
 #endif
@@ -208,62 +209,62 @@ namespace gameanalytics
         {
 #if defined(DM_PLATFORM_IOS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             GameAnalyticsCpp::configureAvailableCustomDimensions03(split(listArray, ","));
 #elif defined(DM_PLATFORM_ANDROID)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             jni_configureAvailableCustomDimensions03(split(listArray, ","));
 #elif defined(DM_PLATFORM_HTML5)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(list) + strlen(list) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions03(JSON.parse('%s'))", arrayString);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableCustomDimensions03(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(listArray) + strlen(listArray) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             gameanalytics::GameAnalytics::configureAvailableCustomDimensions03(arrayString);
 #endif
@@ -273,62 +274,62 @@ namespace gameanalytics
         {
 #if defined(DM_PLATFORM_IOS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             GameAnalyticsCpp::configureAvailableResourceCurrencies(split(listArray, ","));
 #elif defined(DM_PLATFORM_ANDROID)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             jni_configureAvailableResourceCurrencies(split(listArray, ","));
 #elif defined(DM_PLATFORM_HTML5)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(list) + strlen(list) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableResourceCurrencies(JSON.parse('%s'))", arrayString);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableResourceCurrencies(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(listArray) + strlen(listArray) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             gameanalytics::GameAnalytics::configureAvailableResourceCurrencies(arrayString);
 #endif
@@ -338,62 +339,62 @@ namespace gameanalytics
         {
 #if defined(DM_PLATFORM_IOS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             GameAnalyticsCpp::configureAvailableResourceItemTypes(split(listArray, ","));
 #elif defined(DM_PLATFORM_ANDROID)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             jni_configureAvailableResourceItemTypes(split(listArray, ","));
 #elif defined(DM_PLATFORM_HTML5)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(list) + strlen(list) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             char code[strlen(arrayString) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableResourceItemTypes(JSON.parse('%s'))", arrayString);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureAvailableResourceItemTypes(JSON.parse('%s'))", arrayString);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             char listArray[strlen(list) + 1];
-            snprintf(listArray, sizeof(listArray), "%s", list);
+            dmSnPrintf(listArray, sizeof(listArray), "%s", list);
             size_t totalSize = strlen(listArray) + strlen(listArray) * 2 + 3;
             char arrayString[totalSize];
             if(strlen(list) > 0)
             {
                 std::vector<CharArray> array = split(listArray, ",");
-                strcpy(arrayString, "[\"");
+                dmStrlCpy(arrayString, "[\"", sizeof(arrayString));
 
                 for(size_t i = 0; i < array.size(); ++i)
                 {
                     if(i > 0)
                     {
-                        strcat(arrayString, "\",\"");
+                        dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    strcat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                strcat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
-                snprintf(arrayString, sizeof(arrayString), "[]");
+                dmSnPrintf(arrayString, sizeof(arrayString), "[]");
             }
             gameanalytics::GameAnalytics::configureAvailableResourceItemTypes(arrayString);
 #endif
@@ -407,7 +408,7 @@ namespace gameanalytics
             jni_configureBuild(build);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(build) + 48];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureBuild('%s')", build);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureBuild('%s')", build);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureBuild(build);
@@ -422,7 +423,7 @@ namespace gameanalytics
             jni_configureUserId(userId);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(userId) + 49];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureUserId('%s')", userId);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureUserId('%s')", userId);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureUserId(userId);
@@ -437,7 +438,7 @@ namespace gameanalytics
             jni_configureSdkGameEngineVersion(gameEngineSdkVersion);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(gameEngineSdkVersion) + 63];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureSdkGameEngineVersion('%s')", gameEngineSdkVersion);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureSdkGameEngineVersion('%s')", gameEngineSdkVersion);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureSdkGameEngineVersion(gameEngineSdkVersion);
@@ -452,7 +453,7 @@ namespace gameanalytics
             jni_configureGameEngineVersion(gameEngineVersion);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(gameEngineVersion) + 60];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureGameEngineVersion('%s')", gameEngineVersion);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.configureGameEngineVersion('%s')", gameEngineVersion);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::configureGameEngineVersion(gameEngineVersion);
@@ -478,7 +479,7 @@ namespace gameanalytics
             jni_initialize(gameKey, gameSecret, use_imei_android);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(gameKey) + strlen(gameSecret) + 50];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.initialize('%s', '%s')", gameKey, gameSecret);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.initialize('%s', '%s')", gameKey, gameSecret);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::initialize(gameKey, gameSecret);
@@ -510,7 +511,7 @@ namespace gameanalytics
             jni_addBusinessEvent(currency, amount, itemType, itemId, cartType, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(currency) + strlen(itemType) + strlen(itemId) + strlen(cartType) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addBusinessEvent('%s', %d, '%s', '%s', '%s')", currency, amount, itemType, itemId, cartType);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addBusinessEvent('%s', %d, '%s', '%s', '%s')", currency, amount, itemType, itemId, cartType);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType);
@@ -525,7 +526,7 @@ namespace gameanalytics
             jni_addResourceEvent((int)flowType, currency, amount, itemType, itemId, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(currency) + strlen(itemType) + strlen(itemId) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addResourceEvent(%d, '%s', %f, '%s', '%s')", (int)flowType, currency, amount, itemType, itemId);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addResourceEvent(%d, '%s', %f, '%s', '%s')", (int)flowType, currency, amount, itemType, itemId);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addResourceEvent((gameanalytics::EGAResourceFlowType)((int)flowType), currency, amount, itemType, itemId);
@@ -540,7 +541,7 @@ namespace gameanalytics
             jni_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(progression01) + strlen(progression02) + strlen(progression03) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addProgressionEvent(%d, '%s', '%s', '%s')", (int)progressionStatus, progression01, progression02, progression03);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addProgressionEvent(%d, '%s', '%s', '%s')", (int)progressionStatus, progression01, progression02, progression03);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03);
@@ -555,7 +556,7 @@ namespace gameanalytics
             jni_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(progression01) + strlen(progression02) + strlen(progression03) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addProgressionEvent(%d, '%s', '%s', '%s', %d)", (int)progressionStatus, progression01, progression02, progression03, score);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addProgressionEvent(%d, '%s', '%s', '%s', %d)", (int)progressionStatus, progression01, progression02, progression03, score);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03, score);
@@ -570,7 +571,7 @@ namespace gameanalytics
             jni_addDesignEvent(eventId, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(eventId) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addDesignEvent('%s')", eventId);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addDesignEvent('%s')", eventId);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addDesignEvent(eventId);
@@ -585,7 +586,7 @@ namespace gameanalytics
             jni_addDesignEventWithValue(eventId, value, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(eventId) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addDesignEvent('%s', %f)", eventId, value);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addDesignEvent('%s', %f)", eventId, value);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addDesignEvent(eventId, value);
@@ -600,7 +601,7 @@ namespace gameanalytics
             jni_addErrorEvent((int)severity, message, "");
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(message) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.addErrorEvent(%d, '%s')", (int)severity, message);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.addErrorEvent(%d, '%s')", (int)severity, message);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::addErrorEvent((gameanalytics::EGAErrorSeverity)((int)severity), message);
@@ -615,7 +616,7 @@ namespace gameanalytics
             jni_setEnabledInfoLog(flag);
 #elif defined(DM_PLATFORM_HTML5)
             char code[100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledInfoLog(%s)", (flag ? "true" : "false"));
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledInfoLog(%s)", (flag ? "true" : "false"));
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledInfoLog(flag);
@@ -630,7 +631,7 @@ namespace gameanalytics
             jni_setEnabledVerboseLog(flag);
 #elif defined(DM_PLATFORM_HTML5)
             char code[100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledVerboseLog(%s)", (flag ? "true" : "false"));
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledVerboseLog(%s)", (flag ? "true" : "false"));
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledVerboseLog(flag);
@@ -645,7 +646,7 @@ namespace gameanalytics
             jni_setEnabledManualSessionHandling(flag);
 #elif defined(DM_PLATFORM_HTML5)
             char code[100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledManualSessionHandling(%s)", (flag ? "true" : "false"));
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledManualSessionHandling(%s)", (flag ? "true" : "false"));
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledManualSessionHandling(flag);
@@ -660,7 +661,7 @@ namespace gameanalytics
             jni_setEnabledEventSubmission(flag);
 #elif defined(DM_PLATFORM_HTML5)
             char code[100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledEventSubmission(%s)", (flag ? "true" : "false"));
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setEnabledEventSubmission(%s)", (flag ? "true" : "false"));
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setEnabledEventSubmission(flag);
@@ -688,7 +689,7 @@ namespace gameanalytics
             jni_setCustomDimension01(customDimension);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(customDimension) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setCustomDimension01('%s')", customDimension);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setCustomDimension01('%s')", customDimension);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setCustomDimension01(customDimension);
@@ -703,7 +704,7 @@ namespace gameanalytics
             jni_setCustomDimension02(customDimension);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(customDimension) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setCustomDimension02('%s')", customDimension);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setCustomDimension02('%s')", customDimension);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setCustomDimension02(customDimension);
@@ -718,7 +719,7 @@ namespace gameanalytics
             jni_setCustomDimension03(customDimension);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(customDimension) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setCustomDimension03('%s')", customDimension);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setCustomDimension03('%s')", customDimension);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setCustomDimension03(customDimension);
@@ -733,7 +734,7 @@ namespace gameanalytics
             jni_setFacebookId(facebookId);
 #elif defined(DM_PLATFORM_HTML5)
             char code[strlen(facebookId) + 100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setFacebookId('%s')", facebookId);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setFacebookId('%s')", facebookId);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setFacebookId(facebookId);
@@ -752,7 +753,7 @@ namespace gameanalytics
                     jni_setGender((int)gender);
 #elif defined(DM_PLATFORM_HTML5)
                     char code[100];
-                    snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setGender(%d)", (int)gender);
+                    dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setGender(%d)", (int)gender);
                     runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
                     gameanalytics::GameAnalytics::setGender((gameanalytics::EGAGender)((int)gender));
@@ -768,7 +769,7 @@ namespace gameanalytics
                     jni_setGender((int)gender);
 #elif defined(DM_PLATFORM_HTML5)
                     char code[100];
-                    snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setGender(%d)", (int)gender);
+                    dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setGender(%d)", (int)gender);
                     runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
                     gameanalytics::GameAnalytics::setGender((gameanalytics::EGAGender)((int)gender));
@@ -786,7 +787,7 @@ namespace gameanalytics
             jni_setBirthYear(birthYear);
 #elif defined(DM_PLATFORM_HTML5)
             char code[100];
-            snprintf(code, sizeof(code), "gameanalytics.GameAnalytics.setBirthYear(%d)", birthYear);
+            dmSnPrintf(code, sizeof(code), "gameanalytics.GameAnalytics.setBirthYear(%d)", birthYear);
             runHtml5Code(L, code);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
             gameanalytics::GameAnalytics::setBirthYear(birthYear);
@@ -838,7 +839,7 @@ namespace gameanalytics
 #elif defined(DM_PLATFORM_HTML5)
             size_t s = strlen(key) + strlen(defaultValue) + 70;
             char code[s];
-            snprintf(code, s, "gameanalytics.GameAnalytics.getCommandCenterValueAsString('%s', '%s')", key, defaultValue);
+            dmSnPrintf(code, s, "gameanalytics.GameAnalytics.getCommandCenterValueAsString('%s', '%s')", key, defaultValue);
             return runHtml5CodeWithReturnString(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key, defaultValue);
@@ -854,7 +855,7 @@ namespace gameanalytics
 #elif defined(DM_PLATFORM_HTML5)
             size_t s = strlen(key) + 63;
             char code[s];
-            snprintf(code, s, "gameanalytics.GameAnalytics.getCommandCenterValueAsString('%s)", key);
+            dmSnPrintf(code, s, "gameanalytics.GameAnalytics.getCommandCenterValueAsString('%s)", key);
             return runHtml5CodeWithReturnString(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
             return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key);
