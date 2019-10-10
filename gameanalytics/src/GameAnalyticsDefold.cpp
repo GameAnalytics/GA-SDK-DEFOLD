@@ -101,9 +101,9 @@ namespace gameanalytics
                     {
                         dmStrlCat(arrayString, "\",\"", sizeof(arrayString));
                     }
-                    dmStrlCat(arrayString, array[i].array);
+                    dmStrlCat(arrayString, array[i].array, sizeof(arrayString));
                 }
-                dmStrlCat(arrayString, "\"]");
+                dmStrlCat(arrayString, "\"]", sizeof(arrayString));
             }
             else
             {
