@@ -830,61 +830,61 @@ namespace gameanalytics
 #endif
         }
 
-        std::vector<char> GameAnalytics::getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue)
+        std::vector<char> GameAnalytics::getRemoteConfigsValueAsString(lua_State *L, const char *key, const char *defaultValue)
         {
 #if defined(DM_PLATFORM_IOS)
-            return GameAnalyticsCpp::getCommandCenterValueAsString(key, defaultValue);
+            return GameAnalyticsCpp::getRemoteConfigsValueAsString(key, defaultValue);
 #elif defined(DM_PLATFORM_ANDROID)
-            return jni_getCommandCenterValueAsStringWithDefaultValue(key, defaultValue);
+            return jni_getRemoteConfigsValueAsStringWithDefaultValue(key, defaultValue);
 #elif defined(DM_PLATFORM_HTML5)
             size_t s = strlen(key) + strlen(defaultValue) + 70;
             char code[s];
-            dmSnPrintf(code, s, "gameanalytics.GameAnalytics.getCommandCenterValueAsString('%s', '%s')", key, defaultValue);
+            dmSnPrintf(code, s, "gameanalytics.GameAnalytics.getRemoteConfigsValueAsString('%s', '%s')", key, defaultValue);
             return runHtml5CodeWithReturnString(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
-            return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key, defaultValue);
+            return gameanalytics::GameAnalytics::getRemoteConfigsValueAsString(key, defaultValue);
 #endif
         }
 
-        std::vector<char> GameAnalytics::getCommandCenterValueAsString(lua_State *L, const char *key)
+        std::vector<char> GameAnalytics::getRemoteConfigsValueAsString(lua_State *L, const char *key)
         {
 #if defined(DM_PLATFORM_IOS)
-            return GameAnalyticsCpp::getCommandCenterValueAsString(key);
+            return GameAnalyticsCpp::getRemoteConfigsValueAsString(key);
 #elif defined(DM_PLATFORM_ANDROID)
-            return jni_getCommandCenterValueAsString(key);
+            return jni_getRemoteConfigsValueAsString(key);
 #elif defined(DM_PLATFORM_HTML5)
             size_t s = strlen(key) + 63;
             char code[s];
-            dmSnPrintf(code, s, "gameanalytics.GameAnalytics.getCommandCenterValueAsString('%s)", key);
+            dmSnPrintf(code, s, "gameanalytics.GameAnalytics.getRemoteConfigsValueAsString('%s)", key);
             return runHtml5CodeWithReturnString(L, code);
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
-            return gameanalytics::GameAnalytics::getCommandCenterValueAsString(key);
+            return gameanalytics::GameAnalytics::getRemoteConfigsValueAsString(key);
 #endif
         }
 
-        bool GameAnalytics::isCommandCenterReady(lua_State *L)
+        bool GameAnalytics::isRemoteConfigsReady(lua_State *L)
         {
 #if defined(DM_PLATFORM_IOS)
-            return GameAnalyticsCpp::isCommandCenterReady();
+            return GameAnalyticsCpp::isRemoteConfigsReady();
 #elif defined(DM_PLATFORM_ANDROID)
-            return jni_isCommandCenterReady();
+            return jni_isRemoteConfigsReady();
 #elif defined(DM_PLATFORM_HTML5)
-            return runHtml5CodeWithReturnBool(L, "gameanalytics.GameAnalytics.isCommandCenterReady()");
+            return runHtml5CodeWithReturnBool(L, "gameanalytics.GameAnalytics.isRemoteConfigsReady()");
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            return gameanalytics::GameAnalytics::isCommandCenterReady();
+            return gameanalytics::GameAnalytics::isRemoteConfigsReady();
 #endif
         }
 
-        std::vector<char> GameAnalytics::getConfigurationsContentAsString(lua_State *L)
+        std::vector<char> GameAnalytics::getRemoteConfigsContentAsString(lua_State *L)
         {
 #if defined(DM_PLATFORM_IOS)
-            return GameAnalyticsCpp::getConfigurationsContentAsString();
+            return GameAnalyticsCpp::getRemoteConfigsContentAsString();
 #elif defined(DM_PLATFORM_ANDROID)
-            return jni_getConfigurationsContentAsString();
+            return jni_getRemoteConfigsContentAsString();
 #elif defined(DM_PLATFORM_HTML5)
-            return runHtml5CodeWithReturnString(L, "gameanalytics.GameAnalytics.getConfigurationsContentAsString()");
+            return runHtml5CodeWithReturnString(L, "gameanalytics.GameAnalytics.getRemoteConfigsContentAsString()");
 #elif defined(DM_PLATFORM_LINUX) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS)
-            return gameanalytics::GameAnalytics::getConfigurationsContentAsString();
+            return gameanalytics::GameAnalytics::getRemoteConfigsContentAsString();
 #endif
         }
     }

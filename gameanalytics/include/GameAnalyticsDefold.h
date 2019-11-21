@@ -82,10 +82,10 @@ namespace gameanalytics
             static void endSession(lua_State *L);
             static void onQuit(lua_State *L);
 
-            static std::vector<char> getCommandCenterValueAsString(lua_State *L, const char *key);
-            static std::vector<char> getCommandCenterValueAsString(lua_State *L, const char *key, const char *defaultValue);
-            static bool isCommandCenterReady(lua_State *L);
-            static std::vector<char> getConfigurationsContentAsString(lua_State *L);
+            static std::vector<char> getRemoteConfigsValueAsString(lua_State *L, const char *key);
+            static std::vector<char> getRemoteConfigsValueAsString(lua_State *L, const char *key, const char *defaultValue);
+            static bool isRemoteConfigsReady(lua_State *L);
+            static std::vector<char> getRemoteConfigsContentAsString(lua_State *L);
 
         private:
 #if defined(DM_PLATFORM_HTML5)

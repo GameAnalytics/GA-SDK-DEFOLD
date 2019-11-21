@@ -1132,12 +1132,12 @@ namespace gameanalytics {
             }
         }
 
-        std::vector<char> jni_getCommandCenterValueAsString(const char *key)
+        std::vector<char> jni_getRemoteConfigsValueAsString(const char *key)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "getCommandCenterValueAsString";
+            const char* strMethod = "getRemoteConfigsValueAsString";
             std::vector<char> resultVector;
 
             if(jClass)
@@ -1170,12 +1170,12 @@ namespace gameanalytics {
             }
         }
 
-        std::vector<char> jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue)
+        std::vector<char> jni_getRemoteConfigsValueAsStringWithDefaultValue(const char *key, const char *defaultValue)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "getCommandCenterValueAsString";
+            const char* strMethod = "getRemoteConfigsValueAsString";
             std::vector<char> resultVector;
 
             if(jClass)
@@ -1213,12 +1213,12 @@ namespace gameanalytics {
             return resultVector;
         }
 
-        bool jni_isCommandCenterReady()
+        bool jni_isRemoteConfigsReady()
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "isCommandCenterReady";
+            const char* strMethod = "isRemoteConfigsReady";
             bool result = false;
 
             if(jClass)
@@ -1244,12 +1244,12 @@ namespace gameanalytics {
             return result;
         }
 
-        std::vector<char> jni_getConfigurationsContentAsString()
+        std::vector<char> jni_getRemoteConfigsContentAsString()
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "getConfigurationsContentAsString";
+            const char* strMethod = "getRemoteConfigsContentAsString";
             std::vector<char> resultVector;
 
             if(jClass)

@@ -58,7 +58,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "2.3.2"
+#define VERSION "3.0.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -990,8 +990,8 @@ static int endSession(lua_State *L)
     return 0;
 }
 
-// [Lua] gameanalytics.getCommandCenterValueAsString(options)
-static int getCommandCenterValueAsString(lua_State *L)
+// [Lua] gameanalytics.getRemoteConfigsValueAsString(options)
+static int getRemoteConfigsValueAsString(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
     const char *cc_key = "";
@@ -1012,7 +1012,7 @@ static int getCommandCenterValueAsString(lua_State *L)
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options.%s, expected string got: %s", KeyOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.getRemoteConfigsValueAsString(options): options.%s, expected string got: %s", KeyOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else if(UTF8IsEqual(key, DefaultValueOptionsKey))
@@ -1024,53 +1024,53 @@ static int getCommandCenterValueAsString(lua_State *L)
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options.%s, expected string got: %s", DefaultValueOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.getRemoteConfigsValueAsString(options): options.%s, expected string got: %s", DefaultValueOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else
             {
-                return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): Invalid option: '%s'", key);
+                return luaL_error(L, "gameanalytics.getRemoteConfigsValueAsString(options): Invalid option: '%s'", key);
             }
         }
     }
     else
     {
-        return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options, expected table got: %s", LuaTypeName(L, 1));
+        return luaL_error(L, "gameanalytics.getRemoteConfigsValueAsString(options): options, expected table got: %s", LuaTypeName(L, 1));
     }
 
     if(cc_key == NULL || cc_key[0] == '\0')
     {
-        return luaL_error(L, "gameanalytics.getCommandCenterValueAsString(options): options.%s is mandatory and can't be null or empty", KeyOptionsKey);
+        return luaL_error(L, "gameanalytics.getRemoteConfigsValueAsString(options): options.%s is mandatory and can't be null or empty", KeyOptionsKey);
     }
 
     if(useDefaultValue)
     {
-        std::vector<char> result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key, defaultValue);
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(L, cc_key, defaultValue);
         lua_pushstring( L, result.data() );
     }
     else
     {
-        std::vector<char> result = gameanalytics::defold::GameAnalytics::getCommandCenterValueAsString(L, cc_key);
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(L, cc_key);
         lua_pushstring( L, result.data() );
     }
 
     return 1;
 }
 
-// [Lua] gameanalytics.isCommandCenterReady()
-static int isCommandCenterReady(lua_State *L)
+// [Lua] gameanalytics.isRemoteConfigsReady()
+static int isRemoteConfigsReady(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    bool result = gameanalytics::defold::GameAnalytics::isCommandCenterReady(L);
+    bool result = gameanalytics::defold::GameAnalytics::isRemoteConfigsReady(L);
     lua_pushboolean( L, result ? 1 : 0 );
     return 1;
 }
 
-// [Lua] gameanalytics.getConfigurationsContentAsString()
-static int getConfigurationsContentAsString(lua_State *L)
+// [Lua] gameanalytics.getRemoteConfigsContentAsString()
+static int getRemoteConfigsContentAsString(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    std::vector<char> result = gameanalytics::defold::GameAnalytics::getConfigurationsContentAsString(L);
+    std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsContentAsString(L);
     lua_pushstring( L, result.data() );
     return 1;
 }
@@ -1102,9 +1102,9 @@ static const luaL_reg Module_methods[] =
     {"startSession", startSession},
     {"endSession", endSession},
 
-    { "getCommandCenterValueAsString", getCommandCenterValueAsString },
-    { "isCommandCenterReady", isCommandCenterReady },
-    { "getConfigurationsContentAsString", getConfigurationsContentAsString },
+    { "getRemoteConfigsValueAsString", getRemoteConfigsValueAsString },
+    { "isRemoteConfigsReady", isRemoteConfigsReady },
+    { "getRemoteConfigsContentAsString", getRemoteConfigsContentAsString },
 
     {0, 0}
 };

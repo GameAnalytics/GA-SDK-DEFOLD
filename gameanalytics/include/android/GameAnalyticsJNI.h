@@ -48,10 +48,10 @@ namespace gameanalytics {
         extern void jni_startSession();
         extern void jni_endSession();
 
-        extern std::vector<char> jni_getCommandCenterValueAsString(const char *key);
-        extern std::vector<char> jni_getCommandCenterValueAsStringWithDefaultValue(const char *key, const char *defaultValue);
-        extern bool jni_isCommandCenterReady();
-        extern std::vector<char> jni_getConfigurationsContentAsString();
+        extern std::vector<char> jni_getRemoteConfigsValueAsString(const char *key);
+        extern std::vector<char> jni_getRemoteConfigsValueAsStringWithDefaultValue(const char *key, const char *defaultValue);
+        extern bool jni_isRemoteConfigsReady();
+        extern std::vector<char> jni_getRemoteConfigsContentAsString();
 #ifdef __cplusplus
     }
 #endif

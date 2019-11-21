@@ -275,9 +275,9 @@ void GameAnalyticsCpp::endSession() {
     [GameAnalytics endSession];
 }
 
-std::vector<char> GameAnalyticsCpp::getCommandCenterValueAsString(const char *key) {
+std::vector<char> GameAnalyticsCpp::getRemoteConfigsValueAsString(const char *key) {
     NSString *keyString = key != NULL ? [NSString stringWithUTF8String:key] : nil;
-    NSString *returnValue = [GameAnalytics getCommandCenterValueAsString:keyString];
+    NSString *returnValue = [GameAnalytics getRemoteConfigsValueAsString:keyString];
 
     std::vector<char> result;
     if(returnValue != nil)
@@ -293,10 +293,10 @@ std::vector<char> GameAnalyticsCpp::getCommandCenterValueAsString(const char *ke
     return result;
 }
 
-std::vector<char> GameAnalyticsCpp::getCommandCenterValueAsString(const char *key, const char *defaultValue) {
+std::vector<char> GameAnalyticsCpp::getRemoteConfigsValueAsString(const char *key, const char *defaultValue) {
     NSString *keyString = key != NULL ? [NSString stringWithUTF8String:key] : nil;
     NSString *defaultValueString = key != NULL ? [NSString stringWithUTF8String:defaultValue] : nil;
-    NSString *returnValue = [GameAnalytics getCommandCenterValueAsString:keyString defaultValue:defaultValueString];
+    NSString *returnValue = [GameAnalytics getRemoteConfigsValueAsString:keyString defaultValue:defaultValueString];
 
     std::vector<char> result;
     if(returnValue != nil)
@@ -312,12 +312,12 @@ std::vector<char> GameAnalyticsCpp::getCommandCenterValueAsString(const char *ke
     return result;
 }
 
-bool GameAnalyticsCpp::isCommandCenterReady() {
-    return [GameAnalytics isCommandCenterReady] ? true : false;
+bool GameAnalyticsCpp::isRemoteConfigsReady() {
+    return [GameAnalytics isRemoteConfigsReady] ? true : false;
 }
 
-std::vector<char> GameAnalyticsCpp::getConfigurationsContentAsString() {
-    NSString *returnValue = [GameAnalytics getCommandCenterConfigurations];
+std::vector<char> GameAnalyticsCpp::getRemoteConfigsContentAsString() {
+    NSString *returnValue = [GameAnalytics getRemoteConfigsConfigurations];
 
     std::vector<char> resultVector;
     if(returnValue != nil)
