@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.1.0**
+* moved openSSL to seperate Defold extension. REMEMBER to add it to your project's dependencies. See documentation for details.
+
 **3.0.3**
 * fixed getRemoteConfigsValueAsString bug
 
