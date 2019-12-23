@@ -58,7 +58,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "3.1.0"
+#define VERSION "3.1.1"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -993,7 +993,7 @@ static int endSession(lua_State *L)
 // [Lua] gameanalytics.getRemoteConfigsValueAsString(options)
 static int getRemoteConfigsValueAsString(lua_State *L)
 {
-    DM_LUA_STACK_CHECK(L, 0);
+    DM_LUA_STACK_CHECK(L, 1);
     const char *cc_key = "";
     const char *defaultValue = "";
     bool useDefaultValue = false;
@@ -1060,7 +1060,7 @@ static int getRemoteConfigsValueAsString(lua_State *L)
 // [Lua] gameanalytics.isRemoteConfigsReady()
 static int isRemoteConfigsReady(lua_State *L)
 {
-    DM_LUA_STACK_CHECK(L, 0);
+    DM_LUA_STACK_CHECK(L, 1);
     bool result = gameanalytics::defold::GameAnalytics::isRemoteConfigsReady(L);
     lua_pushboolean( L, result ? 1 : 0 );
     return 1;
@@ -1069,7 +1069,7 @@ static int isRemoteConfigsReady(lua_State *L)
 // [Lua] gameanalytics.getRemoteConfigsContentAsString()
 static int getRemoteConfigsContentAsString(lua_State *L)
 {
-    DM_LUA_STACK_CHECK(L, 0);
+    DM_LUA_STACK_CHECK(L, 1);
     std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsContentAsString(L);
     lua_pushstring( L, result.data() );
     return 1;
