@@ -36,9 +36,6 @@ public:
     static void setCustomDimension01(const char *customDimension);
     static void setCustomDimension02(const char *customDimension);
     static void setCustomDimension03(const char *customDimension);
-    static void setFacebookId(const char *facebookId);
-    static void setGender(const char *gender);
-    static void setBirthYear(int birthYear);
 
     static void startSession();
     static void endSession();

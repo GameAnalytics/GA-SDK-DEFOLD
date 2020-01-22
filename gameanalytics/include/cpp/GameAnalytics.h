@@ -63,12 +63,6 @@ namespace gameanalytics
         Critical = 5
     };
 
-    enum EGAGender
-    {
-        Male = 1,
-        Female = 2
-    };
-
     struct CharArray
     {
     public:
@@ -150,9 +144,6 @@ namespace gameanalytics
         static void setCustomDimension01(const char* dimension01);
         static void setCustomDimension02(const char* dimension02);
         static void setCustomDimension03(const char* dimension03);
-        static void setFacebookId(const char* facebookId);
-        static void setGender(EGAGender gender);
-        static void setBirthYear(int birthYear);
 
         static void startSession();
         static void endSession();

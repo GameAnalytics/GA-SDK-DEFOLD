@@ -26,6 +26,10 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.1.2**
+* removed facebook, gender and birthyear functions
+* updated curl libs
+
 **3.1.1**
 * A/B testing fixes
 

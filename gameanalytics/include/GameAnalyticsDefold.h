@@ -30,12 +30,6 @@ namespace gameanalytics
             Critical = 5
         };
 
-        enum EGAGender
-        {
-            Male = 1,
-            Female = 2
-        };
-
         class GameAnalytics {
         public:
             static void configureAvailableCustomDimensions01(lua_State *L, const char* list);
@@ -74,9 +68,6 @@ namespace gameanalytics
             static void setCustomDimension01(lua_State *L, const char *customDimension);
             static void setCustomDimension02(lua_State *L, const char *customDimension);
             static void setCustomDimension03(lua_State *L, const char *customDimension);
-            static void setFacebookId(lua_State *L, const char *facebookId);
-            static void setGender(lua_State *L, EGAGender gender);
-            static void setBirthYear(lua_State *L, int birthYear);
 
             static void startSession(lua_State *L);
             static void endSession(lua_State *L);

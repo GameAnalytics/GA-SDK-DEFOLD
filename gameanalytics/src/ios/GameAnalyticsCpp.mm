@@ -252,21 +252,6 @@ void GameAnalyticsCpp::setCustomDimension03(const char *customDimension) {
     [GameAnalytics setCustomDimension03:customDimensionString];
 }
 
-void GameAnalyticsCpp::setFacebookId(const char *facebookId) {
-    NSString *facebookIdString = !isStringNullOrEmpty(facebookId) ? [NSString stringWithUTF8String:facebookId] : nil;
-    [GameAnalytics setFacebookId:facebookIdString];
-}
-
-void GameAnalyticsCpp::setGender(const char *gender) {
-    NSString *genderString = !isStringNullOrEmpty(gender) ? [NSString stringWithUTF8String:gender] : nil;
-    [GameAnalytics setGender:genderString];
-}
-
-void GameAnalyticsCpp::setBirthYear(int birthYear) {
-    NSInteger birthYearInteger = (NSInteger)birthYear;
-    [GameAnalytics setBirthYear:birthYearInteger];
-}
-
 void GameAnalyticsCpp::startSession() {
     [GameAnalytics startSession];
 }

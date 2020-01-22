@@ -41,9 +41,6 @@ namespace gameanalytics {
         extern void jni_setCustomDimension01(const char *customDimension);
         extern void jni_setCustomDimension02(const char *customDimension);
         extern void jni_setCustomDimension03(const char *customDimension);
-        extern void jni_setFacebookId(const char *facebookId);
-        extern void jni_setGender(int gender);
-        extern void jni_setBirthYear(int birthYear);
 
         extern void jni_startSession();
         extern void jni_endSession();
