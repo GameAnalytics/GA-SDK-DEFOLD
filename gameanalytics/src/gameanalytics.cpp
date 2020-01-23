@@ -58,7 +58,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "3.1.2"
+#define VERSION "3.1.3"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1089,6 +1089,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     use_custom_id = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_custom_id", 0) == 1;
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
     use_imei_android = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_imei_android", 0) == 1;
+    bool auto_detect_app_version = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.auto_detect_app_version", 0) == 1;
 
 #if defined(DM_PLATFORM_ANDROID)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_android", 0);
@@ -1187,6 +1188,10 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     if(build)
     {
         gameanalytics::defold::GameAnalytics::configureBuild(params->m_L, build);
+    }
+    if(auto_detect_app_version)
+    {
+        gameanalytics::defold::GameAnalytics::configureAutoDetectAppVersion(params->m_L, true);
     }
 
     if(dimensions_01)

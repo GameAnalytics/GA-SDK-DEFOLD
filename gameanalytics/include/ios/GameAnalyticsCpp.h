@@ -14,6 +14,7 @@ public:
     static void configureAvailableResourceItemTypes(const std::vector<CharArray>& list);
 
     static void configureBuild(const char *build);
+    static void configureAutoDetectAppVersion(bool flag);
     static void configureUserId(const char *userId);
     static void configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
     static void configureGameEngineVersion(const char *gameEngineVersion);

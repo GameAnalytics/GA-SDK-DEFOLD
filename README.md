@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.1.3**
+* added auto detect app version for build field option
+
 **3.1.2**
 * removed facebook, gender and birthyear functions
 * updated curl libs

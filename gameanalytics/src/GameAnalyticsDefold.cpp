@@ -415,6 +415,17 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::configureAutoDetectAppVersion(lua_State *L, bool flag)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::configureAutoDetectAppVersion(flag);
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_configureAutoDetectAppVersion(flag);
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#endif
+        }
+
         void GameAnalytics::configureUserId(lua_State *L, const char *userId)
         {
 #if defined(DM_PLATFORM_IOS)

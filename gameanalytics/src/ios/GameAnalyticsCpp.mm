@@ -59,6 +59,10 @@ void GameAnalyticsCpp::configureAvailableResourceItemTypes(const std::vector<Cha
     [GameAnalytics configureAvailableResourceItemTypes:list_array];
 }
 
+void GameAnalyticsCpp::configureAutoDetectAppVersion(bool flag) {
+    [GameAnalytics configureAutoDetectAppVersion:flag];
+}
+
 void GameAnalyticsCpp::configureBuild(const char *build) {
     NSString *buildString = !isStringNullOrEmpty(build) ? [NSString stringWithUTF8String:build] : nil;
     [GameAnalytics configureBuild:buildString];

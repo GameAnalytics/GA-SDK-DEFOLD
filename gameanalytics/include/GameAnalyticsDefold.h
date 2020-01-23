@@ -40,6 +40,7 @@ namespace gameanalytics
             static void configureAvailableResourceItemTypes(lua_State *L, const char* list);
 
             static void configureBuild(lua_State *L, const char *build);
+            static void configureAutoDetectAppVersion(lua_State *L, bool flag);
             static void configureUserId(lua_State *L, const char *userId);
             static void configureSdkGameEngineVersion(lua_State *L, const char *gameEngineSdkVersion);
             static void configureGameEngineVersion(lua_State *L, const char *gameEngineVersion);

@@ -21,6 +21,7 @@ namespace gameanalytics {
         extern void jni_configureBuild(const char *build);
         extern void jni_configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
         extern void jni_configureGameEngineVersion(const char *gameEngineVersion);
+        extern void jni_configureAutoDetectAppVersion(bool flag);
         extern void jni_configureUserId(const char *userId);
         extern void jni_initialize(const char *gameKey, const char *gameSecret, bool use_imei_android);
 
