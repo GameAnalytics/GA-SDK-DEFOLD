@@ -27,7 +27,7 @@ Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
 **3.1.6**
-* improved event processing queue thread
+* improved event processing queue thread (android)
 
 **3.1.5**
 * cryptojs bug fix (html5)
