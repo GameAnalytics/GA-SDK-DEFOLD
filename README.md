@@ -26,6 +26,10 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.1.7**
+* fixed bug to not send stored events from previous sessions (offline events or session end events not sent yet) by games on the same domain (html5)
+* this bug fix can potentially affect metrics slightly so be aware of this as old stored events (offline events and session end events not sent yet) in games will not be sent with this new fix because internal keys for storing events in localstorage have changed now (html5)
+
 **3.1.6**
 * improved event processing queue thread (android)
 
