@@ -34,14 +34,14 @@ namespace gameanalytics
             lua_getfield(L, -1, "run");                             // push desired function
             lua_pushstring(L, code);                                // push argument
             lua_call(L, 1, 1);                                      // call function with 1 arg, 1 return value
-            const char* returnValue = lua_tostring(L, 1);           // get the result
+            const char* returnValue = lua_tostring(L, -1);           // get the result
             size_t s = strlen(returnValue);
             for(size_t i = 0; i < s; ++i)
             {
                 result.push_back(returnValue[i]);
             }
             result.push_back('\0');
-            lua_pop(L, 1);                                          // pop 'html5'
+            lua_pop(L, 2);                                          // pop 'html5'
             return result;
         }
 
@@ -52,8 +52,8 @@ namespace gameanalytics
             lua_getfield(L, -1, "run");                             // push desired function
             lua_pushstring(L, code);                                // push argument
             lua_call(L, 1, 1);                                      // call function with 1 arg, 1 return value
-            result = lua_toboolean(L, 1);                            // get the result
-            lua_pop(L, 1);                                          // pop 'html5'
+            result = lua_toboolean(L, -1);                            // get the result
+            lua_pop(L, 2);                                          // pop 'html5'
 
             return result;
         }
