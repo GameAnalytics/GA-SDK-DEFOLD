@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.1.9**
+* fixed progression event with scores (android)
+
 **3.1.8**
 * fixed getRemoteConfigsValueAsString, isRemoteConfigsReady and getRemoteConfigsContentAsString for html5 builds
 

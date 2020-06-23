@@ -637,6 +637,34 @@ typedef enum GAAdError : NSInteger {
 /*!
  @method
  
+ @abstract Add new mopub impression event
+ 
+ @param impressionData
+ Impression data
+ 
+ @attribute Note! This method cannot be called before initialize method has been triggered
+ */
++ (void)addImpressionMopubEventWithImpressionData:(NSDictionary *)impressionData;
+
+/*!
+ @method
+ 
+ @abstract Add new impression event
+ 
+ @param adNetworkName
+ Name of ad network
+ @param impressionData
+ Impression data
+ 
+ @attribute Note! This method cannot be called before initialize method has been triggered
+ */
++ (void)addImpressionEventWithAdNetworkName:(NSString *)adNetworkName
+                   impressionData:(NSDictionary *)impressionData;
+
+
+/*!
+ @method
+ 
  @abstract Get remote configs value as string
  
  @param key
