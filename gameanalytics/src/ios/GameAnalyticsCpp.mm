@@ -306,7 +306,7 @@ bool GameAnalyticsCpp::isRemoteConfigsReady() {
 }
 
 std::vector<char> GameAnalyticsCpp::getRemoteConfigsContentAsString() {
-    NSString *returnValue = [GameAnalytics getRemoteConfigsConfigurations];
+    NSString *returnValue = [GameAnalytics getRemoteConfigsContentAsString];
 
     std::vector<char> resultVector;
     if(returnValue != nil)
