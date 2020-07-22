@@ -58,13 +58,14 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "3.1.10"
+#define VERSION "3.2.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
 const char* game_key = NULL;
 const char* secret_key = NULL;
 bool use_imei_android = false;
+dmScript::LuaCallbackInfo* g_remote_configs_listener;
 
 static int stringCmpi(const char *s1, const char *s2)
 {
@@ -104,8 +105,8 @@ static int configureUserId(lua_State* L)
     if(use_custom_id)
     {
         dmLogInfo("Initializing with custom id: %s\n", s);
-        gameanalytics::defold::GameAnalytics::configureUserId(L, s);
-        gameanalytics::defold::GameAnalytics::initialize(L, game_key, secret_key, use_imei_android);
+        gameanalytics::defold::GameAnalytics::configureUserId(s);
+        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
     }
     else
     {
@@ -378,7 +379,7 @@ static int addBusinessEvent(lua_State *L)
 #elif defined(DM_PLATFORM_ANDROID)
         gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, signature, fields);
 #else
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(L, currency, amount, itemType, itemId, cartType, fields);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, fields);
 #endif
     }
 
@@ -508,7 +509,7 @@ static int addResourceEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addResourceEvent(options): options.%s is mandatory and can't be null or empty", ItemIdOptionsKey);
     }
 
-    gameanalytics::defold::GameAnalytics::addResourceEvent(L, flowType, currency, amount, itemType, itemId, fields);
+    gameanalytics::defold::GameAnalytics::addResourceEvent(flowType, currency, amount, itemType, itemId, fields);
 
     return 0;
 }
@@ -632,11 +633,11 @@ static int addProgressionEvent( lua_State *L )
 
     if(sendScore)
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03, score, fields);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(progressionStatus, progression01, progression02, progression03, score, fields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(L, progressionStatus, progression01, progression02, progression03, fields);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(progressionStatus, progression01, progression02, progression03, fields);
     }
 
     return 0;
@@ -709,11 +710,11 @@ static int addDesignEvent(lua_State *L)
 
     if(sendValue)
     {
-        gameanalytics::defold::GameAnalytics::addDesignEvent(L, eventId, value, fields);
+        gameanalytics::defold::GameAnalytics::addDesignEvent(eventId, value, fields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addDesignEvent(L, eventId, fields);
+        gameanalytics::defold::GameAnalytics::addDesignEvent(eventId, fields);
     }
 
     return 0;
@@ -802,7 +803,7 @@ static int addErrorEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addErrorEvent(options): options, expected table got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::addErrorEvent(L, severity, message, fields);
+    gameanalytics::defold::GameAnalytics::addErrorEvent(severity, message, fields);
 
     return 0;
 }
@@ -816,7 +817,7 @@ static int setEnabledInfoLog(lua_State *L)
         return luaL_error(L, "gameanalytics.setEnabledInfoLog(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::setEnabledInfoLog(L, lua_toboolean(L, 1));
+    gameanalytics::defold::GameAnalytics::setEnabledInfoLog(lua_toboolean(L, 1));
 
     return 0;
 }
@@ -830,7 +831,7 @@ static int setEnabledVerboseLog(lua_State *L)
         return luaL_error(L, "gameanalytics.setEnabledVerboseLog(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::setEnabledVerboseLog(L, lua_toboolean(L, 1));
+    gameanalytics::defold::GameAnalytics::setEnabledVerboseLog(lua_toboolean(L, 1));
 
     return 0;
 }
@@ -844,7 +845,7 @@ static int setEnabledManualSessionHandling(lua_State *L)
         return luaL_error(L, "gameanalytics.setEnabledManualSessionHandling(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::setEnabledManualSessionHandling(L, lua_toboolean(L, 1));
+    gameanalytics::defold::GameAnalytics::setEnabledManualSessionHandling(lua_toboolean(L, 1));
 
     return 0;
 }
@@ -858,7 +859,7 @@ static int setEnabledEventSubmission(lua_State *L)
         return luaL_error(L, "gameanalytics.setEnabledEventSubmission(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(L, lua_toboolean(L, 1));
+    gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(lua_toboolean(L, 1));
 
     return 0;
 }
@@ -874,7 +875,7 @@ static int setCustomDimension01(lua_State *L)
 
     const char *s = lua_tostring(L, 1);
 
-    gameanalytics::defold::GameAnalytics::setCustomDimension01(L, s);
+    gameanalytics::defold::GameAnalytics::setCustomDimension01(s);
 
     return 0;
 }
@@ -890,7 +891,7 @@ static int setCustomDimension02(lua_State *L)
 
     const char *s = lua_tostring(L, 1);
 
-    gameanalytics::defold::GameAnalytics::setCustomDimension02(L, s);
+    gameanalytics::defold::GameAnalytics::setCustomDimension02(s);
 
     return 0;
 }
@@ -906,7 +907,7 @@ static int setCustomDimension03(lua_State *L)
 
     const char *s = lua_tostring(L, 1);
 
-    gameanalytics::defold::GameAnalytics::setCustomDimension03(L, s);
+    gameanalytics::defold::GameAnalytics::setCustomDimension03(s);
 
     return 0;
 }
@@ -915,7 +916,7 @@ static int setCustomDimension03(lua_State *L)
 static int startSession(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    gameanalytics::defold::GameAnalytics::startSession(L);
+    gameanalytics::defold::GameAnalytics::startSession();
 
     return 0;
 }
@@ -924,7 +925,7 @@ static int startSession(lua_State *L)
 static int endSession(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
-    gameanalytics::defold::GameAnalytics::endSession(L);
+    gameanalytics::defold::GameAnalytics::endSession();
 
     return 0;
 }
@@ -984,12 +985,12 @@ static int getRemoteConfigsValueAsString(lua_State *L)
 
     if(useDefaultValue)
     {
-        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(L, cc_key, defaultValue);
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(cc_key, defaultValue);
         lua_pushstring( L, result.data() );
     }
     else
     {
-        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(L, cc_key);
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(cc_key);
         lua_pushstring( L, result.data() );
     }
 
@@ -1000,7 +1001,7 @@ static int getRemoteConfigsValueAsString(lua_State *L)
 static int isRemoteConfigsReady(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 1);
-    bool result = gameanalytics::defold::GameAnalytics::isRemoteConfigsReady(L);
+    bool result = gameanalytics::defold::GameAnalytics::isRemoteConfigsReady();
     lua_pushboolean( L, result ? 1 : 0 );
     return 1;
 }
@@ -1009,9 +1010,23 @@ static int isRemoteConfigsReady(lua_State *L)
 static int getRemoteConfigsContentAsString(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 1);
-    std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsContentAsString(L);
+    std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsContentAsString();
     lua_pushstring( L, result.data() );
     return 1;
+}
+
+// [Lua] gameanalytics.setRemoteConfigsListener(remoteConfigsListener)
+static int setRemoteConfigsListener(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if (g_remote_configs_listener)
+    {
+        dmScript::DestroyCallback(g_remote_configs_listener);
+    }
+    g_remote_configs_listener = dmScript::CreateCallback(L, 1);
+    assert(dmScript::IsCallbackValid(g_remote_configs_listener));
+    gameanalytics::defold::GameAnalytics::setRemoteConfigsListener(g_remote_configs_listener);
+    return 0;
 }
 
 ////////////////////////////////////////////////////////
@@ -1041,6 +1056,7 @@ static const luaL_reg Module_methods[] =
     { "getRemoteConfigsValueAsString", getRemoteConfigsValueAsString },
     { "isRemoteConfigsReady", isRemoteConfigsReady },
     { "getRemoteConfigsContentAsString", getRemoteConfigsContentAsString },
+    { "setRemoteConfigsListener", setRemoteConfigsListener },
 
     {0, 0}
 };
@@ -1114,7 +1130,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
         wordexp(write_path, &p, 0);
         dmLogInfo("write_path=%s\n", p.we_wordv[0]);
         mkdir_p(p.we_wordv[0]);
-        gameanalytics::defold::GameAnalytics::configureWritablePath(params->m_L, p.we_wordv[0]);
+        gameanalytics::defold::GameAnalytics::configureWritablePath(p.we_wordv[0]);
         wordfree(&p);
     }
 #elif defined(DM_PLATFORM_WINDOWS)
@@ -1128,7 +1144,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
         p = expandEnvironmentVariables(p);
         dmLogInfo("write_path=%s\n", p.c_str());
         mkdir_p(p.c_str());
-        gameanalytics::defold::GameAnalytics::configureWritablePath(params->m_L, p.c_str());
+        gameanalytics::defold::GameAnalytics::configureWritablePath(p.c_str());
     }
 #elif defined(DM_PLATFORM_LINUX)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_linux", 0);
@@ -1141,7 +1157,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
         wordexp(write_path, &p, 0);
         dmLogInfo("write_path=%s\n", p.we_wordv[0]);
         mkdir_p(p.we_wordv[0]);
-        gameanalytics::defold::GameAnalytics::configureWritablePath(params->m_L, p.we_wordv[0]);
+        gameanalytics::defold::GameAnalytics::configureWritablePath(p.we_wordv[0]);
         wordfree(&p);
     }
 #endif
@@ -1160,64 +1176,64 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 
     if(enable_info_log)
     {
-        gameanalytics::defold::GameAnalytics::setEnabledInfoLog(params->m_L, true);
+        gameanalytics::defold::GameAnalytics::setEnabledInfoLog(true);
     }
     if(enable_verbose_log)
     {
-        gameanalytics::defold::GameAnalytics::setEnabledVerboseLog(params->m_L, true);
+        gameanalytics::defold::GameAnalytics::setEnabledVerboseLog(true);
     }
 
     if(enable_event_submission)
     {
-        gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, true);
+        gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(true);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(params->m_L, false);
+        gameanalytics::defold::GameAnalytics::setEnabledEventSubmission(false);
     }
 
     if(use_error_reporting)
     {
-        gameanalytics::defold::GameAnalytics::setEnabledErrorReporting(params->m_L, true);
+        gameanalytics::defold::GameAnalytics::setEnabledErrorReporting(true);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::setEnabledErrorReporting(params->m_L, false);
+        gameanalytics::defold::GameAnalytics::setEnabledErrorReporting(false);
     }
 
     if(build)
     {
-        gameanalytics::defold::GameAnalytics::configureBuild(params->m_L, build);
+        gameanalytics::defold::GameAnalytics::configureBuild(build);
     }
     if(auto_detect_app_version)
     {
-        gameanalytics::defold::GameAnalytics::configureAutoDetectAppVersion(params->m_L, true);
+        gameanalytics::defold::GameAnalytics::configureAutoDetectAppVersion(true);
     }
 
     if(dimensions_01)
     {
-        gameanalytics::defold::GameAnalytics::configureAvailableCustomDimensions01(params->m_L, dimensions_01);
+        gameanalytics::defold::GameAnalytics::configureAvailableCustomDimensions01(dimensions_01);
     }
     if(dimensions_02)
     {
-        gameanalytics::defold::GameAnalytics::configureAvailableCustomDimensions02(params->m_L, dimensions_02);
+        gameanalytics::defold::GameAnalytics::configureAvailableCustomDimensions02(dimensions_02);
     }
     if(dimensions_03)
     {
-        gameanalytics::defold::GameAnalytics::configureAvailableCustomDimensions03(params->m_L, dimensions_03);
+        gameanalytics::defold::GameAnalytics::configureAvailableCustomDimensions03(dimensions_03);
     }
     if(resource_currencies)
     {
-        gameanalytics::defold::GameAnalytics::configureAvailableResourceCurrencies(params->m_L, resource_currencies);
+        gameanalytics::defold::GameAnalytics::configureAvailableResourceCurrencies(resource_currencies);
     }
     if(resource_item_types)
     {
-        gameanalytics::defold::GameAnalytics::configureAvailableResourceItemTypes(params->m_L, resource_item_types);
+        gameanalytics::defold::GameAnalytics::configureAvailableResourceItemTypes(resource_item_types);
     }
 
     if(use_manual_session_handling)
     {
-        gameanalytics::defold::GameAnalytics::setEnabledManualSessionHandling(params->m_L, true);
+        gameanalytics::defold::GameAnalytics::setEnabledManualSessionHandling(true);
     }
 
     const char *defoldBuildVersion = NULL;
@@ -1236,12 +1252,12 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     char engine_version[65] = "";
     dmSnPrintf(engine_version, sizeof(engine_version), "defold %s", defoldBuildVersion);
 
-    gameanalytics::defold::GameAnalytics::configureSdkGameEngineVersion(params->m_L, sdk_version);
-    gameanalytics::defold::GameAnalytics::configureGameEngineVersion(params->m_L, engine_version);
+    gameanalytics::defold::GameAnalytics::configureSdkGameEngineVersion(sdk_version);
+    gameanalytics::defold::GameAnalytics::configureGameEngineVersion(engine_version);
 
     if(!use_custom_id)
     {
-        gameanalytics::defold::GameAnalytics::initialize(params->m_L, game_key, secret_key, use_imei_android);
+        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
     }
     else
     {
@@ -1264,7 +1280,14 @@ static dmExtension::Result AppFinalizeExtension(dmExtension::AppParams* params)
 static dmExtension::Result FinalizeExtension(dmExtension::Params* params)
 {
     dmLogInfo("FinalizeExtension");
-    gameanalytics::defold::GameAnalytics::onQuit(params->m_L);
+    gameanalytics::defold::GameAnalytics::onQuit();
+
+    if (params->m_L == dmScript::GetCallbackLuaContext(g_remote_configs_listener))
+    {
+        dmScript::DestroyCallback(g_remote_configs_listener);
+        g_remote_configs_listener = 0;
+    }
+
     return dmExtension::RESULT_OK;
 }
 

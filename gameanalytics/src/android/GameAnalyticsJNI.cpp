@@ -9,15 +9,34 @@
 
 #define GAMEANALYTICS_CLASS_NAME "com/gameanalytics/sdk/GameAnalytics"
 #define GAMEANALYTICS_IMEI_CLASS_NAME "com/gameanalytics/sdk/imei/GAImei"
+#define GAJNI_CLASS_NAME "com/gameanalytics/sdk/GAJNI"
 
 namespace gameanalytics {
 
-    static JNIEnv* Attach()
+    static bool GetJniEnv(JNIEnv **env)
     {
-        JNIEnv* env;
+        bool did_attach_thread = false;
+        *env = nullptr;
+
         JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
-        vm->AttachCurrentThread(&env, NULL);
-        return env;
+        auto get_env_result = vm->GetEnv((void**)env, JNI_VERSION_1_6);
+
+        if (get_env_result == JNI_EDETACHED)
+        {
+            if (vm->AttachCurrentThread(env, NULL) == JNI_OK)
+            {
+                did_attach_thread = true;
+            }
+            else
+            {
+                // Failed to attach thread. Throw an exception if you want to.
+            }
+        }
+        else if (get_env_result == JNI_EVERSION)
+        {
+            // Unsupported JNI version. Throw an exception if you want to.
+        }
+        return did_attach_thread;
     }
 
     static bool Detach(JNIEnv* env)
@@ -32,14 +51,21 @@ namespace gameanalytics {
     struct AttachScope
     {
         JNIEnv* m_Env;
-        AttachScope() : m_Env(Attach())
+        bool m_did_attach;
+        AttachScope()
         {
+            m_did_attach = GetJniEnv(&m_Env);
         }
         ~AttachScope()
         {
-            Detach(m_Env);
+            if(m_did_attach)
+            {
+                Detach(m_Env);
+            }
         }
     };
+
+    dmScript::LuaCallbackInfo* _remote_configs_listener;
 
     static jclass GetClass(JNIEnv* env, const char* classname)
     {
@@ -473,6 +499,32 @@ namespace gameanalytics {
                 else
                 {
                     dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_IMEI_CLASS_NAME);
+                }
+            }
+
+            // initialize remote configs listener
+            {
+                jclass jClass_gajni = GetClass(env, GAJNI_CLASS_NAME);
+                const char* strMethod_gajni = "initialize";
+
+                if(jClass_gajni)
+                {
+                    jmethodID jMethod_gajni = env->GetStaticMethodID(jClass_gajni, strMethod_gajni, "()V");
+
+                    if(jMethod_gajni)
+                    {
+                        env->CallStaticVoidMethod(jClass_gajni, jMethod_gajni);
+                    }
+                    else
+                    {
+                        dmLogError("*** Failed to find method %s ***", strMethod_gajni);
+                    }
+
+                    env->DeleteLocalRef(jClass_gajni);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find class %s ***", GAJNI_CLASS_NAME);
                 }
             }
 
@@ -1184,6 +1236,32 @@ namespace gameanalytics {
             }
 
             return result;
+        }
+
+        void jni_setRemoteConfigsListener(dmScript::LuaCallbackInfo* listener)
+        {
+            _remote_configs_listener = listener;
+        }
+
+        JNIEXPORT void JNICALL Java_com_gameanalytics_sdk_GAJNI_onRemoteConfigsUpdatedNative(JNIEnv* env, jobject)
+        {
+            if(!_remote_configs_listener)
+            {
+                dmLogWarning("Received remote configs update but no listener was set!");
+                return;
+            }
+
+            lua_State* L = dmScript::GetCallbackLuaContext(_remote_configs_listener);
+            DM_LUA_STACK_CHECK(L, 0);
+
+            if (!dmScript::SetupCallback(_remote_configs_listener))
+            {
+                dmLogWarning("SetupCallback failed for remote configs");
+                return;
+            }
+
+            int ret = dmScript::PCall(L, 1, 0);
+            dmScript::TeardownCallback(_remote_configs_listener);
         }
 
         std::vector<char> jni_getRemoteConfigsContentAsString()

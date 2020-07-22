@@ -7,6 +7,7 @@
 #if defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 
 #include <vector>
+#include <memory>
 
 namespace gameanalytics
 {
@@ -61,6 +62,12 @@ namespace gameanalytics
         Warning = 3,
         Error = 4,
         Critical = 5
+    };
+
+    class IRemoteConfigsListener
+    {
+        public:
+            virtual void onRemoteConfigsUpdated() = 0;
     };
 
     struct CharArray
@@ -157,6 +164,7 @@ namespace gameanalytics
         static std::vector<char> getRemoteConfigsValueAsString(const char* key);
         static std::vector<char> getRemoteConfigsValueAsString(const char* key, const char* defaultValue);
         static bool isRemoteConfigsReady();
+        static void addRemoteConfigsListener(const std::shared_ptr<IRemoteConfigsListener>& listener);
         static std::vector<char> getRemoteConfigsContentAsString();
     };
 } // namespace gameanalytics

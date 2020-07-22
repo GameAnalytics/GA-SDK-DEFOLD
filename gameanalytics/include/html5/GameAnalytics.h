@@ -1,7 +1,9 @@
 #pragma  once
 
+#ifdef __cplusplus
 extern "C"
 {
+#endif
     void js_configureAvailableCustomDimensions01(const char *list);
     void js_configureAvailableCustomDimensions02(const char *list);
     void js_configureAvailableCustomDimensions03(const char *list);
@@ -33,4 +35,6 @@ extern "C"
     const char* js_getRemoteConfigsValueAsStringWithDefaultValue(const char *key, const char *defaultValue);
     bool js_isRemoteConfigsReady();
     const char* js_getRemoteConfigsContentAsString();
+#ifdef __cplusplus
 }
+#endif

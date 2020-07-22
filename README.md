@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.2.0**
+* added remote configs listener method
+
 **3.1.10**
 * small fix for ios builds
 

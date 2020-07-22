@@ -32,20 +32,20 @@ namespace gameanalytics
 
         class GameAnalytics {
         public:
-            static void configureAvailableCustomDimensions01(lua_State *L, const char* list);
-            static void configureAvailableCustomDimensions02(lua_State *L, const char* list);
-            static void configureAvailableCustomDimensions03(lua_State *L, const char* list);
+            static void configureAvailableCustomDimensions01(const char* list);
+            static void configureAvailableCustomDimensions02(const char* list);
+            static void configureAvailableCustomDimensions03(const char* list);
 
-            static void configureAvailableResourceCurrencies(lua_State *L, const char* list);
-            static void configureAvailableResourceItemTypes(lua_State *L, const char* list);
+            static void configureAvailableResourceCurrencies(const char* list);
+            static void configureAvailableResourceItemTypes(const char* list);
 
-            static void configureBuild(lua_State *L, const char *build);
-            static void configureAutoDetectAppVersion(lua_State *L, bool flag);
-            static void configureUserId(lua_State *L, const char *userId);
-            static void configureSdkGameEngineVersion(lua_State *L, const char *gameEngineSdkVersion);
-            static void configureGameEngineVersion(lua_State *L, const char *gameEngineVersion);
-            static void configureWritablePath(lua_State *L, const char *writablePath);
-            static void initialize(lua_State *L, const char *gameKey, const char *gameSecret, bool use_imei_android);
+            static void configureBuild(const char *build);
+            static void configureAutoDetectAppVersion(bool flag);
+            static void configureUserId(const char *userId);
+            static void configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
+            static void configureGameEngineVersion(const char *gameEngineVersion);
+            static void configureWritablePath(const char *writablePath);
+            static void initialize(const char *gameKey, const char *gameSecret, bool use_imei_android);
 
 #if defined(DM_PLATFORM_IOS)
             static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields);
@@ -53,37 +53,38 @@ namespace gameanalytics
 #elif defined(DM_PLATFORM_ANDROID)
             static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields);
 #endif
-            static void addBusinessEvent(lua_State *L, const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
-            static void addResourceEvent(lua_State *L, EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields);
-            static void addProgressionEvent(lua_State *L, EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields);
-            static void addDesignEvent(lua_State *L, const char *eventId, const char *fields);
-            static void addDesignEvent(lua_State *L, const char *eventId, float value, const char *fields);
-            static void addErrorEvent(lua_State *L, EGAErrorSeverity severity, const char *message, const char *fields);
+            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
+            static void addResourceEvent(EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields);
+            static void addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields);
+            static void addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields);
+            static void addDesignEvent(const char *eventId, const char *fields);
+            static void addDesignEvent(const char *eventId, float value, const char *fields);
+            static void addErrorEvent(EGAErrorSeverity severity, const char *message, const char *fields);
 
-            static void setEnabledInfoLog(lua_State *L, bool flag);
-            static void setEnabledVerboseLog(lua_State *L, bool flag);
-            static void setEnabledManualSessionHandling(lua_State *L, bool flag);
-            static void setEnabledEventSubmission(lua_State *L, bool flag);
-            static void setEnabledErrorReporting(lua_State *L, bool flag);
-            static void setCustomDimension01(lua_State *L, const char *customDimension);
-            static void setCustomDimension02(lua_State *L, const char *customDimension);
-            static void setCustomDimension03(lua_State *L, const char *customDimension);
+            static void setEnabledInfoLog(bool flag);
+            static void setEnabledVerboseLog(bool flag);
+            static void setEnabledManualSessionHandling(bool flag);
+            static void setEnabledEventSubmission(bool flag);
+            static void setEnabledErrorReporting(bool flag);
+            static void setCustomDimension01(const char *customDimension);
+            static void setCustomDimension02(const char *customDimension);
+            static void setCustomDimension03(const char *customDimension);
 
-            static void startSession(lua_State *L);
-            static void endSession(lua_State *L);
-            static void onQuit(lua_State *L);
+            static void startSession();
+            static void endSession();
+            static void onQuit();
 
-            static std::vector<char> getRemoteConfigsValueAsString(lua_State *L, const char *key);
-            static std::vector<char> getRemoteConfigsValueAsString(lua_State *L, const char *key, const char *defaultValue);
-            static bool isRemoteConfigsReady(lua_State *L);
-            static std::vector<char> getRemoteConfigsContentAsString(lua_State *L);
+            static std::vector<char> getRemoteConfigsValueAsString(const char *key);
+            static std::vector<char> getRemoteConfigsValueAsString(const char *key, const char *defaultValue);
+            static bool isRemoteConfigsReady();
+            static void setRemoteConfigsListener(dmScript::LuaCallbackInfo* listener);
+            static std::vector<char> getRemoteConfigsContentAsString();
 
         private:
 #if defined(DM_PLATFORM_HTML5)
-            static void runHtml5Code(lua_State *L, const char* code);
-            static std::vector<char> runHtml5CodeWithReturnString(lua_State *L, const char* code);
-            static bool runHtml5CodeWithReturnBool(lua_State *L, const char* code);
+            static void runHtml5Code(const char* code);
+            static std::vector<char> runHtml5CodeWithReturnString(const char* code);
+            static bool runHtml5CodeWithReturnBool(const char* code);
 #endif
             static std::vector<CharArray> split(char* str, const char* delimiter);
         };

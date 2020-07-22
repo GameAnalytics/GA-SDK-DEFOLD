@@ -3,6 +3,45 @@
 #import "ios/GameAnalyticsCpp.h"
 #include <string.h>
 #include <stdio.h>
+#define DLIB_LOG_DOMAIN "GameAnalytics"
+#include <dmsdk/dlib/log.h>
+
+dmScript::LuaCallbackInfo* _remote_configs_listener;
+
+@interface GARemoteConfigsDefoldDelegate : NSObject<GARemoteConfigsDelegate>
+{
+}
+
+- (void) onRemoteConfigsUpdated;
+
+@end
+
+@implementation GARemoteConfigsDefoldDelegate
+
+- (void)onRemoteConfigsUpdated
+{
+    if(!_remote_configs_listener)
+    {
+        dmLogWarning("Received remote configs update but no listener was set!");
+        return;
+    }
+
+    lua_State* L = dmScript::GetCallbackLuaContext(_remote_configs_listener);
+    DM_LUA_STACK_CHECK(L, 0);
+
+    if (!dmScript::SetupCallback(_remote_configs_listener))
+    {
+        dmLogWarning("SetupCallback failed for remote configs");
+        return;
+    }
+
+    int ret = dmScript::PCall(L, 1, 0);
+    dmScript::TeardownCallback(_remote_configs_listener);
+}
+
+@end
+
+GARemoteConfigsDefoldDelegate* ga_rc_delegate = nil;
 
 static bool isStringNullOrEmpty(const char* s)
 {
@@ -86,6 +125,9 @@ void GameAnalyticsCpp::configureGameEngineVersion(const char *gameEngineVersion)
 void GameAnalyticsCpp::initialize(const char *gameKey, const char *gameSecret) {
     NSString *gameKeyString = !isStringNullOrEmpty(gameKey) ? [NSString stringWithUTF8String:gameKey] : nil;
     NSString *gameSecretString = !isStringNullOrEmpty(gameSecret) ? [NSString stringWithUTF8String:gameSecret] : nil;
+
+    ga_rc_delegate = [[GARemoteConfigsDefoldDelegate alloc] init];
+    [GameAnalytics setRemoteConfigsDelegate:ga_rc_delegate];
 
     [GameAnalytics initializeWithGameKey:gameKeyString gameSecret:gameSecretString];
 }
@@ -303,6 +345,12 @@ std::vector<char> GameAnalyticsCpp::getRemoteConfigsValueAsString(const char *ke
 
 bool GameAnalyticsCpp::isRemoteConfigsReady() {
     return [GameAnalytics isRemoteConfigsReady] ? true : false;
+}
+
+void GameAnalyticsCpp::setRemoteConfigsListener(dmScript::LuaCallbackInfo* listener)
+{
+    dmLogWarning("setRemoteConfigsListener called");
+    _remote_configs_listener = listener;
 }
 
 std::vector<char> GameAnalyticsCpp::getRemoteConfigsContentAsString() {

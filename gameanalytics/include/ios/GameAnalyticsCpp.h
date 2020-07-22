@@ -2,6 +2,7 @@
 
 #import <vector>
 #include "CharArray.h"
+#include <dmsdk/script/script.h>
 
 class GameAnalyticsCpp {
 public:
@@ -44,5 +45,6 @@ public:
     static std::vector<char> getRemoteConfigsValueAsString(const char *key);
     static std::vector<char> getRemoteConfigsValueAsString(const char *key, const char *defaultValue);
     static bool isRemoteConfigsReady();
+    static void setRemoteConfigsListener(dmScript::LuaCallbackInfo* listener);
     static std::vector<char> getRemoteConfigsContentAsString();
 };
