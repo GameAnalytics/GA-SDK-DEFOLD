@@ -32,6 +32,12 @@
 #define ValueOptionsKey "value"
 #define SeverityOptionsKey "severity"
 #define MessageOptionsKey "message"
+#define AdActionOptionsKey "adAction"
+#define AdTypeOptionsKey "adType"
+#define AdSdkNameOptionsKey "adSdkName"
+#define AdPlacementOptionsKey "adPlacement"
+#define DurationOptionsKey "duration"
+#define NoAdReasonOptionsKey "noAdReason"
 #define CustomFieldsOptionsKey "customFields"
 #define KeyOptionsKey "key"
 #define DefaultValueOptionsKey "defaultValue"
@@ -58,7 +64,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "3.2.0"
+#define VERSION "3.3.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -808,6 +814,204 @@ static int addErrorEvent(lua_State *L)
     return 0;
 }
 
+// [Lua] gameanalytics.addAdEvent( options )
+static int addAdEvent(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    gameanalytics::defold::EGAAdAction adAction = (gameanalytics::defold::EGAAdAction)0;
+    gameanalytics::defold::EGAAdType adType = (gameanalytics::defold::EGAAdType)0;
+    const char *adSdkName = "";
+    const char *adPlacement = "";
+    lua_Integer duration = 0;
+    bool sendDuration = false;
+    gameanalytics::defold::EGAAdError noAdReason = (gameanalytics::defold::EGAAdError)0;
+    const char *fields = "";
+
+    if (lua_type(L, 1) == LUA_TTABLE)
+    {
+        for (lua_pushnil(L); lua_next(L, 1) != 0; lua_pop(L, 1))
+        {
+            const char *key = lua_tostring(L, -2);
+
+            if (UTF8IsEqual(key, AdActionOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TSTRING)
+                {
+                    const char *adActionString = lua_tostring(L, -1);
+
+                    if (stringCmpi(adActionString, "Clicked") == 0)
+                    {
+                        adAction = gameanalytics::defold::Clicked;
+                    }
+                    else if (stringCmpi(adActionString, "Show") == 0)
+                    {
+                        adAction = gameanalytics::defold::Show;
+                    }
+                    else if (stringCmpi(adActionString, "FailedShow") == 0)
+                    {
+                        adAction = gameanalytics::defold::FailedShow;
+                    }
+                    else if (stringCmpi(adActionString, "RewardReceived") == 0)
+                    {
+                        adAction = gameanalytics::defold::RewardReceived;
+                    }
+                    else
+                    {
+                        return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected value {Clicked, Show, FailedShow or RewardReceived} got: %s", AdActionOptionsKey, adActionString);
+                    }
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected string got: %s", AdActionOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, AdTypeOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TSTRING)
+                {
+                    const char *adTypeString = lua_tostring(L, -1);
+
+                    if (stringCmpi(adTypeString, "Video") == 0)
+                    {
+                        adType = gameanalytics::defold::Video;
+                    }
+                    else if (stringCmpi(adTypeString, "RewardedVideo") == 0)
+                    {
+                        adType = gameanalytics::defold::RewardedVideo;
+                    }
+                    else if (stringCmpi(adTypeString, "Playable") == 0)
+                    {
+                        adType = gameanalytics::defold::Playable;
+                    }
+                    else if (stringCmpi(adTypeString, "Interstitial") == 0)
+                    {
+                        adType = gameanalytics::defold::Interstitial;
+                    }
+                    else if (stringCmpi(adTypeString, "OfferWall") == 0)
+                    {
+                        adType = gameanalytics::defold::OfferWall;
+                    }
+                    else if (stringCmpi(adTypeString, "Banner") == 0)
+                    {
+                        adType = gameanalytics::defold::Banner;
+                    }
+                    else
+                    {
+                        return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected value {Video, RewardedVideo, Playable, Interstitial, OfferWall or Banner} got: %s", AdTypeOptionsKey, adTypeString);
+                    }
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected string got: %s", AdTypeOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, AdSdkNameOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TSTRING)
+                {
+                    adSdkName = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected string got: %s", AdSdkNameOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, AdPlacementOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TSTRING)
+                {
+                    adPlacement = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected string got: %s", AdPlacementOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, DurationOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TNUMBER)
+                {
+                    duration = lua_tointeger(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected number got: %s", DurationOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, NoAdReasonOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TSTRING)
+                {
+                    const char *noAdReasonString = lua_tostring(L, -1);
+
+                    if (stringCmpi(noAdReasonString, "Unknown") == 0)
+                    {
+                        noAdReason = gameanalytics::defold::Unknown;
+                    }
+                    else if (stringCmpi(noAdReasonString, "Offline") == 0)
+                    {
+                        noAdReason = gameanalytics::defold::Offline;
+                    }
+                    else if (stringCmpi(noAdReasonString, "NoFill") == 0)
+                    {
+                        noAdReason = gameanalytics::defold::NoFill;
+                    }
+                    else if (stringCmpi(noAdReasonString, "InternalError") == 0)
+                    {
+                        noAdReason = gameanalytics::defold::InternalError;
+                    }
+                    else if (stringCmpi(noAdReasonString, "InvalidRequest") == 0)
+                    {
+                        noAdReason = gameanalytics::defold::InvalidRequest;
+                    }
+                    else if (stringCmpi(noAdReasonString, "UnableToPrecache") == 0)
+                    {
+                        noAdReason = gameanalytics::defold::UnableToPrecache;
+                    }
+                    else
+                    {
+                        return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected value {Unknown, Offline, NoFill, InternalError, InvalidRequest or UnableToPrecache} got: %s", NoAdReasonOptionsKey, noAdReasonString);
+                    }
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected string got: %s", NoAdReasonOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, CustomFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TSTRING)
+                {
+                    fields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else
+            {
+                return luaL_error(L, "gameanalytics.addAdEvent(options): Invalid option: '%s'", key);
+            }
+        }
+    }
+    else
+    {
+        return luaL_error(L, "gameanalytics.addAdEvent(options): options, expected table got: %s", LuaTypeName(L, 1));
+    }
+
+    if(sendDuration)
+    {
+        gameanalytics::defold::GameAnalytics::addAdEventWithDuration(adAction, adType, adSdkName, adPlacement, duration, fields);
+    }
+    else
+    {
+        gameanalytics::defold::GameAnalytics::addAdEventWithNoAdReason(adAction, adType, adSdkName, adPlacement, noAdReason, fields);
+    }
+
+    return 0;
+}
+
 // [Lua] gameanalytics.setEnabledInfoLog( flag )
 static int setEnabledInfoLog(lua_State *L)
 {
@@ -1032,34 +1236,34 @@ static int setRemoteConfigsListener(lua_State *L)
 ////////////////////////////////////////////////////////
 
 static const luaL_reg Module_methods[] =
-{
-    {"configureUserId", configureUserId},
+    {
+        {"configureUserId", configureUserId},
 
-    {"addBusinessEvent", addBusinessEvent},
-    {"addResourceEvent", addResourceEvent},
-    {"addProgressionEvent", addProgressionEvent},
-    {"addDesignEvent", addDesignEvent},
-    {"addErrorEvent", addErrorEvent},
+        {"addBusinessEvent", addBusinessEvent},
+        {"addResourceEvent", addResourceEvent},
+        {"addProgressionEvent", addProgressionEvent},
+        {"addDesignEvent", addDesignEvent},
+        {"addErrorEvent", addErrorEvent},
+        {"addAdEvent", addAdEvent},
 
-    {"setEnabledEventSubmission", setEnabledEventSubmission},
+        {"setEnabledEventSubmission", setEnabledEventSubmission},
 
-    {"setEnabledInfoLog", setEnabledInfoLog},
-    {"setEnabledVerboseLog", setEnabledVerboseLog},
-    {"setEnabledManualSessionHandling", setEnabledManualSessionHandling},
-    {"setCustomDimension01", setCustomDimension01},
-    {"setCustomDimension02", setCustomDimension02},
-    {"setCustomDimension03", setCustomDimension03},
+        {"setEnabledInfoLog", setEnabledInfoLog},
+        {"setEnabledVerboseLog", setEnabledVerboseLog},
+        {"setEnabledManualSessionHandling", setEnabledManualSessionHandling},
+        {"setCustomDimension01", setCustomDimension01},
+        {"setCustomDimension02", setCustomDimension02},
+        {"setCustomDimension03", setCustomDimension03},
 
-    {"startSession", startSession},
-    {"endSession", endSession},
+        {"startSession", startSession},
+        {"endSession", endSession},
 
-    { "getRemoteConfigsValueAsString", getRemoteConfigsValueAsString },
-    { "isRemoteConfigsReady", isRemoteConfigsReady },
-    { "getRemoteConfigsContentAsString", getRemoteConfigsContentAsString },
-    { "setRemoteConfigsListener", setRemoteConfigsListener },
+        {"getRemoteConfigsValueAsString", getRemoteConfigsValueAsString},
+        {"isRemoteConfigsReady", isRemoteConfigsReady},
+        {"getRemoteConfigsContentAsString", getRemoteConfigsContentAsString},
+        {"setRemoteConfigsListener", setRemoteConfigsListener},
 
-    {0, 0}
-};
+        {0, 0}};
 
 static void LuaInit(lua_State* L)
 {

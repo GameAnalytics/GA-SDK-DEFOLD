@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.0**
+* added ad event
+
 **3.2.0**
 * added remote configs listener method
 * updated user identifier flow to prepare for iOS 14 IDFA changes (ios)

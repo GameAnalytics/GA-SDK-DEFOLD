@@ -579,6 +579,39 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::addAdEvent(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, const char *fields)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::addAdEvent((int)adAction, (int)adType, adSdkName, adPlacement, "");
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_addAdEvent((int)adAction, (int)adType, adSdkName, adPlacement, "");
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#endif
+        }
+
+        void GameAnalytics::addAdEventWithDuration(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::addAdEventWithDuration((int)adAction, (int)adType, adSdkName, adPlacement, duration, "");
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_addAdEventWithDuration((int)adAction, (int)adType, adSdkName, adPlacement, duration, "");
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#endif
+        }
+
+        void GameAnalytics::addAdEventWithNoAdReason(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, EGAAdError noAdReason, const char *fields)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::addAdEventWithNoAdReason((int)adAction, (int)adType, adSdkName, adPlacement, (int)noAdReason, "");
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_addAdEventWithNoAdReason((int)adAction, (int)adType, adSdkName, adPlacement, (int)noAdReason, "");
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#endif
+        }
+
         void GameAnalytics::setEnabledInfoLog(bool flag)
         {
 #if defined(DM_PLATFORM_IOS)

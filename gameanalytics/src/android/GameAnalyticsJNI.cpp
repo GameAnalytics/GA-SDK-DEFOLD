@@ -840,6 +840,108 @@ namespace gameanalytics {
             }
         }
 
+        void jni_addAdEvent(int adAction, int adType, const char *adSdkName, const char *adPlacement, const char *fields)
+        {
+            AttachScope attachscope;
+            JNIEnv *env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char *strMethod = "addAdEvent";
+
+            if (jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;)V");
+
+                if (jMethod)
+                {
+                    jstring j_adSdkName = env->NewStringUTF(adSdkName);
+                    jstring j_adPlacement = env->NewStringUTF(adPlacement);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement /*, j_fields*/);
+                    env->DeleteLocalRef(j_adSdkName);
+                    env->DeleteLocalRef(j_adPlacement);
+                    env->DeleteLocalRef(j_fields);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+        }
+
+        void jni_addAdEventWithDuration(int adAction, int adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields)
+        {
+            AttachScope attachscope;
+            JNIEnv *env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char *strMethod = "addAdEvent";
+
+            if (jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;J)V");
+
+                if (jMethod)
+                {
+                    jstring j_adSdkName = env->NewStringUTF(adSdkName);
+                    jstring j_adPlacement = env->NewStringUTF(adPlacement);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement, duration /*, j_fields*/);
+                    env->DeleteLocalRef(j_adSdkName);
+                    env->DeleteLocalRef(j_adPlacement);
+                    env->DeleteLocalRef(j_fields);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+        }
+
+        void jni_addAdEventWithNoAdReason(int adAction, int adType, const char *adSdkName, const char *adPlacement, int noAdReason, const char *fields)
+        {
+            AttachScope attachscope;
+            JNIEnv *env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char *strMethod = "addAdEvent";
+
+            if (jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;I)V");
+
+                if (jMethod)
+                {
+                    jstring j_adSdkName = env->NewStringUTF(adSdkName);
+                    jstring j_adPlacement = env->NewStringUTF(adPlacement);
+                    jstring j_fields = env->NewStringUTF(fields);
+                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement, noAdReason /*, j_fields*/);
+                    env->DeleteLocalRef(j_adSdkName);
+                    env->DeleteLocalRef(j_adPlacement);
+                    env->DeleteLocalRef(j_fields);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+        }
+
         void jni_setEnabledInfoLog(bool flag)
         {
             AttachScope attachscope;
