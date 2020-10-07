@@ -1264,6 +1264,9 @@ namespace gameanalytics {
             {
                 dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
             }
+
+            resultVector.push_back('\0');
+            return resultVector;
         }
 
         std::vector<char> jni_getRemoteConfigsValueAsStringWithDefaultValue(const char *key, const char *defaultValue)
