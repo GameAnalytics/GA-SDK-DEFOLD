@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.3**
+* added manual initialize option to use when setting remote configs listener
+
 **3.3.2**
 * bug fix for remote configs functions crash
 

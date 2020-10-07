@@ -64,13 +64,14 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "3.3.2"
+#define VERSION "3.3.3"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
 const char* game_key = NULL;
 const char* secret_key = NULL;
 bool use_imei_android = false;
+bool manual_initialize = false;
 dmScript::LuaCallbackInfo* g_remote_configs_listener;
 
 static int stringCmpi(const char *s1, const char *s2)
@@ -117,6 +118,23 @@ static int configureUserId(lua_State* L)
     else
     {
         dmLogWarning("Custom id is not enabled\n");
+    }
+
+    return 0;
+}
+
+// [Lua] gameanalytics.initialize()
+static int initialize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+
+    if(manual_initialize)
+    {
+        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
+    }
+    else
+    {
+        dmLogWarning("Manual initialize is not enabled\n");
     }
 
     return 0;
@@ -1239,6 +1257,8 @@ static const luaL_reg Module_methods[] =
     {
         {"configureUserId", configureUserId},
 
+        {"initialize", initialize},
+
         {"addBusinessEvent", addBusinessEvent},
         {"addResourceEvent", addResourceEvent},
         {"addProgressionEvent", addProgressionEvent},
@@ -1310,6 +1330,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
     use_imei_android = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_imei_android", 0) == 1;
     bool auto_detect_app_version = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.auto_detect_app_version", 0) == 1;
+    manual_initialize = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.manual_initialize", 0) == 1;
 
 #if defined(DM_PLATFORM_ANDROID)
     game_key = dmConfigFile::GetString(params->m_ConfigFile, "gameanalytics.game_key_android", 0);
@@ -1459,9 +1480,13 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     gameanalytics::defold::GameAnalytics::configureSdkGameEngineVersion(sdk_version);
     gameanalytics::defold::GameAnalytics::configureGameEngineVersion(engine_version);
 
-    if(!use_custom_id)
+    if(!use_custom_id && !manual_initialize)
     {
         gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
+    }
+    else if(manual_initialize)
+    {
+        dmLogInfo("Manual initialize is enabled. Initialize is delayed until gamenanalytics.initialize() has been called.");
     }
     else
     {
