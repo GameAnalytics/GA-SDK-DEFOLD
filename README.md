@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.4**
+* crash fix for when using keys for remote configs that are not present and not specifying default value
+
 **3.3.3**
 * added manual initialize option to use when setting remote configs listener
 

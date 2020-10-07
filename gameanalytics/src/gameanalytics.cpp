@@ -64,7 +64,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "3.3.3"
+#define VERSION "3.3.4"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1212,7 +1212,7 @@ static int getRemoteConfigsValueAsString(lua_State *L)
     }
     else
     {
-        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(cc_key);
+        std::vector<char> result = gameanalytics::defold::GameAnalytics::getRemoteConfigsValueAsString(cc_key, "");
         lua_pushstring( L, result.data() );
     }
 
