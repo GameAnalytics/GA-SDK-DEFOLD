@@ -3,14 +3,14 @@ name: "GameAnalytics"
 platforms:
     arm64-ios:
         context:
-            frameworks: ["AdSupport", "SystemConfiguration"]
+            frameworks: ["AdSupport", "SystemConfiguration", "AppTrackingTransparency"]
             flags:      ["-stdlib=libc++", "-std=c++11"]
             linkFlags:  ["-ObjC"]
             libs:       ["z", "c++", "sqlite3"]
 
     armv7-ios:
         context:
-            frameworks: ["AdSupport", "SystemConfiguration"]
+            frameworks: ["AdSupport", "SystemConfiguration", "AppTrackingTransparency"]
             flags:      ["-stdlib=libc++", "-std=c++11"]
             linkFlags:  ["-ObjC"]
             libs:       ["z", "c++", "sqlite3"]

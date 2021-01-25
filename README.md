@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.7**
+* fixed dependencies for iOS
+
 **3.3.6**
 * removed memory info from automatic crash reports
 
