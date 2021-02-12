@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.9**
+* added manifest for web
+
 **3.3.8**
 * updated client ts validator
 
