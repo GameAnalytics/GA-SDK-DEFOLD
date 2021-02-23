@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.10**
+* added idfa consent status field to events
+
 **3.3.9**
 * added manifest for web
 
