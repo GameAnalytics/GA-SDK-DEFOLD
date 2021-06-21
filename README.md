@@ -26,6 +26,10 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.3.11**
+* it should now be possible to not show idfa consent dialog if you don't have any third party code that needs to use idfa (ios)
+* prepared for google advertising identifier changes (will not use google advertising identifier when user has opted out) (android)
+
 **3.3.10**
 * added idfa consent status field to events
 

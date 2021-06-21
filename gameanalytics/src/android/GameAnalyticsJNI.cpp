@@ -474,7 +474,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "initializeWithGameKey";
+            const char* strMethod = "initialize";
 
             if(use_imei_android)
             {
@@ -559,7 +559,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addBusinessEventWithCurrency";
+            const char* strMethod = "addBusinessEvent";
 
             if(jClass)
             {
@@ -597,7 +597,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addBusinessEventWithCurrency";
+            const char* strMethod = "addBusinessEvent";
 
             if(jClass)
             {
@@ -641,7 +641,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addResourceEventWithFlowType";
+            const char* strMethod = "addResourceEvent";
 
             if(jClass)
             {
@@ -677,7 +677,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addProgressionEventWithProgressionStatus";
+            const char* strMethod = "addProgressionEvent";
 
             if(jClass)
             {
@@ -713,7 +713,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addProgressionEventWithProgressionStatus";
+            const char* strMethod = "addProgressionEvent";
 
             if(jClass)
             {
@@ -749,7 +749,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addDesignEventWithEventId";
+            const char* strMethod = "addDesignEvent";
 
             if(jClass)
             {
@@ -781,7 +781,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addDesignEventWithEventId";
+            const char* strMethod = "addDesignEvent";
 
             if(jClass)
             {
@@ -813,7 +813,7 @@ namespace gameanalytics {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
-            const char* strMethod = "addErrorEventWithSeverity";
+            const char* strMethod = "addErrorEvent";
 
             if(jClass)
             {
