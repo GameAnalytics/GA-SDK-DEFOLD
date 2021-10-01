@@ -139,11 +139,11 @@ void GameAnalyticsCpp::addBusinessEvent(const char *currency, int amount, const 
     NSString *itemIdString = !isStringNullOrEmpty(itemId) ? [NSString stringWithUTF8String:itemId] : nil;
     NSString *cartTypeString = !isStringNullOrEmpty(cartType) ? [NSString stringWithUTF8String:cartType] : nil;
     NSString *receiptString = !isStringNullOrEmpty(receipt) ? [NSString stringWithUTF8String:receipt] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
     [GameAnalytics addBusinessEventWithCurrency:currencyString
                                          amount:amountInteger
@@ -151,7 +151,7 @@ void GameAnalyticsCpp::addBusinessEvent(const char *currency, int amount, const 
                                          itemId:itemIdString
                                        cartType:cartTypeString
                                         receipt:receiptString
-                                         /*fields:fields_dict*/];
+                                         fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields) {
@@ -160,11 +160,11 @@ void GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(const char *currency,
     NSString *itemTypeString = !isStringNullOrEmpty(itemType) ? [NSString stringWithUTF8String:itemType] : nil;
     NSString *itemIdString = !isStringNullOrEmpty(itemId) ? [NSString stringWithUTF8String:itemId] : nil;
     NSString *cartTypeString = !isStringNullOrEmpty(cartType) ? [NSString stringWithUTF8String:cartType] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
     [GameAnalytics addBusinessEventWithCurrency:currencyString
                                          amount:amountInteger
@@ -172,7 +172,7 @@ void GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(const char *currency,
                                          itemId:itemIdString
                                        cartType:cartTypeString
                                autoFetchReceipt:TRUE
-                                         /*fields:fields_dict*/];
+                                         fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addResourceEvent(int flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields) {
@@ -180,11 +180,11 @@ void GameAnalyticsCpp::addResourceEvent(int flowType, const char *currency, floa
     NSNumber *amountNumber = [NSNumber numberWithFloat:amount];
     NSString *itemTypeString = !isStringNullOrEmpty(itemType) ? [NSString stringWithUTF8String:itemType] : nil;
     NSString *itemIdString = !isStringNullOrEmpty(itemId) ? [NSString stringWithUTF8String:itemId] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
     [GameAnalytics addResourceEventWithFlowType:(GAResourceFlowType)flowType
                                        currency:currencyString
@@ -198,82 +198,82 @@ void GameAnalyticsCpp::addProgressionEvent(int progressionStatus, const char *pr
     NSString *progression01String = !isStringNullOrEmpty(progression01) ? [NSString stringWithUTF8String:progression01] : nil;
     NSString *progression02String = !isStringNullOrEmpty(progression02) ? [NSString stringWithUTF8String:progression02] : nil;
     NSString *progression03String = !isStringNullOrEmpty(progression03) ? [NSString stringWithUTF8String:progression03] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
     [GameAnalytics addProgressionEventWithProgressionStatus:(GAProgressionStatus)progressionStatus
                                               progression01:progression01String
                                               progression02:progression02String
                                               progression03:progression03String
-                                                     /*fields:fields_dict*/];
+                                                     fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addProgressionEventWithScore(int progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields) {
     NSString *progression01String = !isStringNullOrEmpty(progression01) ? [NSString stringWithUTF8String:progression01] : nil;
     NSString *progression02String = !isStringNullOrEmpty(progression02) ? [NSString stringWithUTF8String:progression02] : nil;
     NSString *progression03String = !isStringNullOrEmpty(progression03) ? [NSString stringWithUTF8String:progression03] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
     [GameAnalytics addProgressionEventWithProgressionStatus:(GAProgressionStatus)progressionStatus
                                               progression01:progression01String
                                               progression02:progression02String
                                               progression03:progression03String
                                                       score:score
-                                                     /*fields:fields_dict*/];
+                                                     fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addDesignEvent(const char *eventId, const char *fields) {
     NSString *eventIdString = !isStringNullOrEmpty(eventId) ? [NSString stringWithUTF8String:eventId] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
-    [GameAnalytics addDesignEventWithEventId:eventIdString value:nil /*fields:fields_dict*/];
+    [GameAnalytics addDesignEventWithEventId:eventIdString value:nil fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addDesignEventWithValue(const char *eventId, float value, const char *fields) {
     NSString *eventIdString = !isStringNullOrEmpty(eventId) ? [NSString stringWithUTF8String:eventId] : nil;
     NSNumber *valueNumber = [NSNumber numberWithFloat:value];
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
-    [GameAnalytics addDesignEventWithEventId:eventIdString value:valueNumber /*fields:fields_dict*/];
+    [GameAnalytics addDesignEventWithEventId:eventIdString value:valueNumber fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addErrorEvent(int severity, const char *message, const char *fields) {
     NSString *messageString = !isStringNullOrEmpty(message) ? [NSString stringWithUTF8String:message] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
-    [GameAnalytics addErrorEventWithSeverity:(GAErrorSeverity)severity message:messageString /*fields:fields_dict*/];
+    [GameAnalytics addErrorEventWithSeverity:(GAErrorSeverity)severity message:messageString fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addAdEvent(int adAction, int adType, const char *adSdkName, const char *adPlacement, const char *fields)
 {
     NSString *adSdkNameString = !isStringNullOrEmpty(adSdkName) ? [NSString stringWithUTF8String:adSdkName] : nil;
     NSString *adPlacementString = !isStringNullOrEmpty(adPlacement) ? [NSString stringWithUTF8String:adPlacement] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
-    [GameAnalytics addAdEventWithAction:(GAAdAction)adAction adType:(GAAdType)adType adSdkName:adSdkNameString adPlacement:adPlacementString /*fields:fields_dict*/];
+    [GameAnalytics addAdEventWithAction:(GAAdAction)adAction adType:(GAAdType)adType adSdkName:adSdkNameString adPlacement:adPlacementString fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addAdEventWithDuration(int adAction, int adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields)
@@ -281,26 +281,26 @@ void GameAnalyticsCpp::addAdEventWithDuration(int adAction, int adType, const ch
     NSString *adSdkNameString = !isStringNullOrEmpty(adSdkName) ? [NSString stringWithUTF8String:adSdkName] : nil;
     NSString *adPlacementString = !isStringNullOrEmpty(adPlacement) ? [NSString stringWithUTF8String:adPlacement] : nil;
     NSInteger durationInteger = (NSInteger)duration;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
-    [GameAnalytics addAdEventWithAction:(GAAdAction)adAction adType:(GAAdType)adType adSdkName:adSdkNameString adPlacement:adPlacementString duration:durationInteger /*fields:fields_dict*/];
+    [GameAnalytics addAdEventWithAction:(GAAdAction)adAction adType:(GAAdType)adType adSdkName:adSdkNameString adPlacement:adPlacementString duration:durationInteger fields:fields_dict];
 }
 
 void GameAnalyticsCpp::addAdEventWithNoAdReason(int adAction, int adType, const char *adSdkName, const char *adPlacement, int noAdReason, const char *fields)
 {
     NSString *adSdkNameString = !isStringNullOrEmpty(adSdkName) ? [NSString stringWithUTF8String:adSdkName] : nil;
     NSString *adPlacementString = !isStringNullOrEmpty(adPlacement) ? [NSString stringWithUTF8String:adPlacement] : nil;
-    /*NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
+    NSString *fieldsString = fields != NULL ? [NSString stringWithUTF8String:fields] : nil;
     NSDictionary *fields_dict = nil;
     if (fieldsString) {
         fields_dict = [NSJSONSerialization JSONObjectWithData:[fieldsString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-    }*/
+    }
 
-    [GameAnalytics addAdEventWithAction:(GAAdAction)adAction adType:(GAAdType)adType adSdkName:adSdkNameString adPlacement:adPlacementString noAdReason:(GAAdError)noAdReason /*fields:fields_dict*/];
+    [GameAnalytics addAdEventWithAction:(GAAdAction)adAction adType:(GAAdType)adType adSdkName:adSdkNameString adPlacement:adPlacementString noAdReason:(GAAdError)noAdReason fields:fields_dict];
 }
 
 void GameAnalyticsCpp::setEnabledInfoLog(bool flag) {

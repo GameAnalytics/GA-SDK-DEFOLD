@@ -60,31 +60,45 @@ var GameAnalyticsDefold = {
     },
     js_addBusinessEvent: function(currency, amount, itemType, itemId, cartType, fields)
     {
-        gameanalytics.GameAnalytics.addBusinessEvent(UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), UTF8ToString(cartType)/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addBusinessEvent(UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), UTF8ToString(cartType), JSON.parse(fieldsString));
     },
     js_addResourceEvent: function(flowType, currency, amount, itemType, itemId, fields)
     {
-        gameanalytics.GameAnalytics.addResourceEvent(flowType, UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId)/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addResourceEvent(flowType, UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), JSON.parse(fieldsString));
     },
     js_addProgressionEvent: function(progressionStatus, progression01, progression02, progression03, fields)
     {
-        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03)/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), JSON.parse(fieldsString));
     },
     js_addProgressionEventWithScore: function(progressionStatus, progression01, progression02, progression03, score, fields)
     {
-        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), score/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), score, JSON.parse(fieldsString));
     },
     js_addDesignEvent: function(eventId, fields)
     {
-        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId)/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), JSON.parse(fieldsString));
     },
     js_addDesignEventWithValue: function(eventId, value, fields)
     {
-        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), value/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), value, JSON.parse(fieldsString));
     },
     js_addErrorEvent: function(severity, message, fields)
     {
-        gameanalytics.GameAnalytics.addErrorEvent(severity, UTF8ToString(message)/*, UTF8ToString(fields)*/);
+        var fieldsString = UTF8ToString(fields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.addErrorEvent(severity, UTF8ToString(message), JSON.parse(fieldsString));
     },
     js_setEnabledInfoLog: function(enabled)
     {

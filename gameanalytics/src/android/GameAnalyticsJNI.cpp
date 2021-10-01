@@ -563,7 +563,7 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
                 if(jMethod)
                 {
@@ -572,7 +572,7 @@ namespace gameanalytics {
                     jstring j_itemId = env->NewStringUTF(itemId);
                     jstring j_cartType = env->NewStringUTF(cartType);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType, j_fields);
                     env->DeleteLocalRef(j_currency);
                     env->DeleteLocalRef(j_itemType);
                     env->DeleteLocalRef(j_itemId);
@@ -601,7 +601,7 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
                 if(jMethod)
                 {
@@ -613,7 +613,7 @@ namespace gameanalytics {
                     jstring j_store = env->NewStringUTF(store);
                     jstring j_signature = env->NewStringUTF(signature);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType, j_receipt, j_store, j_signature/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_currency, amount, j_itemType, j_itemId, j_cartType, j_receipt, j_store, j_signature, j_fields);
                     env->DeleteLocalRef(j_currency);
                     env->DeleteLocalRef(j_itemType);
                     env->DeleteLocalRef(j_itemId);
@@ -645,7 +645,7 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;FLjava/lang/String;Ljava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;FLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
                 if(jMethod)
                 {
@@ -653,7 +653,7 @@ namespace gameanalytics {
                     jstring j_itemType = env->NewStringUTF(itemType);
                     jstring j_itemId = env->NewStringUTF(itemId);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, flowType, j_currency, amount, j_itemType, j_itemId/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, flowType, j_currency, amount, j_itemType, j_itemId, j_fields);
                     env->DeleteLocalRef(j_currency);
                     env->DeleteLocalRef(j_itemType);
                     env->DeleteLocalRef(j_itemId);
@@ -681,7 +681,7 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
                 if(jMethod)
                 {
@@ -689,7 +689,7 @@ namespace gameanalytics {
                     jstring j_progression02 = env->NewStringUTF(progression02);
                     jstring j_progression03 = env->NewStringUTF(progression03);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03, j_fields);
                     env->DeleteLocalRef(j_progression01);
                     env->DeleteLocalRef(j_progression02);
                     env->DeleteLocalRef(j_progression03);
@@ -717,7 +717,7 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;D)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;DLjava/lang/String;)V");
 
                 if(jMethod)
                 {
@@ -725,7 +725,7 @@ namespace gameanalytics {
                     jstring j_progression02 = env->NewStringUTF(progression02);
                     jstring j_progression03 = env->NewStringUTF(progression03);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03, (double)score/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, progressionStatus, j_progression01, j_progression02, j_progression03, (double)score, j_fields);
                     env->DeleteLocalRef(j_progression01);
                     env->DeleteLocalRef(j_progression02);
                     env->DeleteLocalRef(j_progression03);
@@ -753,13 +753,13 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;Ljava/lang/String;)V");
 
                 if(jMethod)
                 {
                     jstring j_eventId = env->NewStringUTF(eventId);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId, j_fields);
                     env->DeleteLocalRef(j_eventId);
                     env->DeleteLocalRef(j_fields);
                 }
@@ -785,13 +785,13 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;D)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;DLjava/lang/String;)V");
 
                 if(jMethod)
                 {
                     jstring j_eventId = env->NewStringUTF(eventId);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId, value/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_eventId, value, j_fields);
                     env->DeleteLocalRef(j_eventId);
                     env->DeleteLocalRef(j_fields);
                 }
@@ -817,13 +817,13 @@ namespace gameanalytics {
 
             if(jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(ILjava/lang/String;Ljava/lang/String;)V");
 
                 if(jMethod)
                 {
                     jstring j_message = env->NewStringUTF(message);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, severity, j_message/*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, severity, j_message, j_fields);
                     env->DeleteLocalRef(j_message);
                     env->DeleteLocalRef(j_fields);
                 }
@@ -849,14 +849,14 @@ namespace gameanalytics {
 
             if (jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
                 if (jMethod)
                 {
                     jstring j_adSdkName = env->NewStringUTF(adSdkName);
                     jstring j_adPlacement = env->NewStringUTF(adPlacement);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement /*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement , j_fields);
                     env->DeleteLocalRef(j_adSdkName);
                     env->DeleteLocalRef(j_adPlacement);
                     env->DeleteLocalRef(j_fields);
@@ -883,14 +883,14 @@ namespace gameanalytics {
 
             if (jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;J)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;JLjava/lang/String;)V");
 
                 if (jMethod)
                 {
                     jstring j_adSdkName = env->NewStringUTF(adSdkName);
                     jstring j_adPlacement = env->NewStringUTF(adPlacement);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement, duration /*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement, duration , j_fields);
                     env->DeleteLocalRef(j_adSdkName);
                     env->DeleteLocalRef(j_adPlacement);
                     env->DeleteLocalRef(j_fields);
@@ -917,14 +917,14 @@ namespace gameanalytics {
 
             if (jClass)
             {
-                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;I)V");
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(IILjava/lang/String;Ljava/lang/String;ILjava/lang/String;)V");
 
                 if (jMethod)
                 {
                     jstring j_adSdkName = env->NewStringUTF(adSdkName);
                     jstring j_adPlacement = env->NewStringUTF(adPlacement);
                     jstring j_fields = env->NewStringUTF(fields);
-                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement, noAdReason /*, j_fields*/);
+                    env->CallStaticVoidMethod(jClass, jMethod, adAction, adType, j_adSdkName, j_adPlacement, noAdReason , j_fields);
                     env->DeleteLocalRef(j_adSdkName);
                     env->DeleteLocalRef(j_adPlacement);
                     env->DeleteLocalRef(j_fields);
