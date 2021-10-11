@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**4.1.2**
+* fixed errors for building for windows
+
 **4.1.1**
 * custom fields fixes
 
