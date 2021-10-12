@@ -26,6 +26,9 @@ If you have any issues or feedback regarding the SDK, please contact our friendl
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**4.1.3**
+* fixed bug with custom event fields
+
 **4.1.2**
 * fixed errors for building for windows
 
