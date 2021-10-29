@@ -64,7 +64,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "4.1.3"
+#define VERSION "4.1.4"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
