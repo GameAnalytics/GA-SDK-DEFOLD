@@ -716,6 +716,19 @@ namespace gameanalytics
 #endif
         }
 
+        void GameAnalytics::setGlobalCustomEventFields(const char *customFields)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::setGlobalCustomEventFields(customFields);
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_setGlobalCustomEventFields(customFields);
+#elif defined(DM_PLATFORM_HTML5)
+            js_setGlobalCustomEventFields(customFields);
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+            gameanalytics::GameAnalytics::setGlobalCustomEventFields(customFields);
+#endif
+        }
+
         void GameAnalytics::startSession()
         {
 #if defined(DM_PLATFORM_IOS)

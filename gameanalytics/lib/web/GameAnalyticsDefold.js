@@ -58,6 +58,12 @@ var GameAnalyticsDefold = {
     {
         gameanalytics.GameAnalytics.setCustomDimension03(UTF8ToString(customDimension));
     },
+    js_setGlobalCustomEventFields: function (customFields)
+    {
+        var fieldsString = UTF8ToString(customFields);
+        fieldsString = fieldsString ? fieldsString : "{}";
+        gameanalytics.GameAnalytics.setCustomDimension03(JSON.parse(fieldsString));
+    },
     js_addBusinessEvent: function(currency, amount, itemType, itemId, cartType, fields)
     {
         var fieldsString = UTF8ToString(fields);

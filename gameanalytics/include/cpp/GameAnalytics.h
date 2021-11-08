@@ -160,6 +160,8 @@ namespace gameanalytics
         static void setCustomDimension02(const char* dimension02);
         static void setCustomDimension03(const char* dimension03);
 
+        static void setGlobalCustomEventFields(const char *customFields);
+
         static void startSession();
         static void endSession();
 

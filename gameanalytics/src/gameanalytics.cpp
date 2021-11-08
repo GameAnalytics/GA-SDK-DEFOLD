@@ -64,7 +64,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "4.1.4"
+#define VERSION "4.2.0"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1134,6 +1134,22 @@ static int setCustomDimension03(lua_State *L)
     return 0;
 }
 
+// [Lua] gameanalytics.setGlobalCustomEventFields( customFields )
+static int setGlobalCustomEventFields(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if (lua_type(L, 1) != LUA_TSTRING)
+    {
+        return luaL_error(L, "gameanalytics.setGlobalCustomEventFields(customFields): customFields, expected string got: %s", LuaTypeName(L, 1));
+    }
+
+    const char *s = lua_tostring(L, 1);
+
+    gameanalytics::defold::GameAnalytics::setGlobalCustomEventFields(s);
+
+    return 0;
+}
+
 // [Lua] gameanalytics.startSession()
 static int startSession(lua_State *L)
 {
@@ -1274,6 +1290,7 @@ static const luaL_reg Module_methods[] =
         {"setCustomDimension01", setCustomDimension01},
         {"setCustomDimension02", setCustomDimension02},
         {"setCustomDimension03", setCustomDimension03},
+        {"setGlobalCustomEventFields", setGlobalCustomEventFields},
 
         {"startSession", startSession},
         {"endSession", endSession},

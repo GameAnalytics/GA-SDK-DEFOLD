@@ -17,6 +17,7 @@ extern "C"
     void js_setCustomDimension01(const char *customDimension);
     void js_setCustomDimension02(const char *customDimension);
     void js_setCustomDimension03(const char *customDimension);
+    void js_setGlobalCustomEventFields(const char *fields);
     void js_addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
     void js_addResourceEvent(int flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields);
     void js_addProgressionEvent(int progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields);

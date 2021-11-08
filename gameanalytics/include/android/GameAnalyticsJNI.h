@@ -47,6 +47,8 @@ namespace gameanalytics {
         extern void jni_setCustomDimension02(const char *customDimension);
         extern void jni_setCustomDimension03(const char *customDimension);
 
+        extern void jni_setGlobalCustomEventFields(const char *customFields);
+
         extern void jni_startSession();
         extern void jni_endSession();
 

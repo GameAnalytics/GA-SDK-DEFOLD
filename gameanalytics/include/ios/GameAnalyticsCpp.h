@@ -42,6 +42,8 @@ public:
     static void setCustomDimension02(const char *customDimension);
     static void setCustomDimension03(const char *customDimension);
 
+    static void setGlobalCustomEventFields(const char *customFields);
+
     static void startSession();
     static void endSession();
 

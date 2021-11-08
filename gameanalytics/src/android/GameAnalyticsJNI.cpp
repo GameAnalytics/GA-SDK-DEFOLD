@@ -1172,6 +1172,36 @@ namespace gameanalytics {
             }
         }
 
+        void jni_setGlobalCustomEventFields(const char *customFields)
+        {
+            AttachScope attachscope;
+            JNIEnv *env = attachscope.m_Env;
+            jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
+            const char *strMethod = "setGlobalCustomEventFields";
+
+            if (jClass)
+            {
+                jmethodID jMethod = env->GetStaticMethodID(jClass, strMethod, "(Ljava/lang/String;)V");
+
+                if (jMethod)
+                {
+                    jstring j_customFields = env->NewStringUTF(customFields);
+                    env->CallStaticVoidMethod(jClass, jMethod, j_customFields);
+                    env->DeleteLocalRef(j_customFields);
+                }
+                else
+                {
+                    dmLogError("*** Failed to find method %s ***", strMethod);
+                }
+
+                env->DeleteLocalRef(jClass);
+            }
+            else
+            {
+                dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_CLASS_NAME);
+            }
+        }
+
         void jni_startSession()
         {
             AttachScope attachscope;
