@@ -1,7 +1,7 @@
 # GA-SDK-DEFOLD
 GameAnalytics SDK for Defold.
 
-Documentation is located [here](https://gameanalytics.com/docs/defold-sdk).  
+Documentation is located [here](https://gameanalytics.com/docs/s/article/Defold-SDK-Setup).  
 
 If you have any issues or feedback regarding the SDK, please contact our friendly support team [here](https://gameanalytics.com/contact).
 
