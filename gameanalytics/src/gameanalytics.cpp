@@ -39,6 +39,7 @@
 #define DurationOptionsKey "duration"
 #define NoAdReasonOptionsKey "noAdReason"
 #define CustomFieldsOptionsKey "customFields"
+#define MergeFieldsOptionsKey "mergeFields"
 #define KeyOptionsKey "key"
 #define DefaultValueOptionsKey "defaultValue"
 
@@ -64,7 +65,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "4.2.1"
+#define VERSION "4.2.2"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -254,6 +255,7 @@ static int addBusinessEvent(lua_State *L)
     const char *signature = "";
 #endif
     const char *fields = "";
+    bool mergeFields = false;
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -366,6 +368,17 @@ static int addBusinessEvent(lua_State *L)
                     return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
                 }
             }
+            else if (UTF8IsEqual(key, MergeFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TBOOLEAN)
+                {
+                    mergeFields = lua_toboolean(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected boolean got: %s", MergeFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
             else
             {
                 return luaL_error(L, "gameanalytics.addBusinessEvent(options): Invalid option: '%s'", key);
@@ -393,17 +406,17 @@ static int addBusinessEvent(lua_State *L)
 #if defined(DM_PLATFORM_IOS)
     if(autoFetchReceipt)
     {
-        gameanalytics::defold::GameAnalytics::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType, fields);
+        gameanalytics::defold::GameAnalytics::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType, fields, mergeFields);
     }
     else
 #endif
     {
 #if defined(DM_PLATFORM_IOS)
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, fields);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, signature, fields);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, signature, fields, mergeFields);
 #else
-        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, fields);
+        gameanalytics::defold::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, fields, mergeFields);
 #endif
     }
 
@@ -420,6 +433,7 @@ static int addResourceEvent(lua_State *L)
     const char *itemType = "";
     const char *itemId = "";
     const char *fields = "";
+    bool mergeFields = false;
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -502,7 +516,18 @@ static int addResourceEvent(lua_State *L)
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.addResourceEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, MergeFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TBOOLEAN)
+                {
+                    mergeFields = lua_tostring(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addResourceEvent(options): options.%s, expected boolean got: %s", MergeFieldsOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else
@@ -533,7 +558,7 @@ static int addResourceEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addResourceEvent(options): options.%s is mandatory and can't be null or empty", ItemIdOptionsKey);
     }
 
-    gameanalytics::defold::GameAnalytics::addResourceEvent(flowType, currency, amount, itemType, itemId, fields);
+    gameanalytics::defold::GameAnalytics::addResourceEvent(flowType, currency, amount, itemType, itemId, fields, mergeFields);
 
     return 0;
 }
@@ -549,6 +574,7 @@ static int addProgressionEvent( lua_State *L )
     lua_Integer score = 0;
     bool sendScore = false;
     const char *fields = "";
+    bool mergeFields = false;
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -636,7 +662,18 @@ static int addProgressionEvent( lua_State *L )
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.addProgressionEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, MergeFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TBOOLEAN)
+                {
+                    mergeFields = lua_toboolean(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addProgressionEvent(options): options.%s, expected string got: %s", MergeFieldsOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else
@@ -657,11 +694,11 @@ static int addProgressionEvent( lua_State *L )
 
     if(sendScore)
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(progressionStatus, progression01, progression02, progression03, score, fields);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(progressionStatus, progression01, progression02, progression03, score, fields, mergeFields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addProgressionEvent(progressionStatus, progression01, progression02, progression03, fields);
+        gameanalytics::defold::GameAnalytics::addProgressionEvent(progressionStatus, progression01, progression02, progression03, fields, mergeFields);
     }
 
     return 0;
@@ -675,6 +712,7 @@ static int addDesignEvent(lua_State *L)
     lua_Number value = 0;
     bool sendValue = false;
     const char *fields = "";
+    bool mergeFields = false;
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -713,7 +751,18 @@ static int addDesignEvent(lua_State *L)
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.addDesignEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, MergeFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TBOOLEAN)
+                {
+                    mergeFields = lua_toboolean(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addDesignEvent(options): options.%s, expected boolean got: %s", MergeFieldsOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else
@@ -734,11 +783,11 @@ static int addDesignEvent(lua_State *L)
 
     if(sendValue)
     {
-        gameanalytics::defold::GameAnalytics::addDesignEvent(eventId, value, fields);
+        gameanalytics::defold::GameAnalytics::addDesignEvent(eventId, value, fields, mergeFields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addDesignEvent(eventId, fields);
+        gameanalytics::defold::GameAnalytics::addDesignEvent(eventId, fields, mergeFields);
     }
 
     return 0;
@@ -751,6 +800,7 @@ static int addErrorEvent(lua_State *L)
     gameanalytics::defold::EGAErrorSeverity severity = (gameanalytics::defold::EGAErrorSeverity)0;
     const char *message = "";
     const char *fields = "";
+    bool mergeFields = false;
 
     if(lua_type(L, 1) == LUA_TTABLE)
     {
@@ -813,7 +863,18 @@ static int addErrorEvent(lua_State *L)
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.addErrorEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, MergeFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TBOOLEAN)
+                {
+                    mergeFields = lua_toboolean(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addErrorEvent(options): options.%s, expected boolean got: %s", MergeFieldsOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else
@@ -827,7 +888,7 @@ static int addErrorEvent(lua_State *L)
         return luaL_error(L, "gameanalytics.addErrorEvent(options): options, expected table got: %s", LuaTypeName(L, 1));
     }
 
-    gameanalytics::defold::GameAnalytics::addErrorEvent(severity, message, fields);
+    gameanalytics::defold::GameAnalytics::addErrorEvent(severity, message, fields, mergeFields);
 
     return 0;
 }
@@ -844,6 +905,7 @@ static int addAdEvent(lua_State *L)
     bool sendDuration = false;
     gameanalytics::defold::EGAAdError noAdReason = (gameanalytics::defold::EGAAdError)0;
     const char *fields = "";
+    bool mergeFields = false;
 
     if (lua_type(L, 1) == LUA_TTABLE)
     {
@@ -1004,7 +1066,18 @@ static int addAdEvent(lua_State *L)
                 }
                 else
                 {
-                    return luaL_error(L, "gameanalytics.addBusinessEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected string got: %s", CustomFieldsOptionsKey, LuaTypeName(L, -1));
+                }
+            }
+            else if (UTF8IsEqual(key, MergeFieldsOptionsKey))
+            {
+                if (lua_type(L, -1) == LUA_TBOOLEAN)
+                {
+                    mergeFields = lua_toboolean(L, -1);
+                }
+                else
+                {
+                    return luaL_error(L, "gameanalytics.addAdEvent(options): options.%s, expected boolean got: %s", MergeFieldsOptionsKey, LuaTypeName(L, -1));
                 }
             }
             else
@@ -1020,11 +1093,11 @@ static int addAdEvent(lua_State *L)
 
     if(sendDuration)
     {
-        gameanalytics::defold::GameAnalytics::addAdEventWithDuration(adAction, adType, adSdkName, adPlacement, duration, fields);
+        gameanalytics::defold::GameAnalytics::addAdEventWithDuration(adAction, adType, adSdkName, adPlacement, duration, fields, mergeFields);
     }
     else
     {
-        gameanalytics::defold::GameAnalytics::addAdEventWithNoAdReason(adAction, adType, adSdkName, adPlacement, noAdReason, fields);
+        gameanalytics::defold::GameAnalytics::addAdEventWithNoAdReason(adAction, adType, adSdkName, adPlacement, noAdReason, fields, mergeFields);
     }
 
     return 0;

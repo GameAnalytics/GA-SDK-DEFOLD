@@ -76,21 +76,21 @@ namespace gameanalytics
             static void initialize(const char *gameKey, const char *gameSecret, bool use_imei_android);
 
 #if defined(DM_PLATFORM_IOS)
-            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields);
-            static void addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
+            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields, bool mergeFields);
+            static void addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields, bool mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields);
+            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields, bool mergeFields);
 #endif
-            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields);
-            static void addResourceEvent(EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields);
-            static void addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields);
-            static void addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields);
-            static void addDesignEvent(const char *eventId, const char *fields);
-            static void addDesignEvent(const char *eventId, float value, const char *fields);
-            static void addErrorEvent(EGAErrorSeverity severity, const char *message, const char *fields);
-            static void addAdEvent(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, const char *fields);
-            static void addAdEventWithDuration(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields);
-            static void addAdEventWithNoAdReason(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, EGAAdError noAdReason, const char *fields);
+            static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields, bool mergeFields);
+            static void addResourceEvent(EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields, bool mergeFields);
+            static void addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields, bool mergeFields);
+            static void addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields, bool mergeFields);
+            static void addDesignEvent(const char *eventId, const char *fields, bool mergeFields);
+            static void addDesignEvent(const char *eventId, float value, const char *fields, bool mergeFields);
+            static void addErrorEvent(EGAErrorSeverity severity, const char *message, const char *fields, bool mergeFields);
+            static void addAdEvent(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, const char *fields, bool mergeFields);
+            static void addAdEventWithDuration(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields, bool mergeFields);
+            static void addAdEventWithNoAdReason(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, EGAAdError noAdReason, const char *fields, bool mergeFields);
 
             static void setEnabledInfoLog(bool flag);
             static void setEnabledVerboseLog(bool flag);

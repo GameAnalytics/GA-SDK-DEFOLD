@@ -472,141 +472,141 @@ namespace gameanalytics
         }
 
 #if defined(DM_PLATFORM_IOS)
-        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields)
+        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields, bool mergeFields)
         {
-            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, fields);
+            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, receipt, fields, mergeFields);
         }
 
-        void GameAnalytics::addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields)
+        void GameAnalytics::addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields, bool mergeFields)
         {
-            GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType, fields);
+            GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType, fields, mergeFields);
         }
 #elif defined(DM_PLATFORM_ANDROID)
-        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields)
+        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature, const char *fields, bool mergeFields)
         {
-            jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature, fields);
+            jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature, fields, mergeFields);
         }
 #endif
 
-        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields)
+        void GameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, "", fields);
+            GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, "", fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addBusinessEvent(currency, amount, itemType, itemId, cartType, fields);
+            jni_addBusinessEvent(currency, amount, itemType, itemId, cartType, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addBusinessEvent(currency, amount, itemType, itemId, cartType, fields);
+            js_addBusinessEvent(currency, amount, itemType, itemId, cartType, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, fields);
+            gameanalytics::GameAnalytics::addBusinessEvent(currency, amount, itemType, itemId, cartType, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addResourceEvent(EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields)
+        void GameAnalytics::addResourceEvent(EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addResourceEvent((int)flowType, currency, amount, itemType, itemId, fields);
+            GameAnalyticsCpp::addResourceEvent((int)flowType, currency, amount, itemType, itemId, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addResourceEvent((int)flowType, currency, amount, itemType, itemId, fields);
+            jni_addResourceEvent((int)flowType, currency, amount, itemType, itemId, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addResourceEvent((int)flowType, currency, amount, itemType, itemId, fields);
+            js_addResourceEvent((int)flowType, currency, amount, itemType, itemId, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addResourceEvent((gameanalytics::EGAResourceFlowType)((int)flowType), currency, amount, itemType, itemId, fields);
+            gameanalytics::GameAnalytics::addResourceEvent((gameanalytics::EGAResourceFlowType)((int)flowType), currency, amount, itemType, itemId, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields)
+        void GameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, fields);
+            GameAnalyticsCpp::addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, fields);
+            jni_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, fields);
+            js_addProgressionEvent((int)progressionStatus, progression01, progression02, progression03, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03, fields);
+            gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields)
+        void GameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, fields);
+            GameAnalyticsCpp::addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, fields);
+            jni_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, fields);
+            js_addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03, score, fields);
+            gameanalytics::GameAnalytics::addProgressionEvent((gameanalytics::EGAProgressionStatus)((int)progressionStatus), progression01, progression02, progression03, score, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addDesignEvent(const char *eventId, const char *fields)
+        void GameAnalytics::addDesignEvent(const char *eventId, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addDesignEvent(eventId, fields);
+            GameAnalyticsCpp::addDesignEvent(eventId, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addDesignEvent(eventId, fields);
+            jni_addDesignEvent(eventId, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addDesignEvent(eventId, fields);
+            js_addDesignEvent(eventId, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addDesignEvent(eventId, fields);
+            gameanalytics::GameAnalytics::addDesignEvent(eventId, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addDesignEvent(const char *eventId, float value, const char *fields)
+        void GameAnalytics::addDesignEvent(const char *eventId, float value, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addDesignEventWithValue(eventId, value, fields);
+            GameAnalyticsCpp::addDesignEventWithValue(eventId, value, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addDesignEventWithValue(eventId, value, fields);
+            jni_addDesignEventWithValue(eventId, value, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addDesignEventWithValue(eventId, value, fields);
+            js_addDesignEventWithValue(eventId, value, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addDesignEvent(eventId, value, fields);
+            gameanalytics::GameAnalytics::addDesignEvent(eventId, value, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addErrorEvent(EGAErrorSeverity severity, const char *message, const char *fields)
+        void GameAnalytics::addErrorEvent(EGAErrorSeverity severity, const char *message, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addErrorEvent((int)severity, message, fields);
+            GameAnalyticsCpp::addErrorEvent((int)severity, message, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addErrorEvent((int)severity, message, fields);
+            jni_addErrorEvent((int)severity, message, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
-            js_addErrorEvent((int)severity, message, fields);
+            js_addErrorEvent((int)severity, message, fields, mergeFields);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-            gameanalytics::GameAnalytics::addErrorEvent((gameanalytics::EGAErrorSeverity)((int)severity), message, fields);
+            gameanalytics::GameAnalytics::addErrorEvent((gameanalytics::EGAErrorSeverity)((int)severity), message, fields, mergeFields);
 #endif
         }
 
-        void GameAnalytics::addAdEvent(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, const char *fields)
+        void GameAnalytics::addAdEvent(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addAdEvent((int)adAction, (int)adType, adSdkName, adPlacement, fields);
+            GameAnalyticsCpp::addAdEvent((int)adAction, (int)adType, adSdkName, adPlacement, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addAdEvent((int)adAction, (int)adType, adSdkName, adPlacement, fields);
-#elif defined(DM_PLATFORM_HTML5)
-#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
-#endif
-        }
-
-        void GameAnalytics::addAdEventWithDuration(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields)
-        {
-#if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addAdEventWithDuration((int)adAction, (int)adType, adSdkName, adPlacement, duration, fields);
-#elif defined(DM_PLATFORM_ANDROID)
-            jni_addAdEventWithDuration((int)adAction, (int)adType, adSdkName, adPlacement, duration, fields);
+            jni_addAdEvent((int)adAction, (int)adType, adSdkName, adPlacement, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 #endif
         }
 
-        void GameAnalytics::addAdEventWithNoAdReason(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, EGAAdError noAdReason, const char *fields)
+        void GameAnalytics::addAdEventWithDuration(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, int duration, const char *fields, bool mergeFields)
         {
 #if defined(DM_PLATFORM_IOS)
-            GameAnalyticsCpp::addAdEventWithNoAdReason((int)adAction, (int)adType, adSdkName, adPlacement, (int)noAdReason, fields);
+            GameAnalyticsCpp::addAdEventWithDuration((int)adAction, (int)adType, adSdkName, adPlacement, duration, fields, mergeFields);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_addAdEventWithNoAdReason((int)adAction, (int)adType, adSdkName, adPlacement, (int)noAdReason, fields);
+            jni_addAdEventWithDuration((int)adAction, (int)adType, adSdkName, adPlacement, duration, fields, mergeFields);
+#elif defined(DM_PLATFORM_HTML5)
+#elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
+#endif
+        }
+
+        void GameAnalytics::addAdEventWithNoAdReason(EGAAdAction adAction, EGAAdType adType, const char *adSdkName, const char *adPlacement, EGAAdError noAdReason, const char *fields, bool mergeFields)
+        {
+#if defined(DM_PLATFORM_IOS)
+            GameAnalyticsCpp::addAdEventWithNoAdReason((int)adAction, (int)adType, adSdkName, adPlacement, (int)noAdReason, fields, mergeFields);
+#elif defined(DM_PLATFORM_ANDROID)
+            jni_addAdEventWithNoAdReason((int)adAction, (int)adType, adSdkName, adPlacement, (int)noAdReason, fields, mergeFields);
 #elif defined(DM_PLATFORM_HTML5)
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 #endif

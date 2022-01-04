@@ -64,47 +64,47 @@ var GameAnalyticsDefold = {
         fieldsString = fieldsString ? fieldsString : "{}";
         gameanalytics.GameAnalytics.setCustomDimension03(JSON.parse(fieldsString));
     },
-    js_addBusinessEvent: function(currency, amount, itemType, itemId, cartType, fields)
+    js_addBusinessEvent: function(currency, amount, itemType, itemId, cartType, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addBusinessEvent(UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), UTF8ToString(cartType), JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addBusinessEvent(UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), UTF8ToString(cartType), JSON.parse(fieldsString), mergeFields);
     },
-    js_addResourceEvent: function(flowType, currency, amount, itemType, itemId, fields)
+    js_addResourceEvent: function (flowType, currency, amount, itemType, itemId, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addResourceEvent(flowType, UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addResourceEvent(flowType, UTF8ToString(currency), amount, UTF8ToString(itemType), UTF8ToString(itemId), JSON.parse(fieldsString), mergeFields);
     },
-    js_addProgressionEvent: function(progressionStatus, progression01, progression02, progression03, fields)
+    js_addProgressionEvent: function (progressionStatus, progression01, progression02, progression03, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), JSON.parse(fieldsString), mergeFields);
     },
-    js_addProgressionEventWithScore: function(progressionStatus, progression01, progression02, progression03, score, fields)
+    js_addProgressionEventWithScore: function (progressionStatus, progression01, progression02, progression03, score, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), score, JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addProgressionEvent(progressionStatus, UTF8ToString(progression01), UTF8ToString(progression02), UTF8ToString(progression03), score, JSON.parse(fieldsString), mergeFields);
     },
-    js_addDesignEvent: function(eventId, fields)
+    js_addDesignEvent: function (eventId, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), JSON.parse(fieldsString), mergeFields);
     },
-    js_addDesignEventWithValue: function(eventId, value, fields)
+    js_addDesignEventWithValue: function (eventId, value, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), value, JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addDesignEvent(UTF8ToString(eventId), value, JSON.parse(fieldsString), mergeFields);
     },
-    js_addErrorEvent: function(severity, message, fields)
+    js_addErrorEvent: function (severity, message, fields, mergeFields)
     {
         var fieldsString = UTF8ToString(fields);
         fieldsString = fieldsString ? fieldsString : "{}";
-        gameanalytics.GameAnalytics.addErrorEvent(severity, UTF8ToString(message), JSON.parse(fieldsString));
+        gameanalytics.GameAnalytics.addErrorEvent(severity, UTF8ToString(message), JSON.parse(fieldsString), mergeFields);
     },
     js_setEnabledInfoLog: function(enabled)
     {
