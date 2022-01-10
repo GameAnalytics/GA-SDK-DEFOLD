@@ -8,7 +8,6 @@
 #include <stdio.h>
 
 #define GAMEANALYTICS_CLASS_NAME "com/gameanalytics/sdk/GameAnalytics"
-#define GAMEANALYTICS_IMEI_CLASS_NAME "com/gameanalytics/sdk/imei/GAImei"
 #define GAJNI_CLASS_NAME "com/gameanalytics/sdk/GAJNI"
 
 namespace gameanalytics {
@@ -469,38 +468,12 @@ namespace gameanalytics {
             }
         }
 
-        void jni_initialize(const char *gameKey, const char *gameSecret, bool use_imei_android)
+        void jni_initialize(const char *gameKey, const char *gameSecret)
         {
             AttachScope attachscope;
             JNIEnv* env = attachscope.m_Env;
             jclass jClass = GetClass(env, GAMEANALYTICS_CLASS_NAME);
             const char* strMethod = "initialize";
-
-            if(use_imei_android)
-            {
-                jclass jClass_imei = GetClass(env, GAMEANALYTICS_IMEI_CLASS_NAME);
-                const char* strMethod_imei = "readImei";
-
-                if(jClass_imei)
-                {
-                    jmethodID jMethod_imei = env->GetStaticMethodID(jClass_imei, strMethod_imei, "()V");
-
-                    if(jMethod_imei)
-                    {
-                        env->CallStaticVoidMethod(jClass_imei, jMethod_imei);
-                    }
-                    else
-                    {
-                        dmLogError("*** Failed to find method %s ***", strMethod_imei);
-                    }
-
-                    env->DeleteLocalRef(jClass_imei);
-                }
-                else
-                {
-                    dmLogError("*** Failed to find class %s ***", GAMEANALYTICS_IMEI_CLASS_NAME);
-                }
-            }
 
             // initialize remote configs listener
             {

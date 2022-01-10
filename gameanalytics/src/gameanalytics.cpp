@@ -65,13 +65,12 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "4.2.2"
+#define VERSION "4.2.3"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
 const char* game_key = NULL;
 const char* secret_key = NULL;
-bool use_imei_android = false;
 bool manual_initialize = false;
 dmScript::LuaCallbackInfo* g_remote_configs_listener;
 
@@ -114,7 +113,7 @@ static int configureUserId(lua_State* L)
     {
         dmLogInfo("Initializing with custom id: %s\n", s);
         gameanalytics::defold::GameAnalytics::configureUserId(s);
-        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
+        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key);
     }
     else
     {
@@ -131,7 +130,7 @@ static int initialize(lua_State* L)
 
     if(manual_initialize)
     {
-        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
+        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key);
     }
     else
     {
@@ -1418,7 +1417,6 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     bool use_error_reporting = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_error_reporting", 0) == 1;
     use_custom_id = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_custom_id", 0) == 1;
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
-    use_imei_android = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_imei_android", 0) == 1;
     bool auto_detect_app_version = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.auto_detect_app_version", 0) == 1;
     manual_initialize = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.manual_initialize", 0) == 1;
 
@@ -1572,7 +1570,7 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 
     if(!use_custom_id && !manual_initialize)
     {
-        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key, use_imei_android);
+        gameanalytics::defold::GameAnalytics::initialize(game_key, secret_key);
     }
     else if(manual_initialize)
     {

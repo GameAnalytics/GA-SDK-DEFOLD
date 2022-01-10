@@ -455,13 +455,13 @@ namespace gameanalytics
 #endif
         }
 
-        void GameAnalytics::initialize(const char *gameKey, const char *gameSecret, bool use_imei_android)
+        void GameAnalytics::initialize(const char *gameKey, const char *gameSecret)
         {
 
 #if defined(DM_PLATFORM_IOS)
             GameAnalyticsCpp::initialize(gameKey, gameSecret);
 #elif defined(DM_PLATFORM_ANDROID)
-            jni_initialize(gameKey, gameSecret, use_imei_android);
+            jni_initialize(gameKey, gameSecret);
 #elif defined(DM_PLATFORM_HTML5)
             js_initialize(gameKey, gameSecret);
 #elif defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)

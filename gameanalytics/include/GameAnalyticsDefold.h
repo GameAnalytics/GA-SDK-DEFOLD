@@ -73,7 +73,7 @@ namespace gameanalytics
             static void configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
             static void configureGameEngineVersion(const char *gameEngineVersion);
             static void configureWritablePath(const char *writablePath);
-            static void initialize(const char *gameKey, const char *gameSecret, bool use_imei_android);
+            static void initialize(const char *gameKey, const char *gameSecret);
 
 #if defined(DM_PLATFORM_IOS)
             static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *fields, bool mergeFields);
