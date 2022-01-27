@@ -65,7 +65,7 @@
 
 #include "GameAnalyticsDefold.h"
 
-#define VERSION "4.2.3"
+#define VERSION "4.2.4"
 
 bool g_GameAnalytics_initialized = false;
 bool use_custom_id = false;
@@ -1011,6 +1011,7 @@ static int addAdEvent(lua_State *L)
                 if (lua_type(L, -1) == LUA_TNUMBER)
                 {
                     duration = lua_tointeger(L, -1);
+                    sendDuration = true;
                 }
                 else
                 {
