@@ -112,7 +112,8 @@ typedef enum GAAdType : NSInteger {
     GAAdTypePlayable = 3,
     GAAdTypeInterstitial = 4,
     GAAdTypeOfferWall = 5,
-    GAAdTypeBanner = 6
+    GAAdTypeBanner = 6,
+    GAAdTypeAppOpen = 7
 } GAAdType;
 
 /*!
@@ -284,6 +285,33 @@ typedef enum GAAdError : NSInteger {
  */
 + (void)configureUserId:(NSString *)userId;
 
+/*!
+ @method
+
+ @abstract Set an additional optional user identifying the user. Will be added to every event.
+ This does not influence any GA configuration (unlike the user id) and can be set at any time
+
+ @discussion <i>Example usage:</i>
+ <pre><code>
+ [GameAnalytics configureExternalUserId:@"24566"];
+ </code></pre>
+
+ @param userId
+ (String max length=64)
+ */
++ (void)configureExternalUserId:(NSString *)userId;
+
+// returns the current user id if GameAnalytics has been initialized
++ (NSString*) getUserId;
+
+// returns the current external user id (if any)
++ (NSString*) getExternalUserId;
+
+/*
+ * set this as true if you do not want idfv to be used
+ * as an user id (a random id will be generated instead)
+ */
++ (void) useRandomizedId:(Boolean)value;
 
 /* @IF WRAPPER */
 
@@ -1567,6 +1595,18 @@ typedef enum GAAdError : NSInteger {
 /*!
  @method
 
+ @abstract Get remote configs configurations as a valid json
+
+ @availability Available since (TBD)
+
+ @attribute For internal use.
+ */
++ (NSString *) getRemoteConfigsContentAsJSON;
+
+
+/*!
+ @method
+
  @abstract Use this to set the delegate for the Remote Configs to retreive information about the status of loading configurations
 
  @availability Available since (TBD)
@@ -1687,6 +1727,21 @@ typedef enum GAAdError : NSInteger {
  */
 + (void)setEnabledEventSubmission:(BOOL)flag;
 
+
+/*!
+ @method
+
+ @abstract Enable/disable event submission.
+ When enabled this will allow events to be sent.
+
+ @param doCache enable event local caching if submission is disabled
+ Enable or disable event submission.
+ 
+ @param doSend send events to the server, if this flag is set, caching will also be set to true
+
+ */
++ (void)setEnabledEventSubmission:(BOOL)doSend doCacheLocally:(BOOL)doCache;
+
 /*!
  @method
 
@@ -1770,6 +1825,45 @@ typedef enum GAAdError : NSInteger {
  Custom event fields to use as global ones
  */
 + (void)setGlobalCustomEventFields:(NSDictionary *)customFields;
+
+
+/*!
+ @method
+ 
+ @abstract enable the SDK init event to automatically track the boot time (time from application launch to the GameAnalytics SDK initialization).
+ @param value enable the event
+ 
+ */
++(void)enableSDKInitEvent:(Boolean)value;
+
+/*!
+ @method
+ 
+ @abstract Enable FPS sampling across the entire session to ultimately send an FPS histogram via the Session Performance Event.
+ @param value enable fps data collection
+ 
+ */
++(void)enableFpsHistogram:(Boolean)value;
+
+/*!
+ @method
+ 
+ @abstract Enable memory usage sampling across the entire session to ultimately send a memory usage histogram via the Session Performance Event.
+ @param value enable memory data collection
+ */
++(void)enableMemoryHistogram:(Boolean)value;
+
+/*!
+ @method
+ 
+ @abstract (EXPERIMENTAL) enable discovery of device hardware information like,
+ cpu model, number of cpu cores, GPU model, chipset/hardware (if available).
+ these data points are added as properties to existing health
+ events (error, SDK init, session performance) if those are enabled.
+ 
+ @param value enable hardware info collection
+ */
++(void)enableHealthHardwareInfo:(Boolean)value;
 
 /*!
  @method
