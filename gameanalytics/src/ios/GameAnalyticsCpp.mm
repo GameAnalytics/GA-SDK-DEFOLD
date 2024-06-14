@@ -177,6 +177,8 @@ void GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(const char *currency,
                                          mergeFields:mergeFields];
 }
 
+#import <objc/runtime.h>
+
 void GameAnalyticsCpp::addResourceEvent(int flowType, const char *currency, float amount, const char *itemType, const char *itemId, const char *fields, bool mergeFields) {
     NSString *currencyString = !isStringNullOrEmpty(currency) ? [NSString stringWithUTF8String:currency] : nil;
     NSNumber *amountNumber = [NSNumber numberWithFloat:amount];
@@ -191,10 +193,10 @@ void GameAnalyticsCpp::addResourceEvent(int flowType, const char *currency, floa
     [GameAnalytics addResourceEventWithFlowType:(GAResourceFlowType)flowType
                                        currency:currencyString
                                          amount:amountNumber
-                                       itemType:itemTypeString
-                                         itemId:itemIdString
-                                         fields:fields_dict
-                                         mergeFields:mergeFields];
+                                        itemType:itemTypeString
+                                        itemId:itemIdString
+                                        customFields:fields_dict
+                                        mergeFields:(BOOL)mergeFields];                  
 }
 
 void GameAnalyticsCpp::addProgressionEvent(int progressionStatus, const char *progression01, const char *progression02, const char *progression03, const char *fields, bool mergeFields) {
