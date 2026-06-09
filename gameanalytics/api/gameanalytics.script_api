@@ -1,0 +1,126 @@
+- name: gameanalytics
+  type: table
+  desc: Repository for GameAnalytics Defold SDK
+  members:
+
+  - name: initialize
+    type: function
+
+  - name: configureUserId
+    type: function
+    desc: Configure the user id.
+    parameters:
+    - name: id
+      type: string
+      desc: The user id.
+
+  - name: initialize
+    type: function
+
+  - name: addBusinessEvent
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: addResourceEvent
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: addProgressionEvent
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: addDesignEvent
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: addErrorEvent
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: addAdEvent
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: setEnabledEventSubmission
+    type: function
+    parameters:
+    - name: flag
+      type: boolean
+
+  - name: setEnabledInfoLog
+    type: function
+    parameters:
+    - name: flag
+      type: boolean
+
+  - name: setEnabledVerboseLog
+    type: function
+    parameters:
+    - name: flag
+      type: boolean
+
+  - name: setEnabledManualSessionHandling
+    type: function
+    parameters:
+    - name: flag
+      type: boolean
+
+  - name: setCustomDimension01
+    type: function
+    parameters:
+    - name: dimension
+      type: string
+
+  - name: setCustomDimension02
+    type: function
+    parameters:
+    - name: dimension
+      type: string
+
+  - name: setCustomDimension03
+    type: function
+    parameters:
+    - name: dimension
+      type: string
+
+  - name: setGlobalCustomEventFields
+    type: function
+    parameters:
+    - name: customFields
+      type: string
+
+  - name: startSession
+    type: function
+
+  - name: endSession
+    type: function
+
+  - name: getRemoteConfigsValueAsString
+    type: function
+    parameters:
+    - name: options
+      type: table
+
+  - name: isRemoteConfigsReady
+    type: function
+
+  - name: getRemoteConfigsContentAsString
+    type: function
+
+  - name: setRemoteConfigsListener
+    type: function
+    parameters:
+    - name: remoteConfigsListener
+      type: function
