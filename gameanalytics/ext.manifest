@@ -4,51 +4,53 @@ platforms:
     arm64-ios:
         context:
             frameworks: ["AdSupport", "SystemConfiguration", "AppTrackingTransparency"]
-            flags:      ["-stdlib=libc++", "-std=c++11"]
+            flags:      ["-stdlib=libc++", "-std=c++17"]
             linkFlags:  ["-ObjC"]
             libs:       ["z", "c++", "sqlite3"]
-
-    armv7-ios:
+    arm64_sim-ios:
         context:
             frameworks: ["AdSupport", "SystemConfiguration", "AppTrackingTransparency"]
-            flags:      ["-stdlib=libc++", "-std=c++11"]
+            flags:      ["-stdlib=libc++", "-std=c++17"]
             linkFlags:  ["-ObjC"]
             libs:       ["z", "c++", "sqlite3"]
 
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      ["-std=c++17"]
+            # Defold links every extension into one shared library, which can
+            # only have one JNI_OnLoad. GADefold.cpp hands the JavaVM over instead.
+            defines:    ["GA_NO_JNI_ONLOAD"]
 
     arm64-android:
         context:
-            flags:      ["-std=c++11"]
-
-    x86-osx:
-        context:
-            frameworks: []
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            linkFlags:  ["-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      ["-std=c++17"]
+            defines:    ["GA_NO_JNI_ONLOAD"]
 
     x86_64-osx:
         context:
-            frameworks: []
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            flags:      ["-std=c++17", "-stdlib=libc++"]
             linkFlags:  ["-stdlib=libc++"]
-            libs:       ["c++"]
+            # the frameworks libGameAnalytics.a links
+            frameworks: ["CoreFoundation", "Foundation", "CoreServices", "SystemConfiguration", "Metal", "MetalKit"]
+
+    arm64-osx:
+        context:
+            flags:      ["-std=c++17", "-stdlib=libc++"]
+            linkFlags:  ["-stdlib=libc++"]
+            frameworks: ["CoreFoundation", "Foundation", "CoreServices", "SystemConfiguration", "Metal", "MetalKit"]
 
     x86_64-linux:
         context:
-            flags:      ["-std=c++11"]
+            flags:      ["-std=c++17"]
 
-    js-web:
+    wasm-web:
         context:
-            flags:      ["-std=c++11"]
+            flags:      ["-std=c++17"]
 
-    x86-win32:
+    wasm_pthread-web:
         context:
-            flags:      []
+            flags:      ["-std=c++17"]
 
     x86_64-win32:
         context:
-            flags:      []
+            flags:      ["-std=c++17"]

@@ -1,8 +1,7 @@
 [project]
-title = GameAnalytics
+title = GA_DefoldTest
 version = 0.1
-write_log = 0
-dependencies = https://github.com/GameAnalytics/defold-openssl/archive/master.zip
+dependencies = https://github.com/britzl/defold-metrics/archive/master.zip,https://github.com/britzl/deftest/archive/refs/tags/2.9.0.zip
 
 [bootstrap]
 main_collection = /main/gameanalytics.collectionc
@@ -11,8 +10,13 @@ main_collection = /main/gameanalytics.collectionc
 game_binding = /input/game.input_bindingc
 
 [display]
-width = 720
-height = 1280
+width = 1280
+height = 720
+high_dpi = 0
+fullscreen = 0
+update_frequency = 0
+display_profiles = /builtins/render/default.display_profilesc
+vsync = 0
 
 [physics]
 scale = 0.02
@@ -25,28 +29,29 @@ bundle_identifier = com.gameanalytics.defold
 
 [android]
 package = com.gameanalytics.defold
+debuggable = 1
 
 [osx]
 bundle_identifier = com.gameanalytics.defold
 
 [gameanalytics]
-game_key_ios = IOS_GAME_KEY
-secret_key_ios = IOS_SECRET_KEY
-build_ios = 0.1
-game_key_android = ANDROID_GAME_KEY
-secret_key_android = ANDROID_SECRET_KEY
+game_key_ios =
+secret_key_ios =
+build_ios = 0.1.0
+game_key_android =
+secret_key_android =
 build_android = 0.1
-game_key_html5 = HTML5_GAME_KEY
-secret_key_html5 = HTML5_SECRET_KEY
-build_html5 = 0.1
-game_key_osx = OSX_GAME_KEY
-secret_key_osx = OSX_SECRET_KEY
-build_osx = 0.1
-game_key_windows = WINDOWS_GAME_KEY
-secret_key_windows = WINDOWS_SECRET_KEY
+game_key_html5 =
+secret_key_html5 =
+build_html5 = 0.1.0
+game_key_osx =
+secret_key_osx =
+build_osx = 0.0.1
+game_key_windows =
+secret_key_windows =
 build_windows = 0.1
-game_key_linux = LINUX_GAME_KEY
-secret_key_linux = LINUX_SECRET_KEY
+game_key_linux =
+secret_key_linux =
 build_linux = 0.1
 custom_dimensions_01 = ninja,samurai
 custom_dimensions_02 = whale,dolphin
@@ -55,8 +60,10 @@ resource_currencies = gold,gems
 resource_item_types = boost,lives
 enable_info_log = 1
 enable_verbose_log = 1
-use_custom_id = 0
+manual_initialize = 1
 use_manual_session_handling = 0
+auto_detect_app_version = 1
+use_custom_id = 1
 
 [library]
 include_dirs = gameanalytics

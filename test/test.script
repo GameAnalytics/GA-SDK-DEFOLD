@@ -1,0 +1,71 @@
+local deftest = require "deftest.deftest"
+local e2e = require "test.e2e"
+local test_gameanalytics = require "test.test_gameanalytics"
+
+-- Exit codes, also read by CI:
+--   0 the unit tests and the end-to-end check passed
+--   1 a unit test failed
+--   2 the end-to-end check timed out waiting for the servers (retryable)
+--   3 the end-to-end check failed
+local EXIT_UNIT_FAILED = 1
+local EXIT_E2E_TIMEOUT = 2
+local EXIT_E2E_FAILED = 3
+
+-- The game.project platform suffix for the system the tests run on.
+local PLATFORMS = {
+	["iPhone OS"] = "ios",
+	["Android"] = "android",
+	["HTML5"] = "html5",
+	["Darwin"] = "osx",
+	["Windows"] = "windows",
+	["Linux"] = "linux",
+}
+
+-- The end-to-end check talks to the GameAnalytics servers, so it needs the
+-- keys of a game. The repository ships without them (CI gets them from its
+-- secrets), and without them only the unit tests run.
+local function game_key_setting()
+	local platform = PLATFORMS[sys.get_sys_info().system_name] or "unknown"
+	local setting = "gameanalytics.game_key_" .. platform
+	return setting, sys.get_config_string(setting, "")
+end
+
+function init(self)
+	-- deftest ends the run with os.exit(), which kills the process without
+	-- finalizing the extensions, so the GameAnalytics SDK threads are still
+	-- running while the process tears down. Take its result instead: the
+	-- end-to-end check runs after the unit tests, which expect the SDK to be
+	-- uninitialized, and the engine is shut down through sys.exit.
+	local reported = false
+	os.exit = function(code)
+		if not reported then
+			reported = true
+			local setting, game_key = game_key_setting()
+			if (code or 0) ~= 0 then
+				sys.exit(EXIT_UNIT_FAILED)
+			elseif game_key == "" then
+				print("E2E: SKIPPED - no " .. setting .. " in game.project")
+				sys.exit(0)
+			else
+				self.e2e = e2e.start({ initialize = true })
+			end
+		end
+		if coroutine.running() then
+			coroutine.yield()
+		end
+	end
+
+	deftest.add(test_gameanalytics)
+	deftest.run()
+end
+
+function update(self, dt)
+	if not self.e2e or self.exiting then
+		return
+	end
+	local result = self.e2e:update(dt)
+	if result then
+		self.exiting = true
+		sys.exit(result.ok and 0 or (result.retryable and EXIT_E2E_TIMEOUT or EXIT_E2E_FAILED))
+	end
+end
