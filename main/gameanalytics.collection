@@ -1,4 +1,37 @@
 name: "main"
+instances {
+  id: "fps"
+  prototype: "/metrics/fps.go"
+  position {
+    x: 69.0
+    y: 66.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  component_properties {
+    id: "fps"
+    properties {
+      id: "show"
+      value: "false"
+      type: PROPERTY_TYPE_BOOLEAN
+    }
+    properties {
+      id: "color"
+      value: "1.0, 1.0, 1.0, 1.0"
+      type: PROPERTY_TYPE_VECTOR4
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "UI"

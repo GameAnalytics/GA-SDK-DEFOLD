@@ -1,156 +1,603 @@
-function init(self)
-    -- We want input control.  AKA, pump input to the UI
-    msg.post(".", "acquire_input_focus")
+-- GameAnalytics Defold sample.
+--
+-- Buttons that call every part of the gameanalytics lua API, grouped by
+-- event type, and panels with what the SDK reports back: user and A/B testing
+-- ids, session times, remote configs and a log of the last actions.
+--
+-- The layout is computed in window pixels (ga.gui has node adjustment
+-- disabled) and rebuilt when the window is resized or rotated: side by side
+-- in landscape, stacked in portrait. The button list scrolls by dragging.
+--
+-- To add a test case, add an entry to SECTIONS. Event values (currencies,
+-- item types, dimensions) match the [gameanalytics] section of game.project.
+
+local fps = require "metrics.fps"
+local e2e = require "test.e2e"
+
+local FONT = "system_font"
+local LOG_LINES = 12
+local STATUS_INTERVAL = 0.5
+local TAP_SLOP = 12 -- pixels a touch can move and still count as a tap
+
+local THEME = {
+	background = vmath.vector4(0.09, 0.10, 0.12, 1),
+	panel      = vmath.vector4(0.15, 0.16, 0.19, 1),
+	header     = vmath.vector4(0.12, 0.13, 0.16, 1),
+	text       = vmath.vector4(0.92, 0.93, 0.95, 1),
+	muted      = vmath.vector4(0.62, 0.65, 0.70, 1),
+	pressed    = vmath.vector4(1, 1, 1, 1),
+}
+
+local DIMENSIONS = {
+	{ "ninja", "samurai" },
+	{ "whale", "dolphin" },
+	{ "horde", "alliance" },
+}
+
+local SEVERITIES = { "Debug", "Info", "Warning", "Error", "Critical" }
+
+local function platform()
+	return sys.get_sys_info().system_name
 end
 
-function final(self)
-    -- Add finalization code here
-    -- Remove this function if not needed
+local function fields(extra)
+	local t = { sample = "defold", platform = platform() }
+	for k, v in pairs(extra or {}) do
+		t[k] = v
+	end
+	return json.encode(t)
+end
+
+local function dimension_button(index)
+	local name = string.format("%02d", index)
+	return {
+		function(self) return "Dimension " .. name .. ": " .. DIMENSIONS[index][self.dims[index]] end,
+		function(self)
+			local value = DIMENSIONS[index][self.dims[index]]
+			gameanalytics["setCustomDimension" .. name](value)
+			self.dims[index] = self.dims[index] % #DIMENSIONS[index] + 1
+			return value
+		end,
+	}
+end
+
+-- Each button is { label, action }. A label can be a function, for buttons
+-- that cycle through values; an action can return text for the log.
+local SECTIONS = {
+	{
+		title = "Setup", color = vmath.vector4(0.22, 0.42, 0.78, 1),
+		buttons = {
+			{ "Initialize", function(self)
+				gameanalytics.initialize()
+				self.initialized = true
+			end },
+			{ "Initialize with user id", function(self)
+				-- game.project has use_custom_id = 1, so this initializes too
+				gameanalytics.configureUserId("defold_sample_user")
+				self.initialized = true
+			end },
+			{ "Set external user id", function()
+				local id = "ext_" .. os.time()
+				gameanalytics.setExternalUserId(id)
+				return id
+			end },
+			{ "Set global fields", function()
+				local f = fields({ global = true, set_at = os.time() })
+				gameanalytics.setGlobalCustomEventFields(f)
+				return f
+			end },
+			dimension_button(1),
+			dimension_button(2),
+			dimension_button(3),
+			{ function(self) return "Event submission: " .. (self.submission and "on" or "off") end, function(self)
+				self.submission = not self.submission
+				gameanalytics.setEnabledEventSubmission(self.submission)
+				return self.submission and "on" or "off"
+			end },
+			{ function(self) return "Verbose log: " .. (self.verbose and "on" or "off") end, function(self)
+				self.verbose = not self.verbose
+				gameanalytics.setEnabledVerboseLog(self.verbose)
+				return self.verbose and "on" or "off"
+			end },
+		},
+	},
+	{
+		title = "Session", color = vmath.vector4(0.16, 0.55, 0.55, 1),
+		buttons = {
+			{ "Start session", function() gameanalytics.startSession() end },
+			{ "End session", function() gameanalytics.endSession() end },
+		},
+	},
+	{
+		title = "Business", color = vmath.vector4(0.20, 0.55, 0.27, 1),
+		buttons = {
+			{ "Purchase", function()
+				gameanalytics.addBusinessEvent({ currency = "USD", amount = 99, itemType = "boost", itemId = "megaBoost", cartType = "shop" })
+			end },
+			{ "Purchase with receipt", function()
+				local options = { currency = "USD", amount = 199, itemType = "boost", itemId = "superBoost", cartType = "shop", customFields = fields() }
+				if platform() == "Android" then
+					options.receipt = "<receipt>"
+					options.signature = "<signature>"
+				elseif platform() == "iPhone OS" then
+					options.receipt = "<receipt>"
+				end
+				gameanalytics.addBusinessEvent(options)
+			end },
+		},
+	},
+	{
+		title = "Resource", color = vmath.vector4(0.78, 0.47, 0.12, 1),
+		buttons = {
+			{ "Source: +100 gold", function()
+				gameanalytics.addResourceEvent({ flowType = "Source", currency = "gold", amount = 100, itemType = "boost", itemId = "daily_reward" })
+			end },
+			{ "Sink: -5 gems", function()
+				gameanalytics.addResourceEvent({ flowType = "Sink", currency = "gems", amount = 5, itemType = "lives", itemId = "extra_life", customFields = fields() })
+			end },
+		},
+	},
+	{
+		title = "Progression", color = vmath.vector4(0.50, 0.32, 0.72, 1),
+		buttons = {
+			{ "Start level", function()
+				gameanalytics.addProgressionEvent({ progressionStatus = "Start", progression01 = "world1", progression02 = "level1" })
+			end },
+			{ "Complete level", function()
+				local score = math.random(100, 1000)
+				gameanalytics.addProgressionEvent({ progressionStatus = "Complete", progression01 = "world1", progression02 = "level1", score = score })
+				return "score " .. score
+			end },
+			{ "Fail boss", function()
+				gameanalytics.addProgressionEvent({ progressionStatus = "Fail", progression01 = "world1", progression02 = "level1", progression03 = "boss", score = 42, customFields = fields() })
+			end },
+		},
+	},
+	{
+		title = "Design", color = vmath.vector4(0.12, 0.50, 0.72, 1),
+		buttons = {
+			{ "Design event", function()
+				gameanalytics.addDesignEvent({ eventId = "sample:button:design" })
+			end },
+			{ "With value", function()
+				local value = math.random() * 100
+				gameanalytics.addDesignEvent({ eventId = "sample:button:value", value = value })
+				return string.format("%.2f", value)
+			end },
+			{ "With custom fields", function()
+				gameanalytics.addDesignEvent({ eventId = "sample:button:fields", customFields = fields({ clicks = 1 }), mergeFields = true })
+			end },
+			{ "Burst of 20", function()
+				for i = 1, 20 do
+					gameanalytics.addDesignEvent({ eventId = "sample:burst:" .. i, value = i })
+				end
+			end },
+		},
+	},
+	{
+		title = "Errors", color = vmath.vector4(0.72, 0.22, 0.22, 1),
+		buttons = {
+			{ function(self) return "Error: " .. SEVERITIES[self.severity] end, function(self)
+				local severity = SEVERITIES[self.severity]
+				gameanalytics.addErrorEvent({ severity = severity, message = "Sample " .. severity .. " error" })
+				self.severity = self.severity % #SEVERITIES + 1
+				return severity
+			end },
+		},
+	},
+	{
+		title = "Ads", color = vmath.vector4(0.66, 0.56, 0.12, 1),
+		buttons = {
+			{ "Interstitial shown", function()
+				gameanalytics.addAdEvent({ adAction = "Show", adType = "Interstitial", adSdkName = "sample", adPlacement = "level_end" })
+			end },
+			{ "Banner clicked", function()
+				gameanalytics.addAdEvent({ adAction = "Clicked", adType = "Banner", adSdkName = "sample", adPlacement = "main_menu" })
+			end },
+			{ "Reward after 30s", function()
+				gameanalytics.addAdEvent({ adAction = "RewardReceived", adType = "RewardedVideo", adSdkName = "sample", adPlacement = "shop", duration = 30 })
+			end },
+			{ "Failed: no fill", function()
+				gameanalytics.addAdEvent({ adAction = "FailedShow", adType = "RewardedVideo", adSdkName = "sample", adPlacement = "shop", noAdReason = "NoFill" })
+			end },
+		},
+	},
+	{
+		title = "Remote configs", color = vmath.vector4(0.40, 0.42, 0.48, 1),
+		buttons = {
+			{ "Read next config", function(self)
+				if #self.config_keys == 0 then
+					return "no remote configs yet"
+				end
+				self.config_index = self.config_index % #self.config_keys + 1
+				local key = self.config_keys[self.config_index]
+				return key .. " = " .. gameanalytics.getRemoteConfigsValueAsString({ key = key, defaultValue = "<default>" })
+			end },
+			{ "Clear log", function(self)
+				self.log = {}
+			end },
+		},
+	},
+	{
+		title = "Self test", color = vmath.vector4(0.18, 0.60, 0.42, 1),
+		buttons = {
+			-- the same end-to-end check CI runs after the unit tests
+			{ function(self) return self.self_test and "Self test running..." or "Run self test" end, function(self)
+				if self.self_test then
+					return "already running"
+				end
+				self.self_test = e2e.start({ initialize = not self.initialized, log = function(message) log(self, message) end })
+				self.initialized = true
+			end },
+		},
+	},
+}
+
+---------------------------------------------------------------------------
+-- state shown in the panels
+
+local function log(self, message)
+	table.insert(self.log, 1, os.date("%H:%M:%S  ") .. message)
+	while #self.log > LOG_LINES do
+		table.remove(self.log)
+	end
+	print("GA_SAMPLE: " .. message)
+end
+
+local function remote_config_keys()
+	local ok, content = pcall(json.decode, gameanalytics.getRemoteConfigsContentAsString())
+	local keys = {}
+	if ok and type(content) == "table" then
+		for key in pairs(content) do
+			table.insert(keys, key)
+		end
+		table.sort(keys)
+	end
+	return keys
+end
+
+local function seconds(value)
+	-- the javascript SDK doesn't report session times, the web wrapper returns 0
+	if platform() == "HTML5" then
+		return "n/a"
+	end
+	return string.format("%ds", value)
+end
+
+local function value_or_dash(value)
+	return (value == nil or value == "") and "-" or value
+end
+
+local function status_text(self)
+	self.config_keys = remote_config_keys()
+
+	local lines = {
+		"User id            " .. value_or_dash(gameanalytics.getUserId()),
+		-- the javascript SDK has no external user id
+		"External user id   " .. (platform() == "HTML5" and "n/a" or value_or_dash(gameanalytics.getExternalUserId())),
+		"A/B testing id     " .. value_or_dash(gameanalytics.getABTestingId()),
+		"A/B variant id     " .. value_or_dash(gameanalytics.getABTestingVariantId()),
+		"",
+		"Session            " .. seconds(gameanalytics.getElapsedSessionTime()),
+		"Previous session   " .. seconds(gameanalytics.getElapsedTimeForPreviousSession()),
+		"All sessions       " .. seconds(gameanalytics.getElapsedTimeFromAllSessions()),
+		"",
+		"Remote configs     " .. (gameanalytics.isRemoteConfigsReady() and "ready" or "not ready")
+			.. ", listener called " .. self.listener_calls .. "x",
+	}
+	for i, key in ipairs(self.config_keys) do
+		if i > 8 then
+			table.insert(lines, string.format("  ... %d more", #self.config_keys - 8))
+			break
+		end
+		table.insert(lines, "  " .. key .. " = " .. gameanalytics.getRemoteConfigsValueAsString({ key = key }))
+	end
+	return table.concat(lines, "\n")
+end
+
+---------------------------------------------------------------------------
+-- layout
+
+local function label_of(self, button)
+	return type(button.label) == "function" and button.label(self) or button.label
+end
+
+local function box(parent, x, y, w, h, color, pivot)
+	local node = gui.new_box_node(vmath.vector3(x, y, 0), vmath.vector3(w, h, 0))
+	gui.set_pivot(node, pivot or gui.PIVOT_SW)
+	gui.set_color(node, color)
+	if parent then
+		gui.set_parent(node, parent)
+	end
+	return node
+end
+
+local function text(parent, value, x, y, scale, color, pivot, wrap_width)
+	local node = gui.new_text_node(vmath.vector3(x, y, 0), value)
+	gui.set_font(node, FONT)
+	gui.set_pivot(node, pivot or gui.PIVOT_W)
+	gui.set_scale(node, vmath.vector3(scale, scale, 1))
+	gui.set_color(node, color or THEME.text)
+	gui.set_inherit_alpha(node, false)
+	if wrap_width then
+		gui.set_line_break(node, true)
+		-- the size is in unscaled units
+		gui.set_size(node, vmath.vector3(wrap_width / scale, 0, 0))
+	end
+	gui.set_parent(node, parent)
+	return node
+end
+
+local function text_width(self, value, scale)
+	return resource.get_text_metrics(self.font, value).width * scale
+end
+
+-- Shrinks a label until it fits on its button.
+local function fit_label(self, node, max_width, scale)
+	gui.set_scale(node, vmath.vector3(scale, scale, 1))
+	local width = text_width(self, gui.get_text(node), scale)
+	if width > max_width then
+		local fitted = scale * max_width / width
+		gui.set_scale(node, vmath.vector3(fitted, fitted, 1))
+	end
+end
+
+-- A panel with a title strip. Returns the panel node and its content rect
+-- (left, bottom, width, height in panel coordinates).
+local function panel(self, title, x, y, w, h)
+	local u = self.unit
+	local node = box(self.root, x, y, w, h, THEME.panel)
+	local strip = 34 * u
+	box(node, 0, h - strip, w, strip, THEME.header)
+	text(node, title, 12 * u, h - strip / 2, self.text_scale, THEME.muted)
+	gui.set_clipping_mode(node, gui.CLIPPING_MODE_STENCIL)
+	return node, { 12 * u, 10 * u, w - 24 * u, h - strip - 20 * u }
+end
+
+local function layout_buttons(self, x, y, w, h)
+	local u = self.unit
+	local area, inner = panel(self, "Actions", x, y, w, h)
+	-- the visible part of the list, in screen coordinates
+	self.area = { x = x, y = y + inner[2], w = w, h = inner[4] }
+
+	-- clips the list below the title strip
+	local clip = box(area, 0, inner[2], w, inner[4], THEME.panel)
+	gui.set_clipping_mode(clip, gui.CLIPPING_MODE_STENCIL)
+
+	-- everything that scrolls hangs off this zero height node, moved by self.scroll
+	local content = box(clip, 0, inner[4], w, 0, THEME.panel, gui.PIVOT_NW)
+	self.content = content
+	self.content_top = inner[4]
+
+	local gap = 8 * u
+	local columns = math.max(2, math.floor((inner[3] + gap) / (210 * u + gap)))
+	local button_w = (inner[3] - (columns - 1) * gap) / columns
+	local button_h = 46 * u
+
+	local cursor = 0 -- distance from the top of the content, growing downwards
+	self.buttons = {}
+	for _, section in ipairs(SECTIONS) do
+		cursor = cursor + 6 * u
+		text(content, string.upper(section.title), inner[1], -(cursor + 12 * u), self.text_scale * 0.85, section.color)
+		cursor = cursor + 26 * u
+
+		for i, entry in ipairs(section.buttons) do
+			local column = (i - 1) % columns
+			if column == 0 and i > 1 then
+				cursor = cursor + button_h + gap
+			end
+			local bx = inner[1] + column * (button_w + gap)
+			local by = -(cursor + button_h)
+
+			local button = { label = entry[1], action = entry[2], color = section.color }
+			button.node = box(content, bx, by, button_w, button_h, section.color)
+			button.text = text(button.node, label_of(self, button), button_w / 2, button_h / 2, self.text_scale, THEME.text, gui.PIVOT_CENTER)
+			fit_label(self, button.text, button_w - 16 * u, self.text_scale)
+			-- in content coordinates, y measured downwards from the top
+			button.rect = { x = bx, top = cursor, w = button_w, h = button_h }
+			table.insert(self.buttons, button)
+		end
+		cursor = cursor + button_h + gap
+	end
+
+	self.content_height = cursor + 10 * u
+	self.max_scroll = math.max(0, self.content_height - self.area.h)
+	self.scroll = math.min(self.scroll or 0, self.max_scroll)
+	gui.set_position(content, vmath.vector3(0, self.content_top + self.scroll, 0))
+end
+
+local function build(self)
+	if self.root then
+		gui.delete_node(self.root)
+	end
+
+	local width, height = window.get_size()
+	self.width, self.height = width, height
+	-- 1 unit = 1 pixel on a 720 pixel tall landscape screen
+	self.unit = math.max(0.75, math.min(width, height) / 720)
+	self.text_scale = 1.1 * self.unit
+	local u = self.unit
+	local margin = 12 * u
+
+	self.root = box(nil, 0, 0, width, height, THEME.background)
+
+	-- Lay out inside the safe area (notches, the Dynamic Island, home
+	-- indicators). Everything below works in a frame that starts at the
+	-- safe area's bottom left corner.
+	local safe = window.get_safe_area and window.get_safe_area() or {}
+	local inset_left, inset_right = safe.inset_left or 0, safe.inset_right or 0
+	local inset_top, inset_bottom = safe.inset_top or 0, safe.inset_bottom or 0
+	local frame = box(self.root, inset_left, inset_bottom, width - inset_left - inset_right, height - inset_top - inset_bottom, THEME.background)
+	self.frame_origin = { x = inset_left, y = inset_bottom }
+	width = width - inset_left - inset_right
+	height = height - inset_top - inset_bottom
+	local root = self.root
+	self.root = frame
+
+	local header = 52 * u
+	text(self.root, "GameAnalytics Defold sample", margin, height - header / 2, self.text_scale * 1.25)
+	self.header_text = text(self.root, "", width - margin, height - header / 2, self.text_scale * 0.9, THEME.muted, gui.PIVOT_E)
+
+	local top = height - header
+	if width >= height then
+		-- landscape: actions on the left, status and log on the right
+		local left_w = math.floor((width - 3 * margin) * 0.58)
+		local right_x = margin * 2 + left_w
+		local right_w = width - right_x - margin
+		local status_h = math.floor((top - 3 * margin) * 0.58)
+		layout_buttons(self, margin, margin, left_w, top - margin * 2)
+		local status, inner = panel(self, "Status", right_x, top - margin - status_h, right_w, status_h)
+		self.status = text(status, "", inner[1], inner[2] + inner[4], self.text_scale * 0.9, THEME.text, gui.PIVOT_NW, inner[3])
+		local log_h = top - status_h - 3 * margin
+		local log_panel, log_inner = panel(self, "Log", right_x, margin, right_w, log_h)
+		self.log_text = text(log_panel, "", log_inner[1], log_inner[2] + log_inner[4], self.text_scale * 0.85, THEME.muted, gui.PIVOT_NW, log_inner[3])
+	else
+		-- portrait: status, log, then actions
+		local w = width - 2 * margin
+		local status_h = math.floor((top - 4 * margin) * 0.30)
+		local log_h = math.floor((top - 4 * margin) * 0.17)
+		local status, inner = panel(self, "Status", margin, top - margin - status_h, w, status_h)
+		self.status = text(status, "", inner[1], inner[2] + inner[4], self.text_scale * 0.9, THEME.text, gui.PIVOT_NW, inner[3])
+		local log_y = top - 2 * margin - status_h - log_h
+		local log_panel, log_inner = panel(self, "Log", margin, log_y, w, log_h)
+		self.log_text = text(log_panel, "", log_inner[1], log_inner[2] + log_inner[4], self.text_scale * 0.85, THEME.muted, gui.PIVOT_NW, log_inner[3])
+		layout_buttons(self, margin, margin, w, log_y - 2 * margin)
+	end
+	self.root = root
+end
+
+local function refresh(self)
+	gui.set_text(self.status, status_text(self))
+	gui.set_text(self.log_text, table.concat(self.log, "\n"))
+	gui.set_text(self.header_text, platform() .. "  |  " .. (self.initialized and "initialized" or "not initialized")
+		.. "  |  FPS " .. string.format("%.0f", self.fps.fps()))
+	for _, button in ipairs(self.buttons) do
+		if type(button.label) == "function" then
+			gui.set_text(button.text, label_of(self, button))
+			fit_label(self, button.text, button.rect.w - 16 * self.unit, self.text_scale)
+		end
+	end
+end
+
+---------------------------------------------------------------------------
+-- input
+
+local function in_area(self, x, y)
+	local a = self.area
+	return x >= a.x and x <= a.x + a.w and y >= a.y and y <= a.y + a.h
+end
+
+-- The button under a screen position, if any.
+local function button_at(self, x, y)
+	if not in_area(self, x, y) then
+		return nil
+	end
+	-- distance from the top of the content, which sits at the top of the
+	-- visible area when not scrolled
+	local from_top = self.area.y + self.area.h + self.scroll - y
+	for _, button in ipairs(self.buttons) do
+		local r = button.rect
+		local left = self.area.x + r.x
+		if x >= left and x <= left + r.w and from_top >= r.top and from_top <= r.top + r.h then
+			return button
+		end
+	end
+end
+
+local function press(self, button)
+	local label = label_of(self, button)
+	local ok, result = pcall(button.action, self)
+	if ok then
+		log(self, label .. (result and ("  ->  " .. tostring(result)) or ""))
+	else
+		log(self, label .. "  FAILED: " .. tostring(result))
+	end
+	gui.set_color(button.node, THEME.pressed)
+	gui.animate(button.node, "color", button.color, gui.EASING_OUTQUAD, 0.35)
+	refresh(self)
+end
+
+local function set_scroll(self, value)
+	self.scroll = math.max(0, math.min(self.max_scroll, value))
+	gui.set_position(self.content, vmath.vector3(0, self.content_top + self.scroll, 0))
+end
+
+---------------------------------------------------------------------------
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	math.randomseed(os.time())
+
+	self.initialized = false
+	self.submission = true
+	self.verbose = true
+	self.dims = { 1, 1, 1 }
+	self.severity = 1
+	self.config_keys = {}
+	self.config_index = 0
+	self.listener_calls = 0
+	self.log = {}
+	self.status_timer = 0
+	self.scroll = 0
+	self.fps = fps.create(60, nil, nil, nil)
+	self.font = gui.get_font_resource(FONT)
+
+	build(self)
+	window.set_listener(function(self, event)
+		if event == window.WINDOW_EVENT_RESIZED then
+			build(self)
+			refresh(self)
+		end
+	end)
+
+	-- registered before initializing, so the first update is not missed
+	gameanalytics.setRemoteConfigsListener(function(self)
+		self.listener_calls = self.listener_calls + 1
+		log(self, "remote configs updated")
+	end)
+
+	log(self, "ready, press Initialize")
+	refresh(self)
 end
 
 function update(self, dt)
-    -- Add update code here
-    -- Remove this function if not needed
-end
-
-function on_message(self, message_id, message, sender)
-    -- Add message-handling code here
-    -- Remove this function if not needed
+	self.fps.update()
+	if self.self_test and self.self_test:update(dt) then
+		self.self_test = nil
+	end
+	self.status_timer = self.status_timer + dt
+	if self.status_timer >= STATUS_INTERVAL then
+		self.status_timer = 0
+		refresh(self)
+	end
 end
 
 function on_input(self, action_id, action)
-    -- handle left clicks.  On left click, see if click was within box
-    -- if so change our text (this wont actually be seen), disable ourself and pass a message back
-    -- to logo that we are done so it can undim itself
-    if(action_id == hash("touch") and action.released == true) then
-        local box = gui.get_node("box")
-        if(gui.pick_node(box,action.x,action.y)) then
-        	gameanalytics.configureUserId("my_custom_id")
-            gameanalytics.addBusinessEvent {
-                currency = "USD",
-                amount = 100,
-                itemType = "boost",
-                itemId = "megaBoost",
-                cartType = "shop"
-            }
-
-            local info = sys.get_sys_info()
-
-            if(info.system_name == "Android") then
-                gameanalytics.addBusinessEvent {
-                    currency = "USD",
-                    amount = 100,
-                    itemType = "boost",
-                    itemId = "megaBoost",
-                    cartType = "shop",
-                    receipt = "<receipt>",
-                    signature = "<signature>"
-                }
-            end
-
-            if(info.system_name == "iPhone OS") then
-                gameanalytics.addBusinessEvent {
-                    currency = "USD",
-                    amount = 100,
-                    itemType = "boost",
-                    itemId = "megaBoost",
-                    cartType = "shop",
-                    receipt = "<receipt>"
-                }
-            end
-
-            gameanalytics.addResourceEvent {
-                flowType = "Sink",
-                currency = "gold",
-                amount = 10,
-                itemType = "lives",
-                itemId = "5lives"
-            }
-            gameanalytics.addResourceEvent {
-                flowType = "Source",
-                currency = "gold",
-                amount = 10,
-                itemType = "lives",
-                itemId = "5lives"
-            }
-
-            gameanalytics.addProgressionEvent {
-                progressionStatus = "Start",
-                progression01 = "world1"
-            }
-            gameanalytics.addProgressionEvent {
-                progressionStatus = "Fail",
-                progression01 = "world1",
-                score = 100
-            }
-            gameanalytics.addProgressionEvent {
-                progressionStatus = "Start",
-                progression01 = "world1",
-                progression02 = "level1"
-            }
-            gameanalytics.addProgressionEvent {
-                progressionStatus = "Complete",
-                progression01 = "world1",
-                progression02 = "level1",
-                score = 100
-            }
-            gameanalytics.addProgressionEvent {
-                progressionStatus = "Start",
-                progression01 = "world1",
-                progression02 = "level1",
-                progression03 = "boss1"
-            }
-            gameanalytics.addProgressionEvent {
-                progressionStatus = "Fail",
-                progression01 = "world1",
-                progression02 = "level1",
-                progression03 = "boss1",
-                score = 100
-            }
-
-            gameanalytics.addDesignEvent {
-                eventId = "design:event"
-            }
-            gameanalytics.addDesignEvent {
-                eventId = "design:event",
-                value = 10
-            }
-
-            gameanalytics.addErrorEvent {
-                severity = "Critical",
-                message = "This is a message!!"
-            }
-            gameanalytics.addErrorEvent {
-                severity = "Debug",
-                message = "This is a message!!"
-            }
-            gameanalytics.addErrorEvent {
-                severity = "Error",
-                message = "This is a message!!"
-            }
-            gameanalytics.addErrorEvent {
-                severity = "Info",
-                message = "This is a message!!"
-            }
-            gameanalytics.addErrorEvent {
-                severity = "Warning",
-                message = "This is a message!!"
-            }
-
-            gameanalytics.setCustomDimension01("ninja")
-            gameanalytics.setCustomDimension02("dolphin")
-            gameanalytics.setCustomDimension03("horde")
-
-            gameanalytics.setFacebookId("my_facebook_id")
-
-            gameanalytics.setGender("Male")
-
-            gameanalytics.setBirthYear(1982)
-        end
-    end
-end
-
-function on_reload(self)
-    -- Add input-handling code here
-    -- Remove this function if not needed
+	if action_id == hash("touch") then
+		local x, y = action.screen_x - self.frame_origin.x, action.screen_y - self.frame_origin.y
+		if action.pressed then
+			self.drag = in_area(self, x, y) and { start_y = y, start_scroll = self.scroll, moved = false } or nil
+		elseif self.drag and not action.released then
+			local dy = y - self.drag.start_y
+			if math.abs(dy) > TAP_SLOP * self.unit then
+				self.drag.moved = true
+			end
+			if self.drag.moved then
+				set_scroll(self, self.drag.start_scroll + dy)
+			end
+		elseif action.released then
+			local was_drag = self.drag and self.drag.moved
+			self.drag = nil
+			if not was_drag then
+				local button = button_at(self, x, y)
+				if button then
+					press(self, button)
+				end
+			end
+		end
+		return true
+	elseif action_id == hash("wheel_up") or action_id == hash("wheel_down") then
+		set_scroll(self, self.scroll + (action_id == hash("wheel_up") and -1 or 1) * 40 * self.unit)
+		return true
+	end
 end

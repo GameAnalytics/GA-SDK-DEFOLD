@@ -1,0 +1,194 @@
+name: CI
+
+on:
+  push:
+    branches: [master, "v*"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEFOLD_VERSION: "1.14.0"
+  # The extension has native code, so bob sends it to the Defold build server
+  # to compile a custom engine. Point this at a self-hosted Extender to build locally.
+  BUILD_SERVER: https://build.defold.com
+
+jobs:
+  test:
+    name: Unit tests (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: x86_64-linux
+            os: ubuntu-latest
+            variant: headless
+          - platform: x86_64-win32
+            os: windows-latest
+            variant: headless
+          # No headless engine on the web: the debug build runs in headless
+          # Chromium, see .github/scripts/run_web_tests.py.
+          - platform: wasm-web
+            os: ubuntu-latest
+            variant: debug
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: defold
+        uses: ./.github/actions/setup-defold
+        with:
+          defold-version: ${{ env.DEFOLD_VERSION }}
+
+      # The repository ships without GameAnalytics keys. The end-to-end check
+      # needs the keys of a game, which come from the GA_GAME_KEY and
+      # GA_SECRET_KEY repository secrets. Pull requests from forks don't get
+      # them, and the test run then skips the end-to-end check.
+      - name: Write the GameAnalytics keys from the repository secrets
+        env:
+          GA_GAME_KEY: ${{ secrets.GA_GAME_KEY }}
+          GA_SECRET_KEY: ${{ secrets.GA_SECRET_KEY }}
+        run: |
+          {
+            echo "[gameanalytics]"
+            for platform in ios android html5 osx windows linux; do
+              echo "game_key_$platform = $GA_GAME_KEY"
+              echo "secret_key_$platform = $GA_SECRET_KEY"
+            done
+          } > ci-keys.settings
+          if [ -z "$GA_GAME_KEY" ]; then
+            echo "::notice::GA_GAME_KEY is not set, the end-to-end check will be skipped"
+          fi
+
+      # test/test.settings swaps the bootstrap collection for the deftest runner.
+      - name: Bundle test build
+        run: >
+          java -jar "${{ steps.defold.outputs.bob }}"
+          --platform ${{ matrix.platform }}
+          --variant ${{ matrix.variant }}
+          --archive
+          --settings test/test.settings
+          --settings ci-keys.settings
+          --build-server "$BUILD_SERVER"
+          --bundle-output dist/test
+          resolve build bundle
+
+      # bob only prints a summary of what the build server reported, and for
+      # some platforms (Android) that summary is empty.
+      - name: Show build server log
+        if: failure()
+        run: cat build/*/log.txt || true
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-server-log-test-${{ matrix.platform }}
+          path: build/*/log.txt
+          if-no-files-found: ignore
+
+      # The test build runs the unit tests, then an end-to-end check against
+      # the GameAnalytics servers (test/e2e.lua). Exit codes: 0 passed,
+      # 1 unit test failed, 2 end-to-end timed out, 3 end-to-end failed.
+      # Only a timeout is retried, and a run that never logged
+      # "events sent" counts as one, unless the check was skipped for
+      # lack of keys.
+      - name: Run unit and end-to-end tests
+        if: matrix.platform != 'wasm-web'
+        run: |
+          exe=$(find dist/test -type f \( -name '*.x86_64' -o -name '*.exe' \) | head -n 1)
+          if [ -z "$exe" ]; then echo "no executable in dist/test"; exit 1; fi
+          chmod +x "$exe"
+          cd "$(dirname "$exe")"
+          for attempt in 1 2 3; do
+            set +e
+            timeout 300 "./$(basename "$exe")" 2>&1 | tee run.log
+            code=${PIPESTATUS[0]}
+            set -e
+            if [ "$code" -eq 0 ] && ! grep -q 'E2E: SKIPPED' run.log && ! grep -qE 'Event queue: [0-9]+ events sent' run.log; then
+              echo "::warning::no 'events sent' in the SDK log"
+              code=2
+            fi
+            if [ "$code" -ne 2 ]; then
+              break
+            fi
+            echo "::warning::end-to-end check timed out (attempt $attempt of 3)"
+            if [ "$attempt" -lt 3 ]; then
+              sleep 10
+            fi
+          done
+          exit $code
+
+      - if: matrix.platform == 'wasm-web'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run unit tests
+        if: matrix.platform == 'wasm-web'
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+          python .github/scripts/run_web_tests.py dist/test 180 3
+
+  bundle:
+    name: Sample (${{ matrix.platform }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: x86_64-linux
+          - platform: x86_64-win32
+          - platform: arm64-macos
+          - platform: wasm-web
+          - platform: armv7-android
+            architectures: armv7-android,arm64-android
+          # Bundling for iOS needs a signing identity and provisioning profile,
+          # so only build the engine (which compiles and links the extension)
+          # until those are available as secrets.
+          - platform: arm64-ios
+            build-only: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: defold
+        uses: ./.github/actions/setup-defold
+        with:
+          defold-version: ${{ env.DEFOLD_VERSION }}
+
+      - name: Bundle
+        run: >
+          java -jar "${{ steps.defold.outputs.bob }}"
+          --platform ${{ matrix.platform }}
+          ${{ matrix.architectures && format('--architectures {0}', matrix.architectures) || '' }}
+          --variant debug
+          --archive
+          --build-server "$BUILD_SERVER"
+          --bundle-output dist/${{ matrix.platform }}
+          resolve build ${{ !matrix.build-only && 'bundle' || '' }}
+
+      - name: Show build server log
+        if: failure()
+        run: cat build/*/log.txt || true
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-server-log-${{ matrix.platform }}
+          path: build/*/log.txt
+          if-no-files-found: ignore
+
+      - if: ${{ !matrix.build-only }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-${{ matrix.platform }}
+          path: dist/${{ matrix.platform }}
+          retention-days: 7

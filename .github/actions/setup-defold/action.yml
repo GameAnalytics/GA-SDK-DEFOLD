@@ -1,0 +1,44 @@
+name: Set up Defold
+description: Installs the JDK bob.jar needs and downloads bob.jar for the requested Defold version (cached).
+
+inputs:
+  defold-version:
+    description: Defold release, e.g. 1.14.0
+    required: true
+
+outputs:
+  bob:
+    description: Path to bob.jar
+    value: ${{ steps.paths.outputs.bob }}
+
+runs:
+  using: composite
+  steps:
+    # bob.jar from Defold 1.14 requires OpenJDK 25.
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: "25"
+
+    - id: paths
+      shell: bash
+      # Forward slashes so the same path works in bash, curl, java and
+      # actions/cache on Windows runners too (C:/hostedtoolcache/...).
+      run: echo "bob=${RUNNER_TOOL_CACHE//\\//}/defold/${{ inputs.defold-version }}/bob.jar" >> "$GITHUB_OUTPUT"
+
+    # bob.jar is ~230 MB, so keep it between runs instead of downloading it every time.
+    - id: cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.paths.outputs.bob }}
+        key: defold-bob-${{ inputs.defold-version }}
+
+    - if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p "$(dirname "${{ steps.paths.outputs.bob }}")"
+        curl --fail --location --retry 3 --output "${{ steps.paths.outputs.bob }}" \
+          "https://github.com/defold/defold/releases/download/${{ inputs.defold-version }}/bob.jar"
+
+    - shell: bash
+      run: java -jar "${{ steps.paths.outputs.bob }}" --version

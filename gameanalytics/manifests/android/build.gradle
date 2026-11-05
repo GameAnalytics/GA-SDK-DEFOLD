@@ -1,9 +1,22 @@
 repositories {
-    maven { url 'https://maven.gameanalytics.com/release' }
-    maven { url 'https://maven.google.com' }
+    // Only fetch the GameAnalytics SDK from its own repository, so the build
+    // never asks another repository for it.
+    exclusiveContent {
+        forRepository {
+            maven { url 'https://maven.gameanalytics.com/release' }
+        }
+        filter {
+            includeGroup 'com.gameanalytics.sdk'
+        }
+    }
 }
 
 dependencies {
-	implementation 'com.gameanalytics.sdk:gameanalytics-android:6.6.0'
-	implementation 'com.google.android.gms:play-services-appset:16.0.2'
+	// play-services-appset is left out for now: it pulls in Google and androidx
+	// libraries the Defold build server fails to download. Without it the SDK
+	// skips the App Set ID, and error reporting needs androidx.core from
+	// another extension (see README).
+	implementation('com.gameanalytics.sdk:gameanalytics-android:7.2.0') {
+		exclude group: 'com.google.android.gms', module: 'play-services-appset'
+	}
 }

@@ -10,3 +10,10 @@ builds
 builtins
 .internal
 log.txt
+debug.keystore*
+dist
+bob.jar
+.gradle
+/.editor_settings
+# written by CI from the repository secrets
+ci-keys.settings
