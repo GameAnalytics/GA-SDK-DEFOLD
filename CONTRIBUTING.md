@@ -85,5 +85,5 @@ Then run the executable in `dist/test`. You can also open the project in the edi
 
 1. Pin the GameAnalytics SDK versions to ship in `dependencies.json` (`python3 download_dependencies.py --check` lists newer releases, `--bump` pins and installs them) and commit the libraries.
 2. Set `#define VERSION` in `gameanalytics/src/gameanalytics.cpp`. It is sent with every event as the SDK version.
-3. Add the entry under `<!--(CHANGELOG_TOP)-->` in `README.md`.
+3. Add the entry under `<!--(CHANGELOG_TOP)-->` in `CHANGELOG.md`.
 4. Merge to `master` and tag the commit with the version, e.g. `5.0.0`. Games reference the tag's archive in their `game.project` dependencies.
