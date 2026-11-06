@@ -1137,6 +1137,65 @@ static int setEnabledManualSessionHandling(lua_State *L)
     return 0;
 }
 
+// Health events. These are normally switched on in game.project, the lua
+// functions are for games that initialize by hand and decide at runtime.
+
+// [Lua] gameanalytics.enableSDKInitEvent( flag )
+static int enableSDKInitEvent(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if(lua_type(L, 1) != LUA_TBOOLEAN)
+    {
+        return luaL_error(L, "gameanalytics.enableSDKInitEvent(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
+    }
+
+    gameanalytics::defold::Get()->EnableSDKInitEvent(lua_toboolean(L, 1));
+
+    return 0;
+}
+
+// [Lua] gameanalytics.enableFpsHistogram( flag )
+static int enableFpsHistogram(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if(lua_type(L, 1) != LUA_TBOOLEAN)
+    {
+        return luaL_error(L, "gameanalytics.enableFpsHistogram(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
+    }
+
+    gameanalytics::defold::Get()->EnableFpsHistogram(gameanalytics::defold::FpsTracker(), lua_toboolean(L, 1));
+
+    return 0;
+}
+
+// [Lua] gameanalytics.enableMemoryHistogram( flag )
+static int enableMemoryHistogram(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if(lua_type(L, 1) != LUA_TBOOLEAN)
+    {
+        return luaL_error(L, "gameanalytics.enableMemoryHistogram(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
+    }
+
+    gameanalytics::defold::Get()->EnableMemoryHistogram(lua_toboolean(L, 1));
+
+    return 0;
+}
+
+// [Lua] gameanalytics.enableHealthHardwareInfo( flag )
+static int enableHealthHardwareInfo(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    if(lua_type(L, 1) != LUA_TBOOLEAN)
+    {
+        return luaL_error(L, "gameanalytics.enableHealthHardwareInfo(flag): flag, expected boolean got: %s", LuaTypeName(L, 1));
+    }
+
+    gameanalytics::defold::Get()->EnableHealthHardwareInfo(lua_toboolean(L, 1));
+
+    return 0;
+}
+
 // [Lua] gameanalytics.setEnabledEventSubmission( flag )
 static int setEnabledEventSubmission(lua_State *L)
 {
@@ -1502,6 +1561,11 @@ static const luaL_reg Module_methods[] =
         {"getElapsedTimeForPreviousSession", getElapsedTimeForPreviousSession},
         {"getElapsedTimeFromAllSessions", getElapsedTimeFromAllSessions},
 
+        {"enableSDKInitEvent", enableSDKInitEvent},
+        {"enableFpsHistogram", enableFpsHistogram},
+        {"enableMemoryHistogram", enableMemoryHistogram},
+        {"enableHealthHardwareInfo", enableHealthHardwareInfo},
+
         {0, 0}};
 
 static void LuaInit(lua_State* L)
@@ -1555,6 +1619,10 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
     bool use_manual_session_handling = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.use_manual_session_handling", 0) == 1;
     bool auto_detect_app_version = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.auto_detect_app_version", 0) == 1;
     manual_initialize = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.manual_initialize", 0) == 1;
+    bool enable_sdk_init_event = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_sdk_init_event", 0) == 1;
+    bool enable_fps_histogram = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_fps_histogram", 0) == 1;
+    bool enable_memory_histogram = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_memory_histogram", 0) == 1;
+    bool enable_health_hardware_info = dmConfigFile::GetInt(params->m_ConfigFile, "gameanalytics.enable_health_hardware_info", 0) == 1;
 
     game_key = getPlatformSetting(params->m_ConfigFile, "game_key");
     secret_key = getPlatformSetting(params->m_ConfigFile, "secret_key");
@@ -1592,6 +1660,24 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 
     gameanalytics::defold::Get()->SetEnabledEventSubmission(enable_event_submission, true);
     gameanalytics::defold::Get()->SetEnabledErrorReporting(use_error_reporting);
+
+    // Before the SDK starts: the init event measures the time up to that point.
+    if(enable_sdk_init_event)
+    {
+        gameanalytics::defold::Get()->EnableSDKInitEvent(true);
+    }
+    if(enable_fps_histogram)
+    {
+        gameanalytics::defold::Get()->EnableFpsHistogram(gameanalytics::defold::FpsTracker(), true);
+    }
+    if(enable_memory_histogram)
+    {
+        gameanalytics::defold::Get()->EnableMemoryHistogram(true);
+    }
+    if(enable_health_hardware_info)
+    {
+        gameanalytics::defold::Get()->EnableHealthHardwareInfo(true);
+    }
 
     if(build)
     {
@@ -1664,6 +1750,8 @@ static dmExtension::Result InitializeExtension(dmExtension::Params* params)
 
 static dmExtension::Result UpdateExtension(dmExtension::Params* params)
 {
+    gameanalytics::defold::OnFrame();
+
     if(!g_remote_configs_updated.exchange(false) || !g_remote_configs_listener)
     {
         return dmExtension::RESULT_OK;

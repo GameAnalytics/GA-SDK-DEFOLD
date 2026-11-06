@@ -33,6 +33,14 @@ namespace gameanalytics
         // initialized. Ignored on the other platforms and for null.
         void SetHttpService(HttpService* service);
 
+        // Frame rate for the FPS histogram of the health events. The SDK
+        // samples the tracker from its own thread, where lua is out of
+        // reach, so the extension measures the rate itself: OnFrame() counts
+        // the engine's frames (call it from UpdateExtension), FpsTracker()
+        // is the function to hand to GAWrapper::EnableFpsHistogram.
+        void OnFrame();
+        gameanalytics::FPSTracker FpsTracker();
+
         // Drops the wrapper created by Get(). Call from AppFinalizeExtension.
         void ReleaseEngine();
     }

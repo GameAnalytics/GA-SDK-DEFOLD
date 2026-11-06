@@ -36,6 +36,10 @@ local API = {
 	"getElapsedSessionTime",
 	"getElapsedTimeForPreviousSession",
 	"getElapsedTimeFromAllSessions",
+	"enableSDKInitEvent",
+	"enableFpsHistogram",
+	"enableMemoryHistogram",
+	"enableHealthHardwareInfo",
 }
 
 -- Calls fn(...) and checks that it raises an error containing message.
@@ -112,6 +116,10 @@ return function()
 			"setEnabledVerboseLog",
 			"setEnabledManualSessionHandling",
 			"setEnabledEventSubmission",
+			"enableSDKInitEvent",
+			"enableFpsHistogram",
+			"enableMemoryHistogram",
+			"enableHealthHardwareInfo",
 		}
 
 		test("reject non boolean flags", function()
@@ -123,6 +131,17 @@ return function()
 		test("accept boolean flags", function()
 			gameanalytics.setEnabledInfoLog(true)
 			gameanalytics.setEnabledVerboseLog(false)
+		end)
+
+		-- Ends with everything on: test.settings enables the health events for
+		-- the end-to-end check that runs after the unit tests.
+		test("health events switch off and on", function()
+			gameanalytics.enableFpsHistogram(false)
+			gameanalytics.enableMemoryHistogram(false)
+			gameanalytics.enableSDKInitEvent(true)
+			gameanalytics.enableFpsHistogram(true)
+			gameanalytics.enableMemoryHistogram(true)
+			gameanalytics.enableHealthHardwareInfo(true)
 		end)
 	end)
 

@@ -1,2 +1,8 @@
 [bootstrap]
 main_collection = /test/test.collectionc
+
+[gameanalytics]
+enable_sdk_init_event = 1
+enable_fps_histogram = 1
+enable_memory_histogram = 1
+enable_health_hardware_info = 1
