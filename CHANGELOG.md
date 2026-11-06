@@ -7,6 +7,7 @@
 * added the iOS simulator (`arm64_sim-ios`) and dropped 32-bit Windows (`x86-win32`), 32-bit iOS (`armv7-ios`) and `js-web`, following Defold
 * added `getUserId`, `getExternalUserId`, `setExternalUserId`, `getABTestingId`, `getABTestingVariantId`, `getRemoteConfigsValueAsNumber`, `getRemoteConfigsValueAsJson`, `getElapsedSessionTime`, `getElapsedTimeForPreviousSession` and `getElapsedTimeFromAllSessions`
 * remote configs on iOS are now returned as JSON, like on the other platforms
+* added the health events: the SDK init event with the boot time, the FPS and memory histograms and the hardware info, switched on with `enable_sdk_init_event`, `enable_fps_histogram`, `enable_memory_histogram` and `enable_health_hardware_info` in `game.project` or with `enableSDKInitEvent`, `enableFpsHistogram`, `enableMemoryHistogram` and `enableHealthHardwareInfo` (one switch for all of them on the web)
 * business events accept `receipt`, `signature` and `autoFetchReceipt` on every platform
 * `write_path_<platform>` expands environment variables and a leading `~`
 * fixed a crash at startup on Android and errors in the Android session time functions; Java exceptions are now logged instead of aborting the game (android)
