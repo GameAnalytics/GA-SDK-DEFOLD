@@ -424,21 +424,23 @@ namespace gameanalytics
         (void)value; // there is no advertising id on the web
     }
 
+    // The javascript SDK has one switch for all the health events and
+    // measures the frame rate itself.
     void GAWrapperWeb::EnableSDKInitEvent(bool value) {
-        (void)value;
+        Eval(Call("enableHealthEvent", BoolToJS(value)));
     }
 
     void GAWrapperWeb::EnableFpsHistogram(FPSTracker tracker, bool value) {
         (void)tracker;
-        (void)value;
+        Eval(Call("enableHealthEvent", BoolToJS(value)));
     }
 
     void GAWrapperWeb::EnableMemoryHistogram(bool value) {
-        (void)value;
+        Eval(Call("enableHealthEvent", BoolToJS(value)));
     }
 
     void GAWrapperWeb::EnableHealthHardwareInfo(bool value) {
-        (void)value;
+        Eval(Call("enableHealthEvent", BoolToJS(value)));
     }
 
     void GAWrapperWeb::OnQuit() {

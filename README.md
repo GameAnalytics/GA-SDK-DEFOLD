@@ -93,6 +93,19 @@ Custom dimensions, resource currencies and resource item types must be declared 
 
 When neither `manual_initialize` nor `use_custom_id` is set, the SDK starts as soon as the game starts.
 
+### Health events
+
+[Health events](https://docs.gameanalytics.com/event-types/health-events/) report how the game performs on the players' devices: the time from launch to the SDK start, and histograms of the frame rate and memory use over the session. They are off by default and shown in GameAnalytics to Pro accounts.
+
+| Setting | Description | Default |
+|---|---|---|
+| `enable_sdk_init_event` | `1` to send the SDK init event with the app's boot time. | `0` |
+| `enable_fps_histogram` | `1` to sample the frame rate once a second and send the histogram at the end of the session. The extension measures the rate from the engine's update, values are capped at 120. | `0` |
+| `enable_memory_histogram` | `1` to sample the memory use every 5 seconds and send the histogram at the end of the session. | `0` |
+| `enable_health_hardware_info` | `1` to add the device's hardware (CPU, GPU, cores) to the health events. Experimental. | `0` |
+
+Games with `manual_initialize = 1` can also switch these at runtime with `gameanalytics.enableSDKInitEvent(flag)` and friends (see the [API reference](#api-reference)), before calling `initialize()`. On the web the four settings are one switch in the JavaScript SDK: any of them enables all health events.
+
 ## Sending events
 
 Every event function takes a table of options. Calling one with a missing or wrong option raises a lua error, so mistakes show up during development.
@@ -259,6 +272,7 @@ To use your own id as the GameAnalytics user id, set `use_custom_id = 1` and cal
 | `getElapsedSessionTime()` | Length of the current session, in seconds. |
 | `getElapsedTimeForPreviousSession()` | Length of the previous session, in seconds. |
 | `getElapsedTimeFromAllSessions()` | Total time over all sessions, in seconds. |
+| `enableSDKInitEvent(flag)`, `enableFpsHistogram(flag)`, `enableMemoryHistogram(flag)`, `enableHealthHardwareInfo(flag)` | Switches the [health events](#health-events), call before `initialize()`. |
 
 ## Platform notes
 
@@ -273,6 +287,7 @@ To use your own id as the GameAnalytics user id, set `use_custom_id = 1` and cal
 **Web**
 * External user ids and session times are not available and return empty values or 0.
 * `setEnabledEventSubmission` has no effect.
+* The health events have a single switch: any of the four settings or functions enables all of them.
 
 **Desktop**
 * Requests go through Defold's own HTTP client, so no extra libraries are needed.

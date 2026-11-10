@@ -1,6 +1,9 @@
 #if defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_ANDROID) || defined(DM_PLATFORM_HTML5) || defined(DM_PLATFORM_OSX) || defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 
+#include <atomic>
+
 #include <dmsdk/dlib/log.h>
+#include <dmsdk/dlib/time.h>
 
 #include "GADefold.h"
 
@@ -262,6 +265,48 @@ namespace gameanalytics
 #else
             (void)service;
 #endif
+        }
+
+        // =================================================================
+        // ENGINE HOOK (GAWrapper.h): the FPS tracker of the health events.
+        //
+        // The engine doesn't publish its frame rate, so it is measured from
+        // the extension's update: frames are counted over a one second
+        // window and the rate of the last full window is what the SDK gets.
+        // The SDK reads it from its own thread, hence the atomic.
+        // =================================================================
+        namespace
+        {
+            const uint64_t FPS_WINDOW_US = 1000000;
+
+            std::atomic<float> fps(0.0f);
+            uint32_t framesInWindow = 0;
+            uint64_t windowStart = 0;
+        }
+
+        void OnFrame()
+        {
+            uint64_t now = dmTime::GetMonotonicTime();
+            if(windowStart == 0)
+            {
+                windowStart = now;
+                return;
+            }
+
+            framesInWindow++;
+
+            uint64_t elapsed = now - windowStart;
+            if(elapsed >= FPS_WINDOW_US)
+            {
+                fps.store((float)framesInWindow * (float)FPS_WINDOW_US / (float)elapsed);
+                framesInWindow = 0;
+                windowStart = now;
+            }
+        }
+
+        gameanalytics::FPSTracker FpsTracker()
+        {
+            return []() -> float { return fps.load(); };
         }
 
         void ReleaseEngine()
